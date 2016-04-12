@@ -20,9 +20,6 @@ require 'httparty'
       @words << x["word"]
     end
 
-    gon.watch.words = @words
-    puts gon.watch.words
-
     parsed_tokens.each do |element|
           puts element
     end
