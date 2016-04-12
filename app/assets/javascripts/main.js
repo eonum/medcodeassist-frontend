@@ -90,17 +90,20 @@
           var text = $("#edit").html();
           var plainText = $("#edit").text();
 
-          $.ajax({
-              url : "/front_end/analyse",
-              type : "post",
-              data : { text_field: JSON.stringify(plainText) }
-          });
+          when(
+              $.ajax({
+              url: "/front_end/analyse",
+              type: "post",
+              data: {text_field: JSON.stringify(plainText)}
+          })
+          ) then(
+          alert(words);
 
-          var words = gon.words //["ing", "is", "awesome"];
           words.forEach(function (item) {
               text = text.split(item).join("<a href='#' class='hight' data-toggle='tooltip' title='" + code + "'>" + item + "</a>");
           });
           $("#edit").html(text);
+          );
 
           //updateSuggestedCodes();
       });
