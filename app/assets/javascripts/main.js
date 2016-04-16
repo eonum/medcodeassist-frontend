@@ -86,26 +86,12 @@
       });
 
       $("#analyse").click(function () {
-          var code = "Code aasd";
-          var text = $("#edit").html();
           var plainText = $("#edit").text();
-
-          when(
-              $.ajax({
+          $.ajax({
               url: "/front_end/analyse",
               type: "post",
-              data: {text_field: JSON.stringify(plainText)}
-          })
-          ) then(
-          alert(words);
-
-          words.forEach(function (item) {
-              text = text.split(item).join("<a href='#' class='hight' data-toggle='tooltip' title='" + code + "'>" + item + "</a>");
+              data: {text_field: plainText}
           });
-          $("#edit").html(text);
-          );
-
-          //updateSuggestedCodes();
       });
 
   });

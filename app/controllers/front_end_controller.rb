@@ -1,11 +1,10 @@
 class FrontEndController < ApplicationController
-require 'httparty'
+  require 'httparty'
 
   def index
   end
 
   def analyse
-    render "index";
 
     text = params[:text_field].gsub('\\', ' ') # replace '\' with ' ' because api can't handle \ yet
 
@@ -22,26 +21,19 @@ require 'httparty'
       @words << x["word"]
     end
 
-    puts "Words " + @words.to_s
-
     puts "Parsed tokens:"
     parsed_tokens.each do |element|
-          puts element
-    end
-=begin
-    parsed_synonym.each do |element|
       puts element
     end
 
-
-    code_proposals = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/code_proposals", {query: {input_codes: ['ICD_E1141'], input_code_types: ['ICD'], get_icds: true, count: 1 }})
+    code_proposals = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/code_proposals", {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1 }})
     parsed_codes = JSON.parse(code_proposals.body)
 
-    parsed_codes.each do |element|
-      puts element
-    end
-=end
+    @code = parsed_codes["icds"][0]["code"]
 
+    respond_to do |format|
+      format.js
+    end
   end
 
 end

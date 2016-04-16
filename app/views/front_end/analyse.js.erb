@@ -1,0 +1,8 @@
+  var words = <%= raw @words %>;
+  var code = "Code"; // <%= raw @code %>;
+
+  var text = $("#edit").html();
+  words.forEach(function (item, i) {
+    text = text.split(item).join("<a href='#' class='hight' data-toggle='tooltip' title='" + code + "'>" + item + "</a>");
+  });
+  $("#edit").html(text);
