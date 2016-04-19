@@ -26,10 +26,19 @@ class FrontEndController < ApplicationController
       puts element
     end
 
-    code_proposals = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/code_proposals", {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1 }})
+    code_proposals = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/code_proposals", {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1  }})
     parsed_codes = JSON.parse(code_proposals.body)
 
     @code = parsed_codes["icds"][0]["code"]
+    @codes = []
+    @codes << @code
+
+    @variables = {}
+    @variables["words"] = @words
+    @variables["codes"] = @codes
+
+    require 'json'
+    @variables = @variables.to_json
 
     respond_to do |format|
       format.js
