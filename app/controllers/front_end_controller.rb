@@ -37,6 +37,10 @@ class FrontEndController < ApplicationController
     @variables["words"] = @words
     @variables["codes"] = @codes
 
+    # puts IcdCode.find("56cdb0a79da27e192c000bc9")["text_de"]
+    # puts IcdCode.find_by("code": "E51.8")["text_de"]
+
+
     require 'json'
     @variables = @variables.to_json
 
