@@ -1,5 +1,6 @@
 
   $(document).ready(function() {
+    var gParent="";
       var selectedCodes = {};
       var suggestedCodes = {};
       suggestedCodes["388410"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003813" }, "code" : "38.84.10", "short_code" : "388410", "text_de" : "Sonstiger chirurgischer Verschluss der thorakalen Aorta"};
@@ -29,7 +30,7 @@
                   else{
                       categoryList = "proceduresList";
                   }
-                  $("#"+categoryList).append("<li class='list-group-item' id='"+key+"'>"+suggestedCodes[key].code+": "+suggestedCodes[key].text_de+"</li>");
+                  $("#"+categoryList).append("<li class='list-group-item' id='"+key+"'>"+"<span class='text_field'>"+suggestedCodes[key].code+"</span>"+": "+suggestedCodes[key].text_de+"</li>");
               }
           }
           // var infoButton = "<button class='infoButton' type='button'><img src='http://icons.iconarchive.com/icons/danrabbit/elementary/32/Button-info-icon.png' alt='info'></img></button>";
@@ -88,11 +89,28 @@
 
       // });
 
-      // $(".editButton").click(function (){
-      //   alert("info");
+      $("li").on("click", ".editButton", function (){
+        var xid = this.parentNode.id;
+        if($("#"+xid+" .editButton").text()=="Edit"){
+        $("#"+xid+" .text_field").attr("contenteditable", "true");
+        gParent = $("#"+xid).parent();
+        $("#"+xid+" .editButton").text("Done");
+        gParent.selectable("destroy");
+        }
+        else{
+          $("#"+xid+" .text_field").attr("contenteditable", "false");
+        gParent = $("#"+xid).parent();
+        $("#"+xid+" .editButton").text("Edit");
+        gParent.selectable();
+         gParent.selectable("refresh");
+        }
+      });
 
-      // });
 
+
+
+
+      
       $("#analyse").click(function () {
           var plainText = $("#edit").text();
           $.ajax({

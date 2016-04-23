@@ -135,8 +135,6 @@ footer li img {
 
 
 .editButton{
-    display: flex;
-
  color: white;
  background-color:#508ABF;
  border-radius: 60px;
@@ -152,8 +150,6 @@ footer li img {
 }
 
 .addButton{
-    display: flex;
-
  color: white;
  background-color:#508ABF;
  border-radius: 60px;
