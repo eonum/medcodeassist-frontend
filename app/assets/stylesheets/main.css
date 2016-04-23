@@ -132,3 +132,35 @@ footer li img {
     width: 32px;
     height: 32px;
 }
+
+
+.editButton{
+    display: flex;
+
+ color: white;
+ background-color:#508ABF;
+ border-radius: 60px;
+ border-color:#508ABF;
+ padding:5px 4px 5px 4px ;
+ /*float: right;*/
+ /*margin-left: 10px;*/
+ font-size: 0.8em;
+ /*margin-left: 96%;*/
+ position: absolute;
+ bottom:5px;
+ right:10px;
+}
+
+.addButton{
+    display: flex;
+
+ color: white;
+ background-color:#508ABF;
+ border-radius: 60px;
+ border-color:#508ABF;
+ padding:5px 4px 5px 4px ;
+ /*float: right;*/
+ /*margin-left: 10px;*/
+ font-size: 0.8em;
+ margin-left: 0%;
+}

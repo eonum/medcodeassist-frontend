@@ -32,8 +32,8 @@
                   $("#"+categoryList).append("<li class='list-group-item' id='"+key+"'>"+suggestedCodes[key].code+": "+suggestedCodes[key].text_de+"</li>");
               }
           }
-          var infoButton = "<button class='infoButton' type='button'><img src='http://icons.iconarchive.com/icons/danrabbit/elementary/32/Button-info-icon.png' alt='info'></img></button>";
-          $(".codeList li").append(infoButton);
+          // var infoButton = "<button class='infoButton' type='button'><img src='http://icons.iconarchive.com/icons/danrabbit/elementary/32/Button-info-icon.png' alt='info'></img></button>";
+          // $(".codeList li").append(infoButton);
       };
 
       updateSuggestedCodes();
@@ -48,6 +48,8 @@
                       // add the code to allListMask and the appropriate tab-list in code Mask
                       var id = this.id;
                       var category = this.parentNode.id;
+                      var editButton = "<button class='editButton' type='button'>Edit</button>";
+                      $("#"+id).append(editButton);
                       this.setAttribute("class", "list-group-item ui-selectee");
                       $("#" + category + "Mask, #allListMask").append(this);
                       selectedCodes[id] = suggestedCodes[id];
@@ -65,6 +67,7 @@
                   var id = this.id;
                   // add the code first to the appropriate list
                   var category = selectedCodes[id].category;
+                  $("#"+id+" .editButton").remove();
                   $("#" + category).prepend(this);
                   this.setAttribute("class", "list-group-item ui-selectee");
                   // remove it from all tabs in codeMask
@@ -74,16 +77,21 @@
           }
       });
     
-      $(".infoButton").click(function (){
-          var id = this.parentNode.id;
-          var codeId = suggestedCodes[id].code;
-          console.log("info id: "+codeId);
-          $("#infoCode").empty().append(codeId);
-          $("#infoSynonyms").empty().append("synonyms of code "+codeId);
-          $("#infoDescription").empty().append("Description of code "+codeId+":<br>");
-          $("#infoDescription").append(suggestedCodes[id].text_de);
+      // $(".infoButton").click(function (){
+      //     var id = this.parentNode.id;
+      //     var codeId = suggestedCodes[id].code;
+      //     console.log("info id: "+codeId);
+      //     $("#infoCode").empty().append(codeId);
+      //     $("#infoSynonyms").empty().append("synonyms of code "+codeId);
+      //     $("#infoDescription").empty().append("Description of code "+codeId+":<br>");
+      //     $("#infoDescription").append(suggestedCodes[id].text_de);
 
-      });
+      // });
+
+      // $(".editButton").click(function (){
+      //   alert("info");
+
+      // });
 
       $("#analyse").click(function () {
           var plainText = $("#edit").text();
