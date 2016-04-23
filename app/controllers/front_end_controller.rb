@@ -16,9 +16,11 @@ class FrontEndController < ApplicationController
     parsed_synonym = JSON.parse(synonym.body)
 =end
 
+    puts "words:"
     @words = []
     parsed_tokens.each do |x|
       @words << x["word"]
+      puts x["word"]
     end
 
     puts "Parsed tokens:"

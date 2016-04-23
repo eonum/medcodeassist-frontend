@@ -88,10 +88,9 @@
 
       // });
 
-      // $(".editButton").click(function (){
-      //   alert("info");
-
-      // });
+      $("li").on("click", ".editButton", function(){
+         console.log("edit");
+       });
 
       $("#analyse").click(function () {
           var plainText = $("#edit").text();
