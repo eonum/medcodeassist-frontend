@@ -30,7 +30,7 @@
                   else{
                       categoryList = "proceduresList";
                   }
-                  $("#"+categoryList).append("<li class='list-group-item' id='"+key+"'>"+"<span class='text_field'>"+suggestedCodes[key].code+"</span>"+": "+suggestedCodes[key].text_de+"</li>");
+                  $("#"+categoryList).append("<li class='list-group-item codeItem' id='"+key+"'>"+"<span class='text_field'>"+suggestedCodes[key].code+"</span>"+": "+suggestedCodes[key].text_de+"</li>");
               }
           }
           // var infoButton = "<button class='infoButton' type='button'><img src='http://icons.iconarchive.com/icons/danrabbit/elementary/32/Button-info-icon.png' alt='info'></img></button>";
@@ -39,44 +39,71 @@
 
       updateSuggestedCodes();
 
-      $(".selectable").selectable();
+      // $(".selectable").selectable();
 
 
-      $(".selectable").selectable({
+      // $(".selectable").selectable({
 
-              stop: function () {
-                  $(".ui-selected", this).each(function () {
-                      // add the code to allListMask and the appropriate tab-list in code Mask
-                      var id = this.id;
-                      var category = this.parentNode.id;
-                      var editButton = "<button class='editButton' type='button'>Edit</button>";
-                      $("#"+id).append(editButton);
-                      this.setAttribute("class", "list-group-item ui-selectee");
-                      $("#" + category + "Mask, #allListMask").append(this);
-                      selectedCodes[id] = suggestedCodes[id];
-                      selectedCodes[id].category = category;
-                  });
-              }
+      //         stop: function () {
+      //             $(".ui-selected", this).each(function () {
+      //                 // add the code to allListMask and the appropriate tab-list in code Mask
+      //                 var id = this.id;
+      //                 var category = this.parentNode.id;
+      //                 var editButton = "<button class='zbutton editButton' type='button'>Edit</button><button class='zbutton doneButton' type='button'>Done</button>";
+      //                 $("#"+id).append(editButton);
+      //                 this.setAttribute("class", "list-group-item ui-selectee");
+      //                 $("#" + category + "Mask, #allListMask").append(this);
+      //                 selectedCodes[id] = suggestedCodes[id];
+      //                 selectedCodes[id].category = category;
+      //             });
+      //         }
+      // });
+
+      $("ul").on("click", ".codeItem", function (){
+          var id = this.id;
+          var category = this.parentNode.id;
+          var editButton = "<button class='zbutton editButton' type='button'>Edit</button><button class='zbutton doneButton' type='button'>Done</button>";
+          $("#"+id).append(editButton);
+          $("#" + category + "Mask, #allListMask").append(this);
+          selectedCodes[id] = suggestedCodes[id];
+          selectedCodes[id].category = category;      
+          $("#"+id).toggleClass("codeItem");
+          $("#"+id).toggleClass("codeMaskItem");
+   
       });
 
-      $(".unselectable").selectable();
-
-      $(".unselectable").selectable({
-
-          stop: function () {
-              $(".ui-selected", this).each(function () {
-                  var id = this.id;
-                  // add the code first to the appropriate list
-                  var category = selectedCodes[id].category;
-                  $("#"+id+" .editButton").remove();
-                  $("#" + category).prepend(this);
-                  this.setAttribute("class", "list-group-item ui-selectee");
-                  // remove it from all tabs in codeMask
-                  $(".codeMaskLists li").remove("#"+id);
-                  delete selectedCodes[id];
-              });
-          }
+      $("ul").on("click", ".codeMaskItem", function (){
+          var id = this.id;
+          // add the code first to the appropriate list
+          var category = selectedCodes[id].category;
+          $("#"+id+" .editButton").remove();
+          $("#" + category).prepend(this);
+          // remove it from all tabs in codeMask
+          $(".codeMaskLists li").remove("#"+id);
+          delete selectedCodes[id];
+          $("#"+id).toggleClass("codeMaskItem");
+          $("#"+id).toggleClass("codeItem");
+   
       });
+
+      // $(".unselectable").selectable();
+
+      // $(".unselectable").selectable({
+
+      //     stop: function () {
+      //         $(".ui-selected", this).each(function () {
+      //             var id = this.id;
+      //             // add the code first to the appropriate list
+      //             var category = selectedCodes[id].category;
+      //             $("#"+id+" .editButton").remove();
+      //             $("#" + category).prepend(this);
+      //             this.setAttribute("class", "list-group-item ui-selectee");
+      //             // remove it from all tabs in codeMask
+      //             $(".codeMaskLists li").remove("#"+id);
+      //             delete selectedCodes[id];
+      //         });
+      //     }
+      // });
     
       // $(".infoButton").click(function (){
       //     var id = this.parentNode.id;
@@ -91,23 +118,24 @@
 
       $("li").on("click", ".editButton", function (){
         var xid = this.parentNode.id;
-        if($("#"+xid+" .editButton").text()=="Edit"){
-        $("#"+xid+" .text_field").attr("contenteditable", "true");
-        gParent = $("#"+xid).parent();
-        $("#"+xid+" .editButton").text("Done");
-        gParent.selectable("destroy");
-        }
-        else{
-          $("#"+xid+" .text_field").attr("contenteditable", "false");
-        gParent = $("#"+xid).parent();
-        $("#"+xid+" .editButton").text("Edit");
-        gParent.selectable();
-         gParent.selectable("refresh");
-        }
+        $("#"+xid).removeClass("codeMaskItem");
+        $("#"+xid).attr("contenteditable", "true");
+        $("#"+xid+" .doneButton").toggle();
+        $("#"+xid+" .editButton").toggle();
+        $("#"+xid).toggleClass("editing");
+  
       });
-
-
-
+      $("li").on("click", ".doneButton", function (){
+        var xid = this.parentNode.id;
+        $("#"+xid).attr("contenteditable", "false");
+        $("#"+xid+" .doneButton").toggle();
+        $("#"+xid+" .editButton").toggle();
+        $("#"+xid).toggleClass("editing");
+         setTimeout(function() {
+           $("#"+xid).toggleClass("codeMaskItem");
+      
+          }, 100);
+      });
 
 
       
