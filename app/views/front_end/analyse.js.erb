@@ -1,13 +1,16 @@
   var params = <%= raw @variables %>;
   var words = params["words"];
-  var code = params["codes"];
+  //var code = params["codes"];
 
-  var text = $("#edit").html();
-  words.forEach(function (item, i) {
-    textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
-    textArray.forEach(function(word){text=text.replace(word,"<a href='#' class='hight' data-toggle='tooltip' title='" + code[0] + "'>" + word + "</a>");});;
+  var text = $("#textArea").html();
+  words.forEach(function (item) {
+    var textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
+    textArray.forEach(function(word){
+      var link = "<a class='highlight showWordDetails' contenteditable='false' data-toggle='tooltip' title='click for showWordDetails'>" + word + "</a>"
+      text=text.replace(word, link);
+    });
   });
-  $("#edit").html(text);
+  $("#textArea").html(text);
 
   function preg_quote( str ) {
     // http://kevin.vanzonneveld.net

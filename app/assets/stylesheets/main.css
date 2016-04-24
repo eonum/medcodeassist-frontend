@@ -42,7 +42,7 @@ nav {
     overflow:scroll
 }
 
-.hight{
+.highlight{
     font-weight: bold;
     background: yellow;
 }
@@ -61,12 +61,12 @@ nav {
     padding: 0;
 }
 
-#infoCodeWrapper {
+#infoWordWrapper {
     border-bottom: 1px solid #CCC;
     padding: 0;
 }
 
-#infoSynDesWrapper {
+#infoDetailsWrapper {
 
 }
 
@@ -76,8 +76,8 @@ nav {
     height: inherit;
 }
 
-#infoDescriptionWrapper {
-    border-left: 1px solid #CCC;
+#infoRelatedCodesListWrapper {
+    /*border-left: 1px solid #CCC;*/
     padding-right: 0;
     height: inherit;
 }
@@ -94,7 +94,7 @@ nav {
     border:solid 1px Aqua ;
     font-weight: bold;
 }
-#code-wrapper{
+#codeMaskWrapper {
     margin-top: 30px;
 }
 

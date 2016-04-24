@@ -13,7 +13,7 @@
       function updateSuggestedCodes(){
           var categoryList;
           $("#mainDiagnosesList").empty();
-          $("#minorDiagnosesList").empty();
+          $("#sideDiagnosesList").empty();
           $("#proceduresList").empty();
           for(var key in suggestedCodes){
               // don't show codes that are already selected
@@ -25,7 +25,7 @@
                       categoryList = "mainDiagnosesList";
                   }
                   else if(key=="388499" || key=="388500"){
-                      categoryList = "minorDiagnosesList";
+                      categoryList = "sideDiagnosesList";
                   }
                   else{
                       categoryList = "proceduresList";
@@ -137,14 +137,22 @@
           }, 100);
       });
 
-
       
       $("#analyse").click(function () {
-          var plainText = $("#edit").text();
+          var plainText = $("#textArea").text();
           $.ajax({
               url: "/front_end/analyse",
               type: "post",
               data: {text_field: plainText}
+          });
+      });
+
+      $("#textArea").on("click", ".showWordDetails", function () {
+          var word = this.text;
+          $.ajax({
+              url: "/front_end/showWordDetails",
+              type: "post",
+              data: {word: word}
           });
       });
 

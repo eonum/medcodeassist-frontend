@@ -45,7 +45,7 @@
 
       <label for="Text">Text:</label>
       <!--Textarea Div-->
-      <div id="edit" class="editable form-control bg-primary"  contenteditable="true" >
+      <div id="textArea" class="editable form-control bg-primary" contenteditable="true" >
       </div>
 
       <button id="analyse" type="button" class="btn btn-primary">Analyse</button>
@@ -54,32 +54,35 @@
       <div class="col-md-12" id="infoField-wrapper">
         <label>Information:</label>
         <div class="col-md-12" id="infoField">
-              <div class="col-md-12" id="infoCodeWrapper">
-                <label class="col-md-1">Code:</label>
-                <div class="col-md-9" id="infoCode"></div>
+              <div class="col-md-12" id="infoWordWrapper">
+                <label class="col-md-1">Word:</label>
+                <div class="col-md-9" id="infoWord"></div>
               </div>
-              <div class="col-md-12" id="infoSynDesWrapper">
+              <div class="col-md-12" id="infoDetailsWrapper">
                 <div class="col-md-6" id="infoSynonymsWrapper">
                   <label>Synonyme:</label>
-                  <div class="col-md-12" id="infoSynonyms"></div>
+                  <div class="col-md-12" id="infoSynonyms">
+                    <ul class="list-group" id="synonymsList">
+                    </ul>
+                  </div>
                 </div>
-                <div class="col-md-6" id="infoDescriptionWrapper">
-                  <label>Beschreibung:</label>
-                  <div class="col-md-12" id="infoDescription"></div>
+                <div class="col-md-6" id="infoRelatedCodesListWrapper">
+                  <label>Codes:</label>
+                  <div class="col-md-12" id="infoRelatedCodes"></div>
                 </div>
               </div>
         </div>
       </div>
 
       <!--CodeMask Div-->
-      <div id="code-wrapper">
+      <div id="codeMaskWrapper">
         <label>Code mask:</label>
         <!-- Nav tabs for the list of the mask -->
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#allMask" aria-controls="allMask" role="tab" data-toggle="tab">All</a></li>
-          <li role="presentation"><a href="#hauptDiagnosenMask" aria-controls="hauptDiagnosenMask" role="tab" data-toggle="tab">Hauptdiagnosen</a></li>
-          <li role="presentation"><a href="#nebenDiagnosenMask" aria-controls="hebenDiagnosenMask" role="tab" data-toggle="tab">Nebendiagnosen</a></li>
-          <li role="presentation"><a href="#prozedurenMask" aria-controls="prozedurenMask" role="tab" data-toggle="tab">Prozeduren</a></li>
+          <li role="presentation"><a href="#mainDiagnosesMask" aria-controls="mainDiagnosesMask" role="tab" data-toggle="tab">Hauptdiagnosen</a></li>
+          <li role="presentation"><a href="#sideDiagnosesMask" aria-controls="sideDiagnosesMask" role="tab" data-toggle="tab">Nebendiagnosen</a></li>
+          <li role="presentation"><a href="#proceduresMask" aria-controls="proceduresMask" role="tab" data-toggle="tab">Prozeduren</a></li>
         </ul>
 
         <!-- Tab panes with the lists of the mask -->
@@ -88,15 +91,15 @@
             <ul class="list-group unselectable code-maskList" id="allListMask">
             </ul>
           </div>
-          <div role="tabpanel" class="tab-pane" id="hauptDiagnosenMask">
+          <div role="tabpanel" class="tab-pane" id="mainDiagnosesMask">
             <ul class="list-group unselectable code-maskList" id="mainDiagnosesListMask">
             </ul>
           </div>
-          <div role="tabpanel" class="tab-pane" id="nebenDiagnosenMask">
-            <ul class="list-group unselectable code-maskList" id="minorDiagnosesListMask">
+          <div role="tabpanel" class="tab-pane" id="sideDiagnosesMask">
+            <ul class="list-group unselectable code-maskList" id="sideDiagnosesListMask">
             </ul>
           </div>
-          <div role="tabpanel" class="tab-pane" id="prozedurenMask">
+          <div role="tabpanel" class="tab-pane" id="proceduresMask">
             <ul class="list-group unselectable code-maskList" id="proceduresListMask">
             </ul>
           </div>
@@ -117,9 +120,9 @@
       </div>
 
 
-      <div id="minorDiagnoses">
+      <div id="sideDiagnoses">
         <label>Nebendiagnosen:</label>
-        <ul class="list-group selectable codeList" id="minorDiagnosesList">
+        <ul class="list-group selectable codeList" id="sideDiagnosesList">
         </ul>
       </div>
 
