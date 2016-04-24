@@ -1,6 +1,8 @@
   var params = <%= raw @variables %>;
   var words = params["words"];
   //var code = params["codes"];
+  var suggestedCodes = params["suggestedCodes"];
+  var selectedCodes = params["selectedCodes"];
 
   var text = $("#textArea").html();
   words.forEach(function (item) {
@@ -25,4 +27,33 @@
     // *     example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
     // *     returns 3: '\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:'
     return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
-  }
+  };
+
+  function updateSuggestedCodes(){
+    var categoryList;
+    $("#mainDiagnosesList").empty();
+    $("#sideDiagnosesList").empty();
+    $("#proceduresList").empty();
+    for(var key in suggestedCodes){
+      // don't show codes that are already selected
+      if(selectedCodes && key in selectedCodes){
+        continue;
+      }
+      else{
+        if(key=="388410" || key=="388420"){
+          categoryList = "mainDiagnosesList";
+        }
+        else if(key=="388499" || key=="388500"){
+          categoryList = "sideDiagnosesList";
+        }
+        else{
+          categoryList = "proceduresList";
+        }
+        $("#"+categoryList).append("<li class='list-group-item codeItem' id='"+key+"'>"+"<span class='text_field'>"+suggestedCodes[key].code+"</span>"+": "+suggestedCodes[key].text_de+"</li>");
+      }
+    }
+    // var infoButton = "<button class='infoButton' type='button'><img src='http://icons.iconarchive.com/icons/danrabbit/elementary/32/Button-info-icon.png' alt='info'></img></button>";
+    // $(".codeList li").append(infoButton);
+  };
+
+  updateSuggestedCodes();

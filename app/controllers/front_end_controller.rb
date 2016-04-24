@@ -8,9 +8,9 @@ class FrontEndController < ApplicationController
 
     text = params[:text_field].gsub('\\', ' ') # replace '\' with ' ' because api can't handle \ yet
 
-    #@words = ["test"]
+    @words = ["test"]
 
-
+=begin
     tokens = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/tokenizations", { query: {text: text} } )
     parsed_tokens =  JSON.parse(tokens.body)
 
@@ -32,10 +32,30 @@ class FrontEndController < ApplicationController
     @code = parsed_codes["icds"][0]["code"]
     @codes = []
     @codes << @code
+=end
 
+
+    @suggestedCodes = {}
+    @suggestedCodes["388410"] = {code: "38.84.10", short_code: "388410", text_de: "Sonstiger chirurgischer Verschluss der thorakalen Aorta"}
+    @suggestedCodes["388420"] = {code: "38.84.20", short_code: "388420", text_de: "Sonstiger chirurgischer Verschluss der Aorta abdominalis"}
+    @suggestedCodes["388499"] = {code: "38.84.99", short_code: "388499", text_de: "Sonstiger chirurgischer Verschluss der Aorta, sonstige"};
+    @suggestedCodes["388500"] = {code: "38.85.00", short_code: "388500", text_de: "Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez."};
+    @suggestedCodes["388510"] = {code: "38.85.10", short_code: "388510", text_de: "Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez."};
+    @suggestedCodes["388511"] = {code: "38.85.11", short_code: "388511", text_de: "Sonstiger chirurgischer Verschluss der A. subclavia"};
+
+    @selectedCodes = params[:selectedCodes]
+=begin
+    suggestedCodes["388420"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003814" }, "code" : "38.84.20", "short_code" : "388420", "text_de" : "Sonstiger chirurgischer Verschluss der Aorta abdominalis"};
+    suggestedCodes["388499"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003815" }, "code" : "38.84.99", "short_code" : "388499", "text_de" : "Sonstiger chirurgischer Verschluss der Aorta, sonstige"};
+    suggestedCodes["388500"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003816" }, "code" : "38.85.00", "short_code" : "388500", "text_de" : "Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez."};
+    suggestedCodes["388510"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003817" }, "code" : "38.85.10", "short_code" : "388510", "text_de" : "Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez."};
+    suggestedCodes["388511"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003818" }, "code" : "38.85.11", "short_code" : "388511", "text_de" : "Sonstiger chirurgischer Verschluss der A. subclavia"};
+=end
 
     @variables = {}
     @variables["words"] = @words
+    @variables["suggestedCodes"] = @suggestedCodes
+    @variables["selectedCodes"] = @selectedCodes
 #    @variables["codes"] = @codes
 
     # puts IcdCode.find("56cdb0a79da27e192c000bc9")["text_de"]
