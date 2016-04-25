@@ -6,11 +6,11 @@ class FrontEndController < ApplicationController
 
   def analyse
 
-    text = params[:text_field].gsub('\\', ' ') # replace '\' with ' ' because api can't handle \ yet
+    text = params[:text_field]#.gsub('\\n', ' ') # replace '\' with ' ' because api can't handle \ yet
 
     @words = ["test"]
 
-=begin
+
     tokens = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/tokenizations", { query: {text: text} } )
     parsed_tokens =  JSON.parse(tokens.body)
 
@@ -25,7 +25,7 @@ class FrontEndController < ApplicationController
     parsed_tokens.each do |element|
       puts element
     end
-
+=begin
     code_proposals = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/code_proposals", {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1  }})
     parsed_codes = JSON.parse(code_proposals.body)
 
@@ -38,19 +38,13 @@ class FrontEndController < ApplicationController
     @suggestedCodes = {}
     @suggestedCodes["388410"] = {code: "38.84.10", short_code: "388410", text_de: "Sonstiger chirurgischer Verschluss der thorakalen Aorta"}
     @suggestedCodes["388420"] = {code: "38.84.20", short_code: "388420", text_de: "Sonstiger chirurgischer Verschluss der Aorta abdominalis"}
-    @suggestedCodes["388499"] = {code: "38.84.99", short_code: "388499", text_de: "Sonstiger chirurgischer Verschluss der Aorta, sonstige"};
-    @suggestedCodes["388500"] = {code: "38.85.00", short_code: "388500", text_de: "Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez."};
-    @suggestedCodes["388510"] = {code: "38.85.10", short_code: "388510", text_de: "Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez."};
-    @suggestedCodes["388511"] = {code: "38.85.11", short_code: "388511", text_de: "Sonstiger chirurgischer Verschluss der A. subclavia"};
+    @suggestedCodes["388499"] = {code: "38.84.99", short_code: "388499", text_de: "Sonstiger chirurgischer Verschluss der Aorta, sonstige"}
+    @suggestedCodes["388500"] = {code: "38.85.00", short_code: "388500", text_de: "Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez."}
+    @suggestedCodes["388510"] = {code: "38.85.10", short_code: "388510", text_de: "Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez."}
+    @suggestedCodes["388511"] = {code: "38.85.11", short_code: "388511", text_de: "Sonstiger chirurgischer Verschluss der A. subclavia"}
+
 
     @selectedCodes = params[:selectedCodes]
-=begin
-    suggestedCodes["388420"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003814" }, "code" : "38.84.20", "short_code" : "388420", "text_de" : "Sonstiger chirurgischer Verschluss der Aorta abdominalis"};
-    suggestedCodes["388499"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003815" }, "code" : "38.84.99", "short_code" : "388499", "text_de" : "Sonstiger chirurgischer Verschluss der Aorta, sonstige"};
-    suggestedCodes["388500"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003816" }, "code" : "38.85.00", "short_code" : "388500", "text_de" : "Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez."};
-    suggestedCodes["388510"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003817" }, "code" : "38.85.10", "short_code" : "388510", "text_de" : "Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez."};
-    suggestedCodes["388511"] = { "_id" : { "$oid" : "56cdb0c49da27e192c003818" }, "code" : "38.85.11", "short_code" : "388511", "text_de" : "Sonstiger chirurgischer Verschluss der A. subclavia"};
-=end
 
     @variables = {}
     @variables["words"] = @words
@@ -79,19 +73,20 @@ class FrontEndController < ApplicationController
   def showWordDetails
 
     @word = params[:word]
-    # word = params[:word].gsub('\\', ' ')
+    word = params[:word].gsub('\\', ' ')
 
-    # token = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/synonyms", { query: {word: word} } )
-    # parsed_token = JSON.parse(token.body)
+    token = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/synonyms", { query: {word: word, count: 5} } )
+    parsed_token = JSON.parse(token.body)
 
-
-    parsed_token = [{name: "synonym1", similarity: "1"}, {name: "synonym2", similarity: "0"}]
+    puts "parsed token:"
+    puts parsed_token
+    # parsed_token = [{name: "synonym1", similarity: "1"}, {name: "synonym2", similarity: "0"}]
 
     puts "synonyms:"
     @synonyms = []
     parsed_token.each do |x|
-      @synonyms << x[:name]
-      puts x[:name]
+      @synonyms << x["token"]
+      puts x["token"]
     end
 
     @variables = {}

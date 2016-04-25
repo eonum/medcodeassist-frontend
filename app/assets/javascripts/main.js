@@ -22,7 +22,7 @@
       //         }
       // });
 
-      $("ul").on("click", ".codeItem", function (){
+      $("ul").on("click", "li.codeItem", function (){
           var id = this.id;
           var categoryList = this.parentNode.id;
           if (categoryList == "mainDiagnosesList" && $("#" + categoryList + "Mask").is(':has(li)')){
@@ -43,7 +43,7 @@
           }
       });
 
-      $("ul").on("click", ".codeMaskItem", function (){
+      $("ul").on("click", "li.codeMaskItem", function (){
           var id = this.id;
           // add the code first to the appropriate list
           var categoryList = selectedCodes[id].categoryList;
@@ -89,6 +89,7 @@
       // });
 
       $("li").on("click", ".editButton", function (){
+          alert("edit");
         var xid = this.parentNode.id;
         $("#"+xid).removeClass("codeMaskItem");
         $("#"+xid).attr("contenteditable", "true");

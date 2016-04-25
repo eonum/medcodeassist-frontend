@@ -7,10 +7,10 @@
   var text = $("#textArea").html();
   words.forEach(function (item) {
     var textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
-    if(textArray){
+    if(textArray && item != "n"){
       textArray.forEach(function(word){
-        var link = "<a class='highlight showWordDetails' contenteditable='false' data-toggle='tooltip' title='click for showWordDetails'>" + word + "</a>"
-        text=text.replace(word, link);
+        var link = "<a class='highlight showWordDetails' contenteditable='false' data-toggle='tooltip' title='click for details'>" + word + "</a>"
+        text=text.replace(new RegExp(word, 'g'), link);
       });
     }
   });
@@ -51,11 +51,9 @@
         else{
           categoryList = "proceduresList";
         }
-        $("#"+categoryList).append("<li class='list-group-item codeItem' id='"+key+"'>"+"<span class='text_field'>"+suggestedCodes[key].code+"</span>"+": "+suggestedCodes[key].text_de+"</li>");
+        $("#"+categoryList).append("<li class='list-group-item codeItem' id='"+key+"'>"+"<span class='text_field'>"+suggestedCodes[key].code+": "+suggestedCodes[key].text_de+"</span>"+"</li>");
       }
     }
-    // var infoButton = "<button class='infoButton' type='button'><img src='http://icons.iconarchive.com/icons/danrabbit/elementary/32/Button-info-icon.png' alt='info'></img></button>";
-    // $(".codeList li").append(infoButton);
   };
 
   updateSuggestedCodes();
