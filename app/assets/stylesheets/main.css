@@ -150,14 +150,21 @@ footer li img {
 }
 
 
-.doneButton{
+.doneButton {
     display: none;
 }
 
-li:active{
+li:active {
     background-color: orange;
 }
-.editing{
+
+.list-group-item {
+    background-color: #EEE;
+    margin: 2px;
+    box-shadow: 10px 10px 5px #CCC;
+}
+
+.editing {
     border-color: red;
     font-weight: bold;
 }
