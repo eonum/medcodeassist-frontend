@@ -6,8 +6,8 @@
 
   var text = $("#textArea").html();
   words.forEach(function (item) {
+    var textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
     if(textArray){
-      var textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
       textArray.forEach(function(word){
         var link = "<a class='highlight showWordDetails' contenteditable='false' data-toggle='tooltip' title='click for showWordDetails'>" + word + "</a>"
         text=text.replace(word, link);

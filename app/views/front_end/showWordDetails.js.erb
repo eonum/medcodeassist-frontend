@@ -4,6 +4,8 @@ var synonyms = params["synonyms"];
 
 $("#infoWord").text(word);
 
-synonyms.forEach(function (item) {
-  $("#synonymsList").append("<li>"+item+"</li>");
-});
+if(synonyms){
+  synonyms.forEach(function (item) {
+    $("#synonymsList").append("<li>"+item+"</li>");
+  });
+}
