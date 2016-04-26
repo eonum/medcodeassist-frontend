@@ -1,15 +1,15 @@
-  var params = <%= raw @variables %>;
-  var words = params["words"];
-  //var code = params["codes"];
-  var suggestedCodes = params["suggestedCodes"];
-  var selectedCodes = params["selectedCodes"];
+  var parameters = <%= raw @variables %>;
+  var words = parameters["words"];
+  //var code = parameters["codes"];
+  var suggestedCodes = parameters["suggestedCodes"];
+  var selectedCodes = parameters["selectedCodes"];
 
   var text = $("#textArea").html();
   words.forEach(function (item) {
     var textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
     if(textArray && item != "n"){
       textArray.forEach(function(word){
-        var link = "<a class='highlight showWordDetails' contenteditable='false' data-toggle='tooltip' title='click for details'>" + word + "</a>"
+        var link = "<a class='highlight showWordDetails' contenteditable='true' data-toggle='tooltip' title='click for details'>" + word + "</a>"
         text=text.replace(new RegExp(word, 'g'), link);
       });
     }

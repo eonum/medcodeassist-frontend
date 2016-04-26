@@ -129,5 +129,22 @@
           });
       });
 
+      $("#addCodeButton").click(function () {
+          var key = 0;
+          $("#proceduresListMask, #allListMask").append("<li class='list-group-item' id='newCode"+key+"'>"+"<input type='text' id='searchField"+key+"' value='TestValue'/>"+"</li>"); // codeMaskItem
+          key = key+1;
+
+          // here missing loop
+          $("#searchField0").on('input', function () {
+              var searchText = "E51.8";
+              $.ajax({url: "/front_end/search",
+               type: "post",
+               data: {search_text: searchText}
+              });
+          });
+          //until here
+
+      });
+
   });
  
