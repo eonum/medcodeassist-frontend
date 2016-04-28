@@ -1,11 +1,10 @@
   var parameters = <%= raw @variables %>;
   var codes = parameters["codes"];
   var searchTextId = parameters["search_text_id"];
-  //$("#"+searchTextId).val(codes[0]["code"]);
 
   var codeList = "";
   codes.forEach(function(element) {
-    var listElement = "<li>"+element["code"]+": "+element["text_de"]+"</li>";
+    var listElement = "<li><a>"+element["code"]+": "+element["text_de"]+"</a></li>";
     codeList = codeList + listElement;
   });
   if(codeList.length == 0)
@@ -13,4 +12,7 @@
 
   var parentId = $("#"+searchTextId).parent().attr("id");
   $("#dropdown-"+parentId+" ul").empty().append(codeList);
+  $('ul.dropdown-menu li').click(function() {
+    $("#"+searchTextId).val($(this).text());
+  });
   $("#dropdown-"+parentId).toggleClass("open", true);

@@ -103,8 +103,6 @@ class FrontEndController < ApplicationController
       end
     end
 
-    puts "Codes: " + @codes.to_s
-
     @variables = {}
     @variables["codes"] = @codes
     @variables["search_text_id"] = params["search_text_id"]
