@@ -1,3 +1,16 @@
   var parameters = <%= raw @variables %>;
   var codes = parameters["codes"];
-  $("#searchField0").val(codes[0]["code"]);
+  var searchTextId = parameters["search_text_id"];
+  //$("#"+searchTextId).val(codes[0]["code"]);
+
+  var codeList = "";
+  codes.forEach(function(element) {
+    var listElement = "<li>"+element["code"]+": "+element["text_de"]+"</li>";
+    codeList = codeList + listElement;
+  });
+  if(codeList.length == 0)
+    codeList = "<li>Keine Codes gefunden</li>";
+
+  var parentId = $("#"+searchTextId).parent().attr("id");
+  $("#dropdown-"+parentId+" ul").empty().append(codeList);
+  $("#dropdown-"+parentId).toggleClass("open", true);

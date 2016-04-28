@@ -96,11 +96,18 @@ class FrontEndController < ApplicationController
     @codes = []
     @code_matches = IcdCode.any_of({ :code => /.*#{search_text}.*/i}, {:text_de => /.*#{search_text}.*/i}).entries
     @code_matches.each do |x|
-      @codes << x
+      if @codes.count < 10
+        @codes << x
+      else
+        break
+      end
     end
+
+    puts "Codes: " + @codes.to_s
 
     @variables = {}
     @variables["codes"] = @codes
+    @variables["search_text_id"] = params["search_text_id"]
     @variables = @variables.to_json
 
     respond_to do |format|

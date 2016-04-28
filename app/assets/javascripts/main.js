@@ -129,21 +129,23 @@
           });
       });
 
+      var key = 0;
       $("#addCodeButton").click(function () {
-          var key = 0;
-          $("#proceduresListMask, #allListMask").append("<li class='list-group-item' id='newCode"+key+"'>"+"<input type='text' id='searchField"+key+"' value='TestValue'/>"+"</li>"); // codeMaskItem
           key = key+1;
+          var searchTextId = "searchField"+key;
+          var codeId = "newCode"+key;
+          $("#proceduresListMask, #allListMask").append("<li class='list-group-item' id='"+codeId+"'>"+"<input type='text' id='"+searchTextId+"' value=''/>" + "<div class='dropdown' id='dropdown-"+codeId+"'> <a href='#' data-toggle='dropdown' class='dropdown-toggle'/> <ul class='dropdown-menu'></ul> </div>" + "</li>"); // codeMaskItem
 
-          // here missing loop
-          $("#searchField0").on('input', function () {
-              var searchText = "E51.8";
-              $.ajax({url: "/front_end/search",
-               type: "post",
-               data: {search_text: searchText}
-              });
+          $("#"+searchTextId).on('input', function () {
+              var searchText = $("#"+searchTextId).val();
+              if(searchText.length >= 3)
+              {
+                  $.ajax({url: "/front_end/search",
+                      type: "post",
+                      data: {search_text: searchText, search_text_id: searchTextId}
+                  });
+              }
           });
-          //until here
-
       });
 
   });
