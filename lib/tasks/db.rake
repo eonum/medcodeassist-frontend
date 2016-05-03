@@ -4,7 +4,7 @@ namespace :db do
   desc 'Delete all contents of the test DB and seed it with the contents in test/testdata/json-fixtures'
   task :seed_test_data => :environment do
     Rails.env = 'test'
-    db_config = Mongoid::Config::Environment.load_yaml("config/mongoid.yml")['sessions']['default']
+    db_config = Mongoid::Config::Environment.load_yaml('config/mongoid.yml')['sessions']['default']
     model_paths = Dir["#{Rails.root}/app/models/**/*.rb"]
     sanitized_model_paths = model_paths.map { |path| path.gsub(/.*\/app\/models\//, '').gsub('.rb', '') }
     model_constants = sanitized_model_paths.map do |path|
@@ -23,7 +23,7 @@ namespace :db do
   desc 'Dump all contents of the test DB to test/testdata/json-fixtures'
   task :dump_test_data => :environment do
     Rails.env = 'test'
-    db_config = Mongoid::Config::Environment.load_yaml("config/mongoid.yml")['sessions']['default']
+    db_config = Mongoid::Config::Environment.load_yaml('config/mongoid.yml')['sessions']['default']
 
     model_paths = Dir["#{Rails.root}/app/models/**/*.rb"]
     sanitized_model_paths = model_paths.map { |path| path.gsub(/.*\/app\/models\//, '').gsub('.rb', '') }
@@ -42,7 +42,7 @@ namespace :db do
   desc 'Seed tokens and wordvectors from file'
   task :seed_tokens_and_wordvectors_from_file, [:file, :lang] => :environment do |t, args|
     Rails.env = 'test'
-    db_config = Mongoid::Config::Environment.load_yaml("config/mongoid.yml")['sessions']['default']
+    db_config = Mongoid::Config::Environment.load_yaml('config/mongoid.yml')['sessions']['default']
     collection = 'tokens'
     sh "mongo #{db_config['database']} --eval 'db.#{collection}.drop()'"
 

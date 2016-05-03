@@ -1,6 +1,5 @@
 
   $(document).ready(function() {
-    var gParent="";
       var selectedCodes = {};
       // $(".selectable").selectable();
 
@@ -22,8 +21,10 @@
       //         }
       // });
 
-      $("ul").on("click", ".codeItem", function (){
+      var ulSelector = $("ul");
+      ulSelector.on("click", ".codeItem", function (){
           var id = this.id;
+          var idSelector = $("#"+id);
           var categoryList = this.parentNode.id;
           if (categoryList == "mainDiagnosesList" && $("#" + categoryList + "Mask").is(':has(li)')){
               alert("Nur eine Hauptdiagnose ist erlaubt");
@@ -32,10 +33,10 @@
               // first add buttons and change class
               var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
               var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
-              $("#"+id).append(editButton);
-              $("#"+id).append(doneButton);
-              $("#"+id).toggleClass("codeItem");
-              $("#"+id).toggleClass("codeMaskItem");
+              idSelector.append(editButton);
+              idSelector.append(doneButton);
+              idSelector.toggleClass("codeItem");
+              idSelector.toggleClass("codeMaskItem");
               // then add the code to the codemask lists
               selectedCodes[id] = suggestedCodes[id];
               selectedCodes[id].categoryList = categoryList;
@@ -43,9 +44,10 @@
           }
       });
 
-      $("ul").on("click", ".codeMaskItem div", function (){
-          var thisLi = this.parentNode
+      ulSelector.on("click", ".codeMaskItem div", function (){
+          var thisLi = this.parentNode;
           var id = this.parentNode.id;
+          var idSelector = $("#"+id);
           // add the code first to the appropriate list
           var categoryList = selectedCodes[id].categoryList;
           delete selectedCodes[id];
@@ -53,8 +55,8 @@
           // remove it from all tabs in codeMask
           $(".codeMaskLists li").remove("#"+id);
           // finally change class and remove buttons
-          $("#"+id).toggleClass("codeMaskItem");
-          $("#"+id).toggleClass("codeItem");
+          idSelector.toggleClass("codeMaskItem");
+          idSelector.toggleClass("codeItem");
           $("#"+id+" button").remove();
    
       });
@@ -89,7 +91,7 @@
 
       // });
 
-      $("ul").on("click", "button.editButton", function (){
+      ulSelector.on("click", "button.editButton", function (){
         var id = this.parentNode.id;
         $("#"+id).removeClass("codeMaskItem");
         $("#"+id+" .text_field").attr("contenteditable", "true");
@@ -98,7 +100,7 @@
         $("#"+id+" div").toggleClass("editing");
       });
 
-      $("ul").on("click", "button.doneButton", function (){
+      ulSelector.on("click", "button.doneButton", function (){
         var id = this.parentNode.id;
         $("#"+id+" .text_field").attr("contenteditable", "false");
         $("#"+id+" .doneButton").toggle();
@@ -114,7 +116,7 @@
       $("#analyse").click(function () {
           var plainText = $("#textArea").text();
           $.ajax({
-              url: "/front_end/analyse",
+              url: "/application/analyse",
               type: "post",
               data: {text_field: plainText, selectedCodes: selectedCodes}
           });
@@ -123,7 +125,7 @@
       $("#textArea, #synonymsList").on("click", ".showWordDetails", function () {
           var word = this.text;
           $.ajax({
-              url: "/front_end/show_word_details",
+              url: "/application/show_word_details",
               type: "post",
               data: {word: word}
           });
@@ -133,21 +135,22 @@
       $("#addCodeButton").click(function () {
           key = key+1;
           var id = "newCode"+key;
+          var idSelector = $("#"+id);
           var newLiElement = "<li class='list-group-item newCode' id='"+id+"'></li>";
           $("#allListMask").append(newLiElement); // codeMaskItem
           var divText = "<div class='text_field editing' contenteditable='true'>anorexia</div>";
-          $("#"+id).append(divText);
+          idSelector.append(divText);
           var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
-          $("#"+id).append(divDropdown);
+          idSelector.append(divDropdown);
           var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
-          $("#"+id).append(doneButton);
+          idSelector.append(doneButton);
           var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
-          $("#"+id).append(editButton);
+          idSelector.append(editButton);
           $("#"+id+" .editButton").toggle();
           $("#"+id+" .doneButton").toggle();
       });
 
-      $("ul").on("keyup", "li div.editing", function(){
+      ulSelector.on("keyup", "li div.editing", function(){
           var id = this.parentNode.id;
           interactiveProposals(id);
       });
@@ -157,15 +160,13 @@
             console.log(searchText);
               if(searchText.length >= 3)
               {
-                  $.ajax({url: "/front_end/search",
+                  $.ajax({url: "/application/search",
                       type: "post",
                       data: {search_text: searchText, li_id: id}
                   });
               }
-      };
-
-      $("ul").on("click", ".newCode button.doneButton", function (){
-          var thisLi = this.parentNode;
+      }
+      ulSelector.on("click", ".newCode button.doneButton", function (){
           var id = this.parentNode.id;
           $("#"+id).toggleClass("newCode");
           $("#"+id+" div.dropdown").remove();

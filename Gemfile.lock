@@ -243,8 +243,6 @@ GEM
     thread_safe (0.3.5)
     thread_safe (0.3.5-java)
     tilt (2.0.2)
-    turbolinks (2.5.3)
-      coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     tzinfo-data (1.2015.7)
@@ -284,6 +282,5 @@ DEPENDENCIES
   selenium-webdriver
   spork
   therubyrhino
-  turbolinks
   tzinfo-data
   uglifier (>= 1.3.0)

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Token do
   before do
-    token = Token.new(:name =>"Mirko",:lang =>'de',:wordvector=>['halll','ouups'])
+    token = Token.new(:name => 'Mirko', :lang =>'de', :wordvector=> %w(halll ouups))
     token.save
 
   end

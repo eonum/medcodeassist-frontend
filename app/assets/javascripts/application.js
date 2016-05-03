@@ -10,9 +10,8 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for showWordDetails
 // about supported directives.
 //
-//= require jquery
+//= require jquery.caret
 //= require jquery_ujs
-//= require turbolinks
 //= require_tree .
 //= require bootstrap.min
 //= require jQuery_v2.2.1

@@ -9,8 +9,9 @@
   });
   if(codeList.length == 0)
     codeList = "<li>Keine Codes gefunden</li>";
-  $("#"+li_id+" div.dropdown").empty().append(codeList);
+ var li_id_div_dropdown = $("#"+li_id+" div.dropdown");
+  li_id_div_dropdown.empty().append(codeList);
   $('ul.dropdown-menu li').click(function() {
     $("#"+li_id+" div.text_field").val($(this).text());
   });
-  $("#"+li_id+" div.dropdown").toggleClass("open", true);
+  li_id_div_dropdown.toggleClass("open", true);

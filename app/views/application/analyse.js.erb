@@ -4,17 +4,18 @@
   var suggestedCodes = parameters["suggestedCodes"];
   var selectedCodes = parameters["selectedCodes"];
 
-  var text = $("#textArea").html();
+  var textArea = $("#textArea");
+  var text = textArea.html();
   words.forEach(function (item) {
     var textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
     if(textArray && item != "n"){
       textArray.forEach(function(word){
-        var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' data-toggle='tooltip' title='click for details'>" + word + "</a>"
+        var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' data-toggle='tooltip' title='click for details'>" + word + "</a>";
         text=text.replace(new RegExp(word, 'g'), highlightedWord);
       });
     }
   });
-  $("#textArea").html(text);
+  textArea.html(text);
 
   function preg_quote( str ) {
     // http://kevin.vanzonneveld.net
@@ -29,7 +30,7 @@
     // *     example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
     // *     returns 3: '\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:'
     return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
-  };
+  }
 
   function updateSuggestedCodes(){
     var categoryList;
@@ -37,11 +38,8 @@
     $("#sideDiagnosesList").empty();
     $("#proceduresList").empty();
     for(var key in suggestedCodes){
-      // don't show codes that are already selected
-      if(selectedCodes && key in selectedCodes){
-        continue;
-      }
-      else{
+      // only show codes that aren't already selected
+      if(!selectedCodes || !(key in selectedCodes)){
         if(key=="388410" || key=="388420"){
           categoryList = "mainDiagnosesList";
         }
@@ -54,6 +52,6 @@
         $("#"+categoryList).append("<li class='list-group-item codeItem' id='"+key+"'>"+"<div class='text_field'>"+suggestedCodes[key].code+": "+suggestedCodes[key].text_de+"</div>"+"</li>");
       }
     }
-  };
+  }
 
   updateSuggestedCodes();
