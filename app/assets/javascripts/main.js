@@ -135,43 +135,41 @@
       $("#addCodeButton").click(function () {
           key = key+1;
           var id = "newCode"+key;
-          var idSelector = $("#"+id);
           var newLiElement = "<li class='list-group-item newCode' id='"+id+"'></li>";
           $("#allListMask").append(newLiElement); // codeMaskItem
           var divText = "<div class='text_field editing' contenteditable='true'>anorexia</div>";
-          idSelector.append(divText);
+          $("#"+id).append(divText);
           var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
-          idSelector.append(divDropdown);
+          $("#"+id).append(divDropdown);
           var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
-          idSelector.append(doneButton);
+          $("#"+id).append(doneButton);
           var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
-          idSelector.append(editButton);
+          $("#"+id).append(editButton);
           $("#"+id+" .editButton").toggle();
           $("#"+id+" .doneButton").toggle();
       });
 
-      ulSelector.on("keyup", "li div.editing", function(){
+      $("ul").on("keyup", "li div.editing", function(){
           var id = this.parentNode.id;
           interactiveProposals(id);
       });
 
       function interactiveProposals(id){
-              var searchText = $("#"+id+" div.text_field").text();
-            console.log(searchText);
-              if(searchText.length >= 3)
-              {
-                  $.ajax({url: "/application/search",
-                      type: "post",
-                      data: {search_text: searchText, li_id: id}
-                  });
-              }
-      }
-      ulSelector.on("click", ".newCode button.doneButton", function (){
+          var searchText = $("#"+id+" div.text_field").text();
+          console.log(searchText);
+          if(searchText.length >= 3)
+          {
+              $.ajax({url: "/application/search",
+                  type: "post",
+                  data: {search_text: searchText, li_id: id}
+              });
+          }
+      };
+
+      $("ul").on("click", ".newCode button.doneButton", function (){
+          var thisLi = this.parentNode;
           var id = this.parentNode.id;
           $("#"+id).toggleClass("newCode");
           $("#"+id+" div.dropdown").remove();
       });
-
-
   });
- 
