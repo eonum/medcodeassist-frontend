@@ -11,6 +11,7 @@ class FrontEndController < ApplicationController
 
     @words = ["test"]
 
+=begin
     tokens = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/tokenizations", { query: {text: text} } )
     parsed_tokens =  JSON.parse(tokens.body)
 
@@ -25,7 +26,7 @@ class FrontEndController < ApplicationController
     parsed_tokens.each do |element|
       puts element
     end
-=begin
+
     code_proposals = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/code_proposals", {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1  }})
     parsed_codes = JSON.parse(code_proposals.body)
 
@@ -63,7 +64,7 @@ class FrontEndController < ApplicationController
 
     @word = params[:word]
 
-    token = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/synonyms", { query: {word: @word.gsub('\\', ' '), count: 5} } )
+    #token = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/synonyms", { query: {word: @word.gsub('\\', ' '), count: 5} } )
     parsed_token = JSON.parse(token.body)
 
     puts "parsed token:"
@@ -105,7 +106,7 @@ class FrontEndController < ApplicationController
 
     @variables = {}
     @variables["codes"] = @codes
-    @variables["search_text_id"] = params["search_text_id"]
+    @variables["li_id"] = params["li_id"]
     @variables = @variables.to_json
 
     respond_to do |format|

@@ -12,8 +12,6 @@ nav {
     font-weight: bolder;
 }
 
-}
-
 #feedback { font-size: 1.4em; }
 .selectable .ui-selecting, .unselectable .ui-selecting { background: #FECA40; }
 /*.selectable .ui-selected { background: #F39814; color: white; }*/
@@ -45,6 +43,7 @@ nav {
 .highlight{
     font-weight: bold;
     background: yellow;
+    cursor: pointer;
 }
 
 
@@ -154,17 +153,28 @@ footer li img {
     display: none;
 }
 
-li:active {
+li div:active {
     background-color: orange;
 }
 
 .list-group-item {
     background-color: #EEE;
     margin: 2px;
+    padding: 0;
     box-shadow: 10px 10px 5px #CCC;
+    min-height: 42px;
+    cursor: pointer;
 }
 
+
 .editing {
-    border-color: red;
-    font-weight: bold;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+}
+
+.text_field {
+    padding: 10px 15px;
+    height: 100%;
+    min-height: 40px;
+    width: 90%;
 }

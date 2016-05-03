@@ -1,6 +1,6 @@
   var parameters = <%= raw @variables %>;
   var codes = parameters["codes"];
-  var searchTextId = parameters["search_text_id"];
+  var li_id = parameters["li_id"];
 
   var codeList = "";
   codes.forEach(function(element) {
@@ -9,10 +9,8 @@
   });
   if(codeList.length == 0)
     codeList = "<li>Keine Codes gefunden</li>";
-
-  var parentId = $("#"+searchTextId).parent().attr("id");
-  $("#dropdown-"+parentId+" ul").empty().append(codeList);
+  $("#"+li_id+" div.dropdown").empty().append(codeList);
   $('ul.dropdown-menu li').click(function() {
-    $("#"+searchTextId).val($(this).text());
+    $("#"+li_id+" div.text_field").val($(this).text());
   });
-  $("#dropdown-"+parentId).toggleClass("open", true);
+  $("#"+li_id+" div.dropdown").toggleClass("open", true);
