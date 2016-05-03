@@ -207,8 +207,6 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    ruby-stemmer (0.9.6)
-    ruby-stemmer (0.9.6-x86-mingw32)
     rubyzip (1.2.0)
     sass (3.4.20)
     sass-rails (5.0.4)
@@ -276,7 +274,6 @@ DEPENDENCIES
   mongoid-rspec
   rails (= 4.2.4)
   rspec-rails
-  ruby-stemmer (>= 0.8.3)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   selenium-webdriver

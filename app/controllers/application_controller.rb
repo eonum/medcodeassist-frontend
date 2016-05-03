@@ -5,39 +5,30 @@ class ApplicationController < ActionController::Base
   require 'httparty'
   require 'json'
 
+  @@api_url = 'http://pse4.inf.unibe.ch/api/v1/'
+
   def index
   end
 
   def analyse
 
-    text = params[:text_field]#.gsub('\\n', ' ') # replace '\' with ' ' because api can't handle \ yet
-
     @words = ['test']
 
 =begin
-    tokens = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/tokenizations", { query: {text: text} } )
-    parsed_tokens =  JSON.parse(tokens.body)
+  text = params[:text_field]
+  tokens = HTTParty.post(@@api_url+'tokenizations', { query: {text: text} } )
+  parsed_tokens =  JSON.parse(tokens.body)
 
-    puts "words:"
-    @words = []
-    parsed_tokens.each do |x|
-      @words << x["word"]
-      puts x["word"]
-    end
+  puts "words:"
+  @words = parsed_tokens.map {|x| x["word"]}
 
-    puts "Parsed tokens:"
-    parsed_tokens.each do |element|
-      puts element
-    end
+  code_proposals = HTTParty.post(@@api_url+'code_proposals', {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1  }})
+  parsed_codes = JSON.parse(code_proposals.body)
 
-    code_proposals = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/code_proposals", {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1  }})
-    parsed_codes = JSON.parse(code_proposals.body)
-
-    @code = parsed_codes["icds"][0]["code"]
-    @codes = []
-    @codes << @code
+  @code = parsed_codes["icds"][0]["code"]
+  @codes = []
+  @codes << @code
 =end
-
 
     @suggested_codes = {}
     @suggested_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
@@ -52,11 +43,9 @@ class ApplicationController < ActionController::Base
 
     @variables = {}
     @variables['words'] = @words
-    @variables['suggestedCodes'] = @suggested_codes
-    @variables['selectedCodes'] = @selected_codes
-#    @variables["codes"] = @codes
-
-    @variables = @variables.to_json
+    @variables['suggested_codes'] = @suggested_codes
+    @variables['selected_codes'] = @selected_codes
+    @variables_as_json = @variables.to_json
 
     respond_to do |format|
       format.js
@@ -67,29 +56,21 @@ class ApplicationController < ActionController::Base
 
     @word = params[:word]
 
-    #token = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/synonyms", { query: {word: @word.gsub('\\', ' '), count: 5} } )
-    #parsed_token = JSON.parse(token.body)
+    # token = HTTParty.post(@@api_url+'synonyms', { query: {word: @word.gsub('\\', ' '), count: 5} } )
+    # parsed_token = JSON.parse(token.body)
 
-    puts 'parsed token:'
     if(@word=='test')
       parsed_token = [{'token' => 'synonym1', similarity: '1'}, {'token' => 'synonym2', similarity: '0'}]
     else
       parsed_token = [{'token' => 'synonym3', similarity: '1'}, {'token' => 'synonym4', similarity: '0'}]
     end
-    puts parsed_token
 
-    puts 'synonyms:'
-    @synonyms = []
-    parsed_token.each do |x|
-      @synonyms << x['token']
-      puts x['token']
-    end
+    @synonyms = parsed_token.map {|x| x['token']}
 
     @variables = {}
     @variables['word'] = @word
     @variables['synonyms'] = @synonyms
-
-    @variables = @variables.to_json
+    @variables_as_json = @variables.to_json
 
     respond_to do |format|
       format.js
@@ -100,20 +81,13 @@ class ApplicationController < ActionController::Base
   def search
     search_text = params['search_text']
 
-    @codes = []
     @code_matches = IcdCode.any_of({ :code => /.*#{search_text}.*/i}, {:text_de => /.*#{search_text}.*/i}).entries
-    @code_matches.each do |x|
-      if @codes.count < 10
-        @codes << x
-      else
-        break
-      end
-    end
+    @codes = @code_matches.map {|x| x}.take 10
 
     @variables = {}
     @variables['codes'] = @codes
     @variables['li_id'] = params['li_id']
-    @variables = @variables.to_json
+    @variables_as_json = @variables.to_json
 
     respond_to do |format|
       format.js

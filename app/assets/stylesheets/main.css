@@ -14,7 +14,6 @@ nav {
 
 #feedback { font-size: 1.4em; }
 .selectable .ui-selecting, .unselectable .ui-selecting { background: #FECA40; }
-/*.selectable .ui-selected { background: #F39814; color: white; }*/
 
 #analyse{
     position: relative;
@@ -126,10 +125,7 @@ footer li img {
  border-radius: 60px;
  border-color:#508ABF;
  padding:5px 4px 5px 4px ;
- /*float: right;*/
- /*margin-left: 10px;*/
  font-size: 0.8em;
- /*margin-left: 96%;*/
  position: absolute;
  bottom:5px;
  right:10px;
