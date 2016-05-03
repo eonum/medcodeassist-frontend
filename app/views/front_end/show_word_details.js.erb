@@ -6,7 +6,7 @@ $("#infoWord").text(word);
 
 if(synonyms){
   $("#synonymsList").empty();
-  synonyms.forEach(function (item) {
-    $("#synonymsList").append("<li>"+item+"</li>");
+  synonyms.forEach(function (synonym) {
+    $("#synonymsList").append("<li toggle='tooltip' title='click for details'><a class='highlight showWordDetails'>" + synonym + "</a></li>");
   });
 }

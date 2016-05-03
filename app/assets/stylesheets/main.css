@@ -43,7 +43,6 @@ nav {
 .highlight{
     font-weight: bold;
     background: yellow;
-    cursor: pointer;
 }
 
 
@@ -177,4 +176,8 @@ li div:active {
     height: 100%;
     min-height: 40px;
     width: 90%;
+}
+
+.showWordDetails {
+    cursor: pointer;
 }

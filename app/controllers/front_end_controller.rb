@@ -60,16 +60,20 @@ class FrontEndController < ApplicationController
     end
   end
 
-  def showWordDetails
+  def show_word_details
 
     @word = params[:word]
 
     #token = HTTParty.post("http://pse4.inf.unibe.ch/api/v1/synonyms", { query: {word: @word.gsub('\\', ' '), count: 5} } )
-    parsed_token = JSON.parse(token.body)
+    #parsed_token = JSON.parse(token.body)
 
     puts "parsed token:"
+    if(@word=="test")
+      parsed_token = [{"token" => "synonym1", similarity: "1"}, {"token" => "synonym2", similarity: "0"}]
+    else
+      parsed_token = [{"token" => "synonym3", similarity: "1"}, {"token" => "synonym4", similarity: "0"}]
+    end
     puts parsed_token
-    # parsed_token = [{name: "synonym1", similarity: "1"}, {name: "synonym2", similarity: "0"}]
 
     puts "synonyms:"
     @synonyms = []

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get 'front_end/index'
   post 'front_end/analyse'
-  post 'front_end/showWordDetails'
+  post 'front_end/show_word_details'
   post 'front_end/search'
   root 'front_end#index'
   namespace :api do

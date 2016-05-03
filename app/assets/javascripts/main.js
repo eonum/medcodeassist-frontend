@@ -120,10 +120,10 @@
           });
       });
 
-      $("#textArea").on("click", ".showWordDetails", function () {
+      $("#textArea, #synonymsList").on("click", ".showWordDetails", function () {
           var word = this.text;
           $.ajax({
-              url: "/front_end/showWordDetails",
+              url: "/front_end/show_word_details",
               type: "post",
               data: {word: word}
           });

@@ -9,8 +9,8 @@
     var textArray = text.match(new RegExp( "(" + preg_quote( item ) + ")" , 'gi'));
     if(textArray && item != "n"){
       textArray.forEach(function(word){
-        var link = "<a class='highlight showWordDetails' contenteditable='true' data-toggle='tooltip' title='click for details'>" + word + "</a>"
-        text=text.replace(new RegExp(word, 'g'), link);
+        var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' data-toggle='tooltip' title='click for details'>" + word + "</a>"
+        text=text.replace(new RegExp(word, 'g'), highlightedWord);
       });
     }
   });
