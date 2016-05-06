@@ -1,17 +1,3 @@
-# Seed DRGs
-puts 'Seeding DRGs'
-Drg.delete_all
-drg_keys = [:code, :short_code, :text_de, :text_fr, :text_it, :version, :cost_weight, :first_day_surcharge, :first_day_discount, :surcharge_per_day, :discount_per_day, :avg_duration, :transfer_flatrate, :partition]
-csv = CSV.read('db/seeds/drgs.csv', col_sep: ',')
-csv.shift
-csv.each do |row|
-  Drg.create(Hash[row.map.with_index{|e, i| [drg_keys[i], e]}])
-end
-Drg.where(short_code: nil).each do |drg|
-  drg.short_code = drg.code
-  drg.save!
-end
-
 # Seed ICDs
 puts 'Seeding ICDs'
 IcdCode.delete_all

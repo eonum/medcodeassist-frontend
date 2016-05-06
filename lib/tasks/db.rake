@@ -74,10 +74,7 @@ namespace :db do
         end
       end
 
-      if key.start_with? 'DRG_'
-        code_class = Drg
-        prefix_end = 3
-      elsif key.start_with? 'CHOP_'
+      if key.start_with? 'CHOP_'
         code_class = ChopCode
         prefix_end = 4
       elsif key.start_with? 'ICD_'
