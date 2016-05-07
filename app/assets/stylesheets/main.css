@@ -181,3 +181,11 @@ li div:active {
 .showWordDetails {
     cursor: pointer;
 }
+
+#code-list {
+    position: fixed;
+}
+
+#infoField-wrapper {
+    display: none;
+}

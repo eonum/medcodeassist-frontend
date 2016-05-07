@@ -93,6 +93,8 @@
         var id = this.parentNode.id;
         $("#"+id).removeClass("codeMaskItem");
         $("#"+id+" .text_field").attr("contenteditable", "true");
+        var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
+        $("#"+id).append(divDropdown);
         $("#"+id+" .doneButton").toggle();
         $("#"+id+" .editButton").toggle();
         $("#"+id+" div").toggleClass("editing");
@@ -137,9 +139,9 @@
           $("#allListMask").append(newLiElement); // codeMaskItem
           var divText = "<div class='text_field editing' contenteditable='true'>anorexia</div>";
           $("#"+id).append(divText);
-          var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
+          var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
           $("#"+id).append(divDropdown);
-          var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
+          var doneButton = "<button class='zbutton doneButton' type='button'>Add</button>";
           $("#"+id).append(doneButton);
           var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
           $("#"+id).append(editButton);
