@@ -4,7 +4,7 @@ require 'spork'
 # if you change any configuration or code from libraries loaded
 # need to restart spork for it take effect.
 Spork.prefork do
-  ENV["RAILS_ENV"] ||= 'test'
+  ENV['RAILS_ENV'] ||= 'test'
 
   require 'rails/application'
   require 'rails/mongoid'
@@ -16,7 +16,7 @@ Spork.prefork do
 
   Dir[File.join(File.dirname(__FILE__), 'support', '**', '*.rb')].each {|f| require f}
 
-  require File.dirname(__FILE__) + "/../config/environment.rb"
+  require File.dirname(__FILE__) + '/../config/environment.rb'
   #.  After this line is too late.
 
   require 'rspec/rails'
@@ -25,7 +25,7 @@ Spork.prefork do
 
     config.include Mongoid::Matchers
 
-    config.order = "random"
+    config.order = 'random'
     config.infer_base_class_for_anonymous_controllers = false
     config.before(:suite) do
       DatabaseCleaner[:mongoid].strategy = :truncation

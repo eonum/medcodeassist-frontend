@@ -1,0 +1,16 @@
+var parameters = <%= raw @variables_as_json %>;
+var codes = parameters.codes;
+var li_id = parameters.li_id;
+
+var codeList = "";
+codes.forEach(function(element) {
+  var listElement = "<li><a>"+element["code"]+": "+element["text_de"]+"</a></li>";
+  codeList = codeList + listElement;
+});
+if(codeList.length == 0)
+  codeList = "<li>Keine Codes gefunden</li>";
+$("#"+li_id+" div.dropdown ul.dropdown-menu").empty().append(codeList);
+$('ul.dropdown-menu li').click(function() {
+  $("#"+li_id+" div.text_field").text($(this).text());
+});
+$("#"+li_id+" div.dropdown").toggleClass("open", true);

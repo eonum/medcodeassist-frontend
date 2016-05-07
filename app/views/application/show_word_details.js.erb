@@ -1,0 +1,12 @@
+var parameters = <%= raw @variables_as_json %>;
+var word = parameters.word;
+var synonyms = parameters.synonyms;
+
+$("#infoWord").text(word);
+
+if(synonyms) {
+  $("#synonymsList").empty();
+  synonyms.forEach(function (synonym) {
+    $("#synonymsList").append("<li title='click for details'><a class='highlight showWordDetails'>" + synonym + "</a></li>");
+  });
+}

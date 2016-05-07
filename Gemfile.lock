@@ -207,8 +207,6 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    ruby-stemmer (0.9.6)
-    ruby-stemmer (0.9.6-x86-mingw32)
     rubyzip (1.2.0)
     sass (3.4.20)
     sass-rails (5.0.4)
@@ -243,8 +241,6 @@ GEM
     thread_safe (0.3.5)
     thread_safe (0.3.5-java)
     tilt (2.0.2)
-    turbolinks (2.5.3)
-      coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     tzinfo-data (1.2015.7)
@@ -278,12 +274,10 @@ DEPENDENCIES
   mongoid-rspec
   rails (= 4.2.4)
   rspec-rails
-  ruby-stemmer (>= 0.8.3)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   selenium-webdriver
   spork
   therubyrhino
-  turbolinks
   tzinfo-data
   uglifier (>= 1.3.0)

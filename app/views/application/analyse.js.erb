@@ -1,0 +1,45 @@
+var parameters = <%= raw @variables_as_json %>;
+var words = parameters.words;
+var suggestedCodes = parameters.suggested_codes;
+var selectedCodes = parameters.selected_codes;
+
+var textArea = $("#textArea");
+var text = textArea.html();
+words.forEach(function(item) {
+  var textArray = text.match(new RegExp( "(" + reg_escape( item ) + ")" , 'gi'));
+  if(textArray && item != "n") {
+    textArray.forEach(function(word) {
+      var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' data-toggle='tooltip' title='click for details'>" + word + "</a>";
+      text=text.replace(new RegExp(word, 'g'), highlightedWord);
+    });
+  }
+});
+textArea.html(text);
+
+function reg_escape(str) {
+  return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+}
+
+function updateSuggestedCodes() {
+  var categoryList;
+  $("#mainDiagnosesList").empty();
+  $("#sideDiagnosesList").empty();
+  $("#proceduresList").empty();
+  for(var key in suggestedCodes) {
+    // only show codes that aren't already selected
+    if(!selectedCodes || !(key in selectedCodes)) {
+      if(key=="388410" || key=="388420") {
+        categoryList = "mainDiagnosesList";
+      }
+      else if(key=="388499" || key=="388500") {
+        categoryList = "sideDiagnosesList";
+      }
+      else {
+        categoryList = "proceduresList";
+      }
+      $("#"+categoryList).append("<li class='list-group-item codeItem' id='"+key+"'>"+"<div class='text_field'>"+suggestedCodes[key].code+": "+suggestedCodes[key].text_de+"</div>"+"</li>");
+    }
+  }
+}
+
+updateSuggestedCodes();
