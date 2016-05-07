@@ -30,16 +30,25 @@ class ApplicationController < ActionController::Base
   @codes << @code
 =end
 
-    @suggested_codes = {}
-    @suggested_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
-    @suggested_codes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'}
-    @suggested_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
-    @suggested_codes['388500'] = {code: '38.85.00', short_code: '388500', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez.'}
-    @suggested_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
-    @suggested_codes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'}
+    @main_codes = {}
+    @main_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
+    @main_codes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'}
 
+    @side_codes = {}
+    @side_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
+    @side_codes['388500'] = {code: '38.85.00', short_code: '388500', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez.'}
 
-    @selected_codes = params[:selected_codes]
+    @procedure_codes = {}
+    @procedure_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
+    @procedure_codes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'}
+
+    @suggested_codes = [@main_codes, @side_codes, @procedure_codes]
+
+    @selected_main_codes = params[:selected_main_codes]
+    @selected_side_codes = params[:selected_side_codes]
+    @selected_procedure_codes = params[:selected_procedure_codes]
+
+    @selected_codes = [@selected_main_codes, @selected_side_codes, @selected_procedure_codes]
 
     @variables = {}
     @variables['words'] = @words

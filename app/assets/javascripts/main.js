@@ -1,12 +1,45 @@
 $(document).ready(function() {
-  var selectedCodes = {};
+  var selectedMainCodes = {};
+  var selectedSideCodes = {};
+  var selectedProcedureCodes = {};
+  var selectedCodes = [selectedMainCodes, selectedSideCodes, selectedProcedureCodes];
+
+  function getCategoryFromId (categoryId) {
+      switch(categoryId) {
+          case 0:
+              return "mainDiagnoses";
+              break;
+          case 1:
+              return "sideDiagnoses";
+              break;
+          case 2:
+              return "procedures";
+              break;
+      }
+  }
+
+  function addSelectedCode(categoryId, id){
+          selectedCodes[categoryId][id] = suggestedCodes[categoryId][id];
+  }
+
+  function deleteSelectedCode(categoryId, id){
+      if(categoryId == 0){
+          delete selectedMainCodes[id];
+      }
+      else if(categoryId == 1){
+          delete selectedSideCodes[id];
+      }
+      else if(categoryId == 2){
+          delete selectedProcedureCodes[id];
+      }
+  }
 
   var ulSelector = $("ul");
   ulSelector.on("click", ".codeItem", function() {
       var id = this.id;
       var idSelector = $("#"+id);
-      var categoryList = this.parentNode.id;
-      if (categoryList == "mainDiagnosesList" && $("#" + categoryList + "Mask").is(':has(li)')) {
+      var categoryId = $(this).attr("data-categoryId");
+      if (categoryId == 0 && !jQuery.isEmptyObject(selectedMainCodes)) {
           alert("Nur eine Hauptdiagnose ist erlaubt");
           return;
       }
@@ -18,9 +51,8 @@ $(document).ready(function() {
       idSelector.toggleClass("codeItem");
       idSelector.toggleClass("codeMaskItem");
       // then add the code to the codemask lists
-      selectedCodes[id] = suggestedCodes[id];
-      selectedCodes[id].categoryList = categoryList;
-      $("#" + categoryList + "Mask, #allListMask").append(this);
+      addSelectedCode(categoryId, id);
+      $("#allListMask").append(this);
   });
 
   ulSelector.on("click", ".codeMaskItem div", function() {
@@ -28,11 +60,14 @@ $(document).ready(function() {
       var id = this.parentNode.id;
       var idSelector = $("#"+id);
       // add the code first to the appropriate list
-      var categoryList = selectedCodes[id].categoryList;
-      delete selectedCodes[id];
-      $("#" + categoryList).prepend(thisLi);
+      var categoryId = parseInt($(thisLi).attr("data-categoryId"));
+      deleteSelectedCode(categoryId, id);
+      var category = getCategoryFromId(categoryId);;
+      console.log("catId: "+ categoryId);
+      console.log("cat: "+ category);
+      $("#" + category +"List").prepend(thisLi);
       // remove it from all tabs in codeMask
-      $(".codeMaskLists li").remove("#"+id);
+      $(".allListMask li").remove("#"+id);
       // finally change class and remove buttons
       idSelector.toggleClass("codeMaskItem");
       idSelector.toggleClass("codeItem");
@@ -67,7 +102,7 @@ $(document).ready(function() {
       $.ajax({
           url: "/application/analyse",
           type: "post",
-          data: { text_field: plainText, selectedCodes: selectedCodes }
+          data: { text_field: plainText, selected_main_codes: selectedMainCodes, selected_side_codes: selectedSideCodes, selected_procedure_codes: selectedProcedureCodes}
       });
   });
 
@@ -124,4 +159,12 @@ $(document).ready(function() {
       $("#"+id+" div.dropdown").remove();
       $("#addCodeButton").toggle();
   });
+
+  $('#filter').keyup(function () {
+        $('.searchable tr').hide();
+        $('.searchable tr').filter(function () {
+            return rex.test($(this).text());
+        }).show();
+  });
+
 });

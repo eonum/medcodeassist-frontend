@@ -2,6 +2,7 @@ var parameters = <%= raw @variables_as_json %>;
 var words = parameters.words;
 var suggestedCodes = parameters.suggested_codes;
 var selectedCodes = parameters.selected_codes;
+//var selectedMainCodes = parameters.selected_main_codes;
 
 var textArea = $("#textArea");
 var text = textArea.html();
@@ -20,24 +21,40 @@ function reg_escape(str) {
   return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 }
 
+function getCategoryFromId (categoryId) {
+  var category;
+  switch(categoryId) {
+    case 0:
+    {
+      category = "mainDiagnoses";
+      break;
+    }
+    case 1:
+    {
+      category = "sideDiagnoses";
+      break;
+    }
+    case 2:
+    {
+      category = "procedures";
+      break;
+    }
+  }
+  return category;
+}
+
 function updateSuggestedCodes() {
-  var categoryList;
-  $("#mainDiagnosesList").empty();
-  $("#sideDiagnosesList").empty();
-  $("#proceduresList").empty();
-  for(var key in suggestedCodes) {
-    // only show codes that aren't already selected
-    if(!selectedCodes || !(key in selectedCodes)) {
-      if(key=="388410" || key=="388420") {
-        categoryList = "mainDiagnosesList";
+  var category;
+  for(var categoryId=0; categoryId < suggestedCodes.length; categoryId++){
+    category = getCategoryFromId(categoryId);
+    $("#"+category+"List").empty();
+    for(var codeId in suggestedCodes[categoryId]){
+      // only show codes that aren't already selected
+      var code = suggestedCodes[categoryId][codeId].code;
+      var text = suggestedCodes[categoryId][codeId].text_de;
+      if(!selectedCodes[categoryId] || !(codeId in selectedCodes[categoryId])) {
+        $("#"+category+"List").append("<li class='list-group-item codeItem' id='"+codeId+"' data-categoryId='"+categoryId+"'><div class='text_field'>"+code+": "+text+"</div></li>");
       }
-      else if(key=="388499" || key=="388500") {
-        categoryList = "sideDiagnosesList";
-      }
-      else {
-        categoryList = "proceduresList";
-      }
-      $("#"+categoryList).append("<li class='list-group-item codeItem' id='"+key+"'>"+"<div class='text_field'>"+suggestedCodes[key].code+": "+suggestedCodes[key].text_de+"</div>"+"</li>");
     }
   }
 }
