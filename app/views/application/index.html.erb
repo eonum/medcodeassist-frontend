@@ -18,6 +18,49 @@
 
       <button id="analyse" type="button" class="btn btn-primary">Analyse</button>
 
+      <!-- Modal -->
+      <div id="popup" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="btn btn-default close" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </button>
+              <h1>{{this.title}} </h1>
+              <h4> {{this.description}}</h4>
+            </div>
+            <div class="modal-body container">
+              <div class="col-md-12" id="infoField-wrapper">
+                <label>Information:</label>
+                <div class="col-md-12" id="infoField">
+                  <div class="col-md-12" id="infoWordWrapper">
+                    <label class="col-md-1">Word:</label>
+                    <div class="col-md-9" id="infoWord"></div>
+                  </div>
+                  <div class="col-md-12" id="infoDetailsWrapper">
+                    <div class="col-md-6" id="infoSynonymsWrapper">
+                      <label>Synonyme:</label>
+                      <div class="col-md-12" id="infoSynonyms">
+                        <ul class="list-group" id="synonymsList">
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-md-6" id="infoRelatedCodesListWrapper">
+                      <label>Codes:</label>
+                      <div class="col-md-12" id="infoRelatedCodes"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
       <!--Div for the InfoField-->
       <div class="col-md-12" id="infoField-wrapper">
         <label>Information:</label>
@@ -46,17 +89,18 @@
       <div id="codeMaskWrapper">
         <label>Code mask:</label>
         <!-- Nav tabs for the list of the mask -->
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#allMask" aria-controls="allMask" role="tab" data-toggle="tab">All</a></li>
-          <li role="presentation"><a href="#mainDiagnosesMask" aria-controls="mainDiagnosesMask" role="tab" data-toggle="tab">Hauptdiagnosen</a></li>
-          <li role="presentation"><a href="#sideDiagnosesMask" aria-controls="sideDiagnosesMask" role="tab" data-toggle="tab">Nebendiagnosen</a></li>
-          <li role="presentation"><a href="#proceduresMask" aria-controls="proceduresMask" role="tab" data-toggle="tab">Prozeduren</a></li>
+        <ul class="nav nav-tabs" id="maskTabs" role="tablist">
+          <li role="presentation" class="active"><a id="allMaskLink" href="#allMask" aria-controls="allMask" role="tab" data-toggle="tab">Alle</a></li>
+          <li role="presentation"><a class="filterTab" href="#mainDiagnosesMask" aria-controls="mainDiagnosesMask" role="tab" data-toggle="tab" data-categoryId="0">Hauptdiagnosen</a></li>
+          <li role="presentation"><a class="filterTab withAddButton" href="#sideDiagnosesMask" aria-controls="sideDiagnosesMask" role="tab" data-toggle="tab" data-categoryId="1">Nebendiagnosen</a></li>
+          <li role="presentation"><a class="filterTab withAddButton" href="#proceduresMask" aria-controls="proceduresMask" role="tab" data-toggle="tab" data-categoryId="2">Prozeduren</a></li>
         </ul>
 
         <!-- Tab panes with the lists of the mask -->
         <div class="tab-content codeMaskLists">
           <div role="tabpanel" class="tab-pane active" id="allMask">
             <ul class="list-group unselectable code-maskList" id="allListMask">
+              <li class='list-group-item mainNewCode' data-categoryId="0"><div class='text_field editing' contenteditable='true'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div><button class='zbutton doneButton' type='button'>Add</button><button class='zbutton editButton' type='button'>Edit</button></li>
             </ul>
           </div>
         </div>

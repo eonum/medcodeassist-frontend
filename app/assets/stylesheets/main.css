@@ -12,6 +12,10 @@ nav {
     font-weight: bolder;
 }
 
+li {
+    display: block;
+}
+
 #feedback { font-size: 1.4em; }
 .selectable .ui-selecting, .unselectable .ui-selecting { background: #FECA40; }
 
@@ -171,5 +175,13 @@ li div:active {
 }
 
 #infoField-wrapper {
+    display: none;
+}
+
+#addCodeButton {
+    display: none;
+}
+
+.mainNewCode {
     display: none;
 }

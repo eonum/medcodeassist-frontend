@@ -34,6 +34,7 @@ $(document).ready(function() {
       }
   }
 
+
   var ulSelector = $("ul");
   ulSelector.on("click", ".codeItem", function() {
       var id = this.id;
@@ -134,6 +135,8 @@ $(document).ready(function() {
       $(this).toggle();
   });
 
+
+
   $("ul").on("keyup", "li div.editing", function() {
       var id = this.parentNode.id;
       interactiveProposals(id);
@@ -160,11 +163,34 @@ $(document).ready(function() {
       $("#addCodeButton").toggle();
   });
 
-  $('#filter').keyup(function () {
-        $('.searchable tr').hide();
-        $('.searchable tr').filter(function () {
-            return rex.test($(this).text());
+
+  function deleteIncompleteCodes(){
+      $('#allListMask li.newCode').remove();
+  }
+
+  $("#maskTabs li a.filterTab").click(function () {
+        var categoryId = $(this).attr("data-categoryId");
+        $('#allListMask li').hide();
+        $('#allListMask li').filter(function () {
+            liCategoryId = $(this).attr("data-categoryId");
+            return  liCategoryId === categoryId;
         }).show();
+        $('#addCodeButton').hide();
+        deleteIncompleteCodes();
   });
+
+  $("#maskTabs li a#allMaskLink").click(function () {
+      $('#allListMask li').show();
+      $('#addCodeButton').hide();
+      $('#allListMask li.mainNewCode').hide();
+      deleteIncompleteCodes();
+  });
+
+  $("#maskTabs li a.withAddButton").click(function () {
+      $('#addCodeButton').show();
+      $('#allListMask li.mainNewCode').hide();
+      deleteIncompleteCodes();
+  });
+
 
 });
