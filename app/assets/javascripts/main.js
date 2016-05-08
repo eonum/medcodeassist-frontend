@@ -2,45 +2,14 @@ $(document).ready(function() {
   var selectedMainCodes = {};
   var selectedSideCodes = {};
   var selectedProcedureCodes = {};
-  var selectedCodes = [selectedMainCodes, selectedSideCodes, selectedProcedureCodes];
-
-  function getCategoryFromId (categoryId) {
-      switch(categoryId) {
-          case 0:
-              return "mainDiagnoses";
-              break;
-          case 1:
-              return "sideDiagnoses";
-              break;
-          case 2:
-              return "procedures";
-              break;
-      }
-  }
-
-  function addSelectedCode(categoryId, id){
-          selectedCodes[categoryId][id] = suggestedCodes[categoryId][id];
-  }
-
-  function deleteSelectedCode(categoryId, id){
-      if(categoryId == 0){
-          delete selectedMainCodes[id];
-      }
-      else if(categoryId == 1){
-          delete selectedSideCodes[id];
-      }
-      else if(categoryId == 2){
-          delete selectedProcedureCodes[id];
-      }
-  }
-
+  var selectedCodes = {mainDiagnoses: selectedMainCodes, sideDiagnoses: selectedSideCodes, procedures: selectedProcedureCodes};
 
   var ulSelector = $("ul");
   ulSelector.on("click", ".codeItem", function() {
       var id = this.id;
       var idSelector = $("#"+id);
-      var categoryId = $(this).attr("data-categoryId");
-      if (categoryId == 0 && !jQuery.isEmptyObject(selectedMainCodes)) {
+      var category = $(this).attr("data-category");
+      if (category == "mainDiagnoses" && !jQuery.isEmptyObject(selectedMainCodes)) {
           alert("Nur eine Hauptdiagnose ist erlaubt");
           return;
       }
@@ -52,7 +21,7 @@ $(document).ready(function() {
       idSelector.toggleClass("codeItem");
       idSelector.toggleClass("codeMaskItem");
       // then add the code to the codemask lists
-      addSelectedCode(categoryId, id);
+      selectedCodes[category][id] = suggestedCodes[category][id];
       $("#allListMask").append(this);
   });
 
@@ -61,11 +30,8 @@ $(document).ready(function() {
       var id = this.parentNode.id;
       var idSelector = $("#"+id);
       // add the code first to the appropriate list
-      var categoryId = parseInt($(thisLi).attr("data-categoryId"));
-      deleteSelectedCode(categoryId, id);
-      var category = getCategoryFromId(categoryId);;
-      console.log("catId: "+ categoryId);
-      console.log("cat: "+ category);
+      var category = $(thisLi).attr("data-category");
+      delete selectedCodes[category][id];
       $("#" + category +"List").prepend(thisLi);
       // remove it from all tabs in codeMask
       $(".allListMask li").remove("#"+id);
@@ -169,11 +135,13 @@ $(document).ready(function() {
   }
 
   $("#maskTabs li a.filterTab").click(function () {
-        var categoryId = $(this).attr("data-categoryId");
+        var category = $(this).attr("data-category");
+        console.log('tab category: '+category);
         $('#allListMask li').hide();
         $('#allListMask li').filter(function () {
-            liCategoryId = $(this).attr("data-categoryId");
-            return  liCategoryId === categoryId;
+            liCategory = $(this).attr("data-category");
+            console.log("licat: "+liCategory);
+            return  liCategory == category;
         }).show();
         $('#addCodeButton').hide();
         deleteIncompleteCodes();

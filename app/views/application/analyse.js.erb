@@ -22,39 +22,15 @@ function reg_escape(str) {
   return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 }
 
-function getCategoryFromId (categoryId) {
-  var category;
-  switch(categoryId) {
-    case 0:
-    {
-      category = "mainDiagnoses";
-      break;
-    }
-    case 1:
-    {
-      category = "sideDiagnoses";
-      break;
-    }
-    case 2:
-    {
-      category = "procedures";
-      break;
-    }
-  }
-  return category;
-}
-
 function updateSuggestedCodes() {
-  var category;
-  for(var categoryId=0; categoryId < suggestedCodes.length; categoryId++){
-    category = getCategoryFromId(categoryId);
+  for(var category in suggestedCodes){
     $("#"+category+"List").empty();
-    for(var codeId in suggestedCodes[categoryId]){
+    for(var codeId in suggestedCodes[category]){
       // only show codes that aren't already selected
-      var code = suggestedCodes[categoryId][codeId].code;
-      var text = suggestedCodes[categoryId][codeId].text_de;
-      if(!selectedCodes[categoryId] || !(codeId in selectedCodes[categoryId])) {
-        $("#"+category+"List").append("<li class='list-group-item codeItem' id='"+codeId+"' data-categoryId='"+categoryId+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+      var code = suggestedCodes[category][codeId].code;
+      var text = suggestedCodes[category][codeId].text_de;
+      if(!selectedCodes[category] || !(codeId in selectedCodes[category])) {
+        $("#"+category+"List").append("<li class='list-group-item codeItem' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
       }
     }
   }

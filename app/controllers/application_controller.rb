@@ -42,13 +42,9 @@ class ApplicationController < ActionController::Base
     @procedure_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
     @procedure_codes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'}
 
-    @suggested_codes = [@main_codes, @side_codes, @procedure_codes]
+    @suggested_codes = {mainDiagnoses: @main_codes, sideDiagnoses: @side_codes, procedures: @procedure_codes}
 
-    @selected_main_codes = params[:selected_main_codes]
-    @selected_side_codes = params[:selected_side_codes]
-    @selected_procedure_codes = params[:selected_procedure_codes]
-
-    @selected_codes = [@selected_main_codes, @selected_side_codes, @selected_procedure_codes]
+    @selected_codes = {mainDiagnoses: @selected_main_codes, sideDiagnoses: @selected_side_codes, procedures: @selected_procedure_codes}
 
     @variables = {}
     @variables['words'] = @words
@@ -65,6 +61,18 @@ class ApplicationController < ActionController::Base
 
     @word = params[:word]
 
+    @main_related_codes = {}
+    @main_related_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
+
+    @side_related_codes = {}
+    @side_related_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
+
+    @procedure_related_codes = {}
+    @procedure_related_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
+
+    @suggested_related_codes = {mainDiagnoses: @main_related_codes, sideDiagnoses: @side_related_codes, procedures: @procedure_related_codes}
+
+
     # token = HTTParty.post(@@api_url+'synonyms', { query: {word: @word.gsub('\\', ' '), count: 5} } )
     # parsed_token = JSON.parse(token.body)
 
@@ -79,6 +87,7 @@ class ApplicationController < ActionController::Base
     @variables = {}
     @variables['word'] = @word
     @variables['synonyms'] = @synonyms
+    @variables['suggested_related_codes'] = @suggested_related_codes
     @variables_as_json = @variables.to_json
 
     respond_to do |format|

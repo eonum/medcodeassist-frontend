@@ -45,9 +45,27 @@
               </div>
               <div class="col-md-12" id="infoRelatedCodesListWrapper">
                 <label>Codes:</label>
-                <div class="col-md-12" id="infoRelatedCodes">
-                  <ul class="list-group" id="relatedCodesList">
-                  </ul>
+                <div class="form-group col-md-12" id="infoRelatedCodes">
+                  <!--Code Lists-->
+                    <div id="mainDiagnoses">
+                      <label>Hauptdiagnosen:</label>
+                      <ul class="list-group selectable codeList" id="mainDiagnosesRelatedList">
+                      </ul>
+                    </div>
+
+
+                    <div id="sideDiagnoses">
+                      <label>Nebendiagnosen:</label>
+                      <ul class="list-group selectable codeList" id="sideDiagnosesRelatedList">
+                      </ul>
+                    </div>
+
+
+                    <div id="Proccedures">
+                      <label>Prozeduren:</label>
+                      <ul class="list-group selectable codeList" id="proceduresRelatedList">
+                      </ul>
+                    </div>
                 </div>
               </div>
             </div>
@@ -62,16 +80,16 @@
         <!-- Nav tabs for the list of the mask -->
         <ul class="nav nav-tabs" id="maskTabs" role="tablist">
           <li role="presentation" class="active"><a id="allMaskLink" href="#allMask" aria-controls="allMask" role="tab" data-toggle="tab">Alle</a></li>
-          <li role="presentation"><a class="filterTab" href="#mainDiagnosesMask" aria-controls="mainDiagnosesMask" role="tab" data-toggle="tab" data-categoryId="0">Hauptdiagnosen</a></li>
-          <li role="presentation"><a class="filterTab withAddButton" href="#sideDiagnosesMask" aria-controls="sideDiagnosesMask" role="tab" data-toggle="tab" data-categoryId="1">Nebendiagnosen</a></li>
-          <li role="presentation"><a class="filterTab withAddButton" href="#proceduresMask" aria-controls="proceduresMask" role="tab" data-toggle="tab" data-categoryId="2">Prozeduren</a></li>
+          <li role="presentation"><a class="filterTab" href="#mainDiagnosesMask" aria-controls="mainDiagnosesMask" role="tab" data-toggle="tab" data-category="mainDiagnoses">Hauptdiagnosen</a></li>
+          <li role="presentation"><a class="filterTab withAddButton" href="#sideDiagnosesMask" aria-controls="sideDiagnosesMask" role="tab" data-toggle="tab" data-category="sideDiagnoses">Nebendiagnosen</a></li>
+          <li role="presentation"><a class="filterTab withAddButton" href="#proceduresMask" aria-controls="proceduresMask" role="tab" data-toggle="tab" data-category="procedures">Prozeduren</a></li>
         </ul>
 
         <!-- Tab panes with the lists of the mask -->
         <div class="tab-content codeMaskLists">
           <div role="tabpanel" class="tab-pane active" id="allMask">
             <ul class="list-group unselectable code-maskList" id="allListMask">
-              <li class='list-group-item mainNewCode' data-categoryId="0"><div class='text_field editing' contenteditable='true'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div><button class='zbutton doneButton' type='button'>Add</button><button class='zbutton editButton' type='button'>Edit</button></li>
+              <li class='list-group-item mainNewCode' data-category="mainDiagnoses"><div class='text_field editing' contenteditable='true'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div><button class='zbutton doneButton' type='button'>Add</button><button class='zbutton editButton' type='button'>Edit</button></li>
             </ul>
           </div>
         </div>
