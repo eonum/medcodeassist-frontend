@@ -32,45 +32,15 @@ li {
 }
 
 .highlight{
+    background-color: orange;
+    opacity: 0.5;
+}
+
+.showWordDetails {
+    cursor: pointer;
+    color: black;
     font-weight: bold;
-    background: yellow;
 }
-
-
-#infoField-wrapper{
-    height: auto;
-    margin-top: 30px;
-    margin-bottom: 50px;
-    padding: 0;
-}
-
-#infoField {
-    border: 1px solid #CCC;
-    border-radius: 5px;
-    padding: 0;
-}
-
-#infoWordWrapper {
-    border-bottom: 1px solid #CCC;
-    padding: 0;
-}
-
-#infoDetailsWrapper {
-
-}
-
-#infoSynonymsWrapper {
-    border-right: 1px solid #CCC;
-    padding-left: 0;
-    height: inherit;
-}
-
-#infoRelatedCodesListWrapper {
-    /*border-left: 1px solid #CCC;*/
-    padding-right: 0;
-    height: inherit;
-}
-
 
 #code-mask{
     border: solid 1px #CCCCCC;
@@ -166,16 +136,8 @@ li div:active {
     width: 90%;
 }
 
-.showWordDetails {
-    cursor: pointer;
-}
-
 #code-list {
     position: fixed;
-}
-
-#infoField-wrapper {
-    display: none;
 }
 
 #addCodeButton {
@@ -184,4 +146,50 @@ li div:active {
 
 .mainNewCode {
     display: none;
+}
+
+.modal-header {
+    background-color: darkgray;
+    height: 40px;
+    padding: 0;
+}
+
+#info {
+    height: inherit;
+}
+
+.modal-body {
+    padding:0;
+    margin: 0;
+}
+
+#infoWordWrapper{
+    height: 40px;
+    background-color: #EEE;
+    padding: 0;
+}
+
+#infoWordDiv {
+    height: inherit;
+    padding-left: 0;
+}
+
+#infoWord {
+    color: darkblue;
+}
+
+#infoSynonymsWrapper {
+    background-color: #FFF;
+    height: inherit;
+}
+
+#infoRelatedCodesListWrapper {
+    background-color: #EEE;
+    height: inherit;
+}
+
+#synonymsList li {
+    display: inline;
+    padding: 5px;
+    color: darkblue;
 }

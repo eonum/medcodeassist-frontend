@@ -25,63 +25,34 @@
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="btn btn-default close" data-dismiss="modal">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-              </button>
-              <h1>{{this.title}} </h1>
-              <h4> {{this.description}}</h4>
+              <div class="col-md-12" id="info">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Information</h4>
+              </div>
             </div>
-            <div class="modal-body container">
-              <div class="col-md-12" id="infoField-wrapper">
-                <label>Information:</label>
-                <div class="col-md-12" id="infoField">
-                  <div class="col-md-12" id="infoWordWrapper">
-                    <label class="col-md-1">Word:</label>
-                    <div class="col-md-9" id="infoWord"></div>
-                  </div>
-                  <div class="col-md-12" id="infoDetailsWrapper">
-                    <div class="col-md-6" id="infoSynonymsWrapper">
-                      <label>Synonyme:</label>
-                      <div class="col-md-12" id="infoSynonyms">
-                        <ul class="list-group" id="synonymsList">
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="col-md-6" id="infoRelatedCodesListWrapper">
-                      <label>Codes:</label>
-                      <div class="col-md-12" id="infoRelatedCodes"></div>
-                    </div>
-                  </div>
+
+            <div class="modal-body">
+              <div class="col-md-12" id="infoWordWrapper">
+                <div class="col-md-1"><h4>Word:</h4></div>
+                <div class="col-md-9" id="infoWordDiv"><h4 id="infoWord"></h4></div>
+              </div>
+              <div class="col-md-12" id="infoSynonymsWrapper">
+                <label>Synonyme:</label>
+                <div class="col-md-12" id="infoSynonyms">
+                  <ul class="list-group" id="synonymsList">
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-12" id="infoRelatedCodesListWrapper">
+                <label>Codes:</label>
+                <div class="col-md-12" id="infoRelatedCodes">
+                  <ul class="list-group" id="relatedCodesList">
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
 
-        </div>
-      </div>
-
-
-      <!--Div for the InfoField-->
-      <div class="col-md-12" id="infoField-wrapper">
-        <label>Information:</label>
-        <div class="col-md-12" id="infoField">
-              <div class="col-md-12" id="infoWordWrapper">
-                <label class="col-md-1">Word:</label>
-                <div class="col-md-9" id="infoWord"></div>
-              </div>
-              <div class="col-md-12" id="infoDetailsWrapper">
-                <div class="col-md-6" id="infoSynonymsWrapper">
-                  <label>Synonyme:</label>
-                  <div class="col-md-12" id="infoSynonyms">
-                    <ul class="list-group" id="synonymsList">
-                    </ul>
-                  </div>
-                </div>
-                <div class="col-md-6" id="infoRelatedCodesListWrapper">
-                  <label>Codes:</label>
-                  <div class="col-md-12" id="infoRelatedCodes"></div>
-                </div>
-              </div>
         </div>
       </div>
 
@@ -109,7 +80,6 @@
       </div>
     </div>
 
-
     <!--Code Lists-->
     <div class="form-group col-md-5  " id="codeLists">
 
@@ -133,7 +103,6 @@
         </ul>
       </div>
     </div>
-
 
   </div>
 

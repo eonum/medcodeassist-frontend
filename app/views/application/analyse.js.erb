@@ -2,7 +2,8 @@ var parameters = <%= raw @variables_as_json %>;
 var words = parameters.words;
 var suggestedCodes = parameters.suggested_codes;
 var selectedCodes = parameters.selected_codes;
-//var selectedMainCodes = parameters.selected_main_codes;
+
+$("#analyse").text('Update');
 
 var textArea = $("#textArea");
 var text = textArea.html();
@@ -10,7 +11,7 @@ words.forEach(function(item) {
   var textArray = text.match(new RegExp( "(" + reg_escape( item ) + ")" , 'gi'));
   if(textArray && item != "n") {
     textArray.forEach(function(word) {
-      var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' data-toggle='tooltip'  title='click for details' data-toggle='modal' data-target='#popup' >" + word + "</a>";
+      var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' title='click for details' data-toggle='modal' data-target='#popup' >" + word + "</a>";
       text=text.replace(new RegExp(word, 'g'), highlightedWord);
     });
   }
