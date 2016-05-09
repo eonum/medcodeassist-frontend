@@ -63,8 +63,6 @@ class ApplicationController < ActionController::Base
 
   def show_word_details
 
-    @word = params[:word]
-
     @main_related_codes = {}
     @main_related_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
 
@@ -89,9 +87,10 @@ class ApplicationController < ActionController::Base
     @synonyms = parsed_token.map {|x| x['token']}
 
     @variables = {}
-    @variables['word'] = @word
+    @variables['word'] = params[:word]
     @variables['synonyms'] = @synonyms
     @variables['suggested_related_codes'] = @suggested_related_codes
+    @variables['selected_codes'] = params[:selected_codes]
     @variables_as_json = @variables.to_json
 
     respond_to do |format|

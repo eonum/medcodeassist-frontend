@@ -79,7 +79,7 @@ $(document).ready(function() {
       $.ajax({
           url: "/application/show_word_details",
           type: "post",
-          data: { word: word }
+          data: { word: word, selected_codes: selectedCodes }
       });
   });
 
