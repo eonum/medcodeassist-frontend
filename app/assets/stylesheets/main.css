@@ -110,6 +110,14 @@ footer li img {
     display: none;
 }
 
+.editButton {
+    display: none;
+}
+
+#addCodeButton {
+    display: none;
+}
+
 li div:active {
     background-color: orange;
 }
@@ -138,10 +146,6 @@ li div:active {
 
 #code-list {
     position: fixed;
-}
-
-#addCodeButton {
-    display: none;
 }
 
 .mainNewCode {

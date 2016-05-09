@@ -103,7 +103,7 @@ class ApplicationController < ActionController::Base
     search_text = params['search_text']
 
     @code_matches = IcdCode.any_of({ :code => /.*#{search_text}.*/i}, {:text_de => /.*#{search_text}.*/i}).entries
-    @codes = @code_matches.map {|x| x}.take 10
+    @codes = @code_matches.take 10
 
     @variables = {}
     @variables['codes'] = @codes

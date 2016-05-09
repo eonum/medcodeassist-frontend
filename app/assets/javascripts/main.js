@@ -145,12 +145,14 @@ $(document).ready(function() {
             return  liCategory == category;
         }).show();
         $('#addCodeButton').hide();
+        $('.editButton').show();
         deleteIncompleteCodes();
   });
 
   $("#maskTabs li a#allMaskLink").click(function () {
       $('#allListMask li').show();
       $('#addCodeButton').hide();
+      $('.editButton').hide();
       $('#allListMask li.mainNewCode').hide();
       deleteIncompleteCodes();
   });
