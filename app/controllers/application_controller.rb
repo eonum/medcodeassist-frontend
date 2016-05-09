@@ -44,12 +44,16 @@ class ApplicationController < ActionController::Base
 
     @suggested_codes = {mainDiagnoses: @main_codes, sideDiagnoses: @side_codes, procedures: @procedure_codes}
 
-    @selected_codes = {mainDiagnoses: @selected_main_codes, sideDiagnoses: @selected_side_codes, procedures: @selected_procedure_codes}
+    selected_codes = params[:selected_codes]
+
+    puts "selected codes:"
+    puts selected_codes
+    #{mainDiagnoses: @selected_main_codes, sideDiagnoses: @selected_side_codes, procedures: @selected_procedure_codes}
 
     @variables = {}
     @variables['words'] = @words
     @variables['suggested_codes'] = @suggested_codes
-    @variables['selected_codes'] = @selected_codes
+    @variables['selected_codes'] = selected_codes
     @variables_as_json = @variables.to_json
 
     respond_to do |format|

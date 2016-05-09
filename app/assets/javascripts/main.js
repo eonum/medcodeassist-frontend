@@ -1,5 +1,6 @@
 $(document).ready(function() {
   var selectedMainCodes = {};
+    selectedMainCodes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'};
   var selectedSideCodes = {};
   var selectedProcedureCodes = {};
   var selectedCodes = {mainDiagnoses: selectedMainCodes, sideDiagnoses: selectedSideCodes, procedures: selectedProcedureCodes};
@@ -69,7 +70,7 @@ $(document).ready(function() {
       $.ajax({
           url: "/application/analyse",
           type: "post",
-          data: { text_field: plainText, selected_main_codes: selectedMainCodes, selected_side_codes: selectedSideCodes, selected_procedure_codes: selectedProcedureCodes}
+          data: { text_field: plainText, selected_codes: selectedCodes}//: selectedMainCodes, selected_side_codes: selectedSideCodes, selected_procedure_codes: selectedProcedureCodes}
       });
   });
 

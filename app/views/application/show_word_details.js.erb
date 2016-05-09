@@ -15,13 +15,15 @@ if(synonyms) {
 
 function updateSuggestedRelatedCodes() {
   for(var category in suggestedRelatedCodes){
-    $("#"+category+"List").empty();
+    $("#"+category+"RelatedList").empty();
     for(var codeId in suggestedRelatedCodes[category]){
       // only show codes that aren't already selected
       var code = suggestedRelatedCodes[category][codeId].code;
       var text = suggestedRelatedCodes[category][codeId].text_de;
-      if(!selectedCodes[category] || !(codeId in selectedCodes[category])) {
-        $("#"+category+"List").append("<li class='list-group-item codeItem' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+      console.log("cat: "+category);
+      console.log("sel codes: "+selectedCodes[category]);
+      if(jQuery.isEmptyObject(selectedCodes[category]) || !(codeId in selectedCodes[category])) {
+        $("#"+category+"RelatedList").append("<li class='list-group-item codeItem' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
       }
     }
   }
