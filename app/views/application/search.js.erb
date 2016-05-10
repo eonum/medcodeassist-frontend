@@ -4,13 +4,15 @@ var li_id = parameters.li_id;
 
 var codeList = "";
 codes.forEach(function(element) {
-  var listElement = "<li><a>"+element["code"]+": "+element["text_de"]+"</a></li>";
+  var codeId = element["short_code"];
+  var code = element["code"]
+  var text = element["text_de"]
+  var listElement = "<li class='dropdown-element' id='"+codeId+"' data-code='"+code+"' data-text='"+text+"'><a>"+code+": "+text+"</a></li>";
   codeList = codeList + listElement;
 });
+
 if(codeList.length == 0)
   codeList = "<li>Keine Codes gefunden</li>";
 $("#"+li_id+" div.dropdown ul.dropdown-menu").empty().append(codeList);
-$('ul.dropdown-menu li').click(function() {
-  $("#"+li_id+" div.text_field").text($(this).text());
-});
-$("#"+li_id+" div.dropdown").toggleClass("open", true);
+
+$("#"+li_id+" div.dropdown").addClass("open");

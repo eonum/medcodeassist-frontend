@@ -25,11 +25,14 @@ function reg_escape(str) {
 function updateSuggestedCodes() {
   for(var category in suggestedCodes){
     $("#"+category+"List").empty();
+    console.log("cat: "+category);
     for(var codeId in suggestedCodes[category]){
       // only show codes that aren't already selected
+      console.log("codeId: "+codeId);
       var code = suggestedCodes[category][codeId].code;
       var text = suggestedCodes[category][codeId].text_de;
-      if( jQuery.isEmptyObject(selectedCodes[category]) || !(codeId in selectedCodes[category])) {
+      console.log("code: "+ code+", text: "+text);
+      if(!selectedCodes || !selectedCodes[category] || jQuery.isEmptyObject(selectedCodes[category]) || !(codeId in selectedCodes[category])) {
         $("#"+category+"List").append("<li class='list-group-item codeItem' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
       }
     }

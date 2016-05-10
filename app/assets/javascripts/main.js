@@ -1,9 +1,11 @@
 $(document).ready(function() {
   var selectedMainCodes = {};
-    selectedMainCodes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'};
+    //selectedMainCodes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'};
   var selectedSideCodes = {};
   var selectedProcedureCodes = {};
+    //selectedProcedureCodes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'};
   var selectedCodes = {mainDiagnoses: selectedMainCodes, sideDiagnoses: selectedSideCodes, procedures: selectedProcedureCodes};
+  var tempSelectedCodes = {mainDiagnoses: {}, sideDiagnoses: {}, procedures: {}};
 
   var ulSelector = $("ul");
   ulSelector.on("click", ".codeItem", function() {
@@ -19,8 +21,8 @@ $(document).ready(function() {
       var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
       idSelector.append(editButton);
       idSelector.append(doneButton);
-      idSelector.toggleClass("codeItem");
-      idSelector.toggleClass("codeMaskItem");
+      idSelector.removeClass("codeItem");
+      idSelector.addClass("codeMaskItem");
       // then add the code to the codemask lists
       selectedCodes[category][id] = suggestedCodes[category][id];
       $("#allListMask").append(this);
@@ -37,8 +39,8 @@ $(document).ready(function() {
       // remove it from all tabs in codeMask
       $(".allListMask li").remove("#"+id);
       // finally change class and remove buttons
-      idSelector.toggleClass("codeMaskItem");
-      idSelector.toggleClass("codeItem");
+      idSelector.removeClass("codeMaskItem");
+      idSelector.addClass("codeItem");
       $("#"+id+" button").remove();
   });
 
@@ -48,19 +50,19 @@ $(document).ready(function() {
     $("#"+id+" .text_field").attr("contenteditable", "true");
     var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
     $("#"+id).append(divDropdown);
-    $("#"+id+" .doneButton").toggle();
-    $("#"+id+" .editButton").toggle();
-    $("#"+id+" div").toggleClass("editing");
+    $("#"+id+" .doneButton").show();
+    $("#"+id+" .editButton").hide();
+    $("#"+id+" div").addClass("editing");
   });
 
   ulSelector.on("click", "button.doneButton", function() {
     var id = this.parentNode.id;
     $("#"+id+" .text_field").attr("contenteditable", "false");
-    $("#"+id+" .doneButton").toggle();
-    $("#"+id+" .editButton").toggle();
-    $("#"+id+" div").toggleClass("editing");
+    $("#"+id+" .doneButton").hide();
+    $("#"+id+" .editButton").show();
+    $("#"+id+" div").removeClass("editing");
      setTimeout(function() {
-       $("#"+id).toggleClass("codeMaskItem");
+       $("#"+id).addClass("codeMaskItem");
       }, 100);
   });
 
@@ -70,7 +72,7 @@ $(document).ready(function() {
       $.ajax({
           url: "/application/analyse",
           type: "post",
-          data: { text_field: plainText, selected_codes: selectedCodes}//: selectedMainCodes, selected_side_codes: selectedSideCodes, selected_procedure_codes: selectedProcedureCodes}
+          data: { text_field: plainText, selected_codes: selectedCodes}
       });
   });
 
@@ -87,7 +89,8 @@ $(document).ready(function() {
   $("#addCodeButton").click(function() {
       key = key+1;
       var id = "newCode"+key;
-      var newLiElement = "<li class='list-group-item newCode' id='"+id+"'></li>";
+      var category = $(this).attr("data-category");
+      var newLiElement = "<li class='list-group-item newCode' id='"+id+"' data-category='"+category+"'></li>";
       $("#allListMask").append(newLiElement); // codeMaskItem
       var divText = "<div class='text_field editing' contenteditable='true'></div>";
       $("#"+id).append(divText);
@@ -97,37 +100,46 @@ $(document).ready(function() {
       $("#"+id).append(doneButton);
       var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
       $("#"+id).append(editButton);
-      $("#"+id+" .editButton").toggle();
-      $("#"+id+" .doneButton").toggle();
-      $(this).toggle();
+      $("#"+id+" .doneButton").show();
+      $(this).hide();
   });
 
-
-
-  $("ul").on("keyup", "li div.editing", function() {
+  ulSelector.on("keyup", "li div.editing", function() {
       var id = this.parentNode.id;
       interactiveProposals(id);
   });
 
   function interactiveProposals(id) {
       var searchText = $("#"+id+" div.text_field").text();
-      console.log(searchText);
-      if(searchText.length >= 3)
+      var category = $("#"+id).attr("data-category");
+      if(searchText.length >= 1)
       {
           $.ajax({
               url: "/application/search",
               type: "post",
-              data: { search_text: searchText, li_id: id }
+              data: { search_text: searchText, li_id: id, category: category }
           });
       }
   };
 
-  $("ul").on("click", ".newCode button.doneButton", function() {
+  $("ul#allListMask").on("click","li.dropdown-element", function() {
+      var liId = this.parentNode.parentNode.parentNode.id;
+      $("#"+liId+" div.text_field").text($(this).text());
+      var codeId = $(this).attr("id");
+      var code = $(this).attr("data-code");
+      var text = $(this).attr("data-text");
+      var category = $("#"+liId).attr("data-category");
+      $("#"+liId).attr("id", codeId);
+      $("#"+codeId+" .doneButton").show();
+      tempSelectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
+  });
+
+  ulSelector.on("click", ".newCode button.doneButton", function() {
       var thisLi = this.parentNode;
       var id = this.parentNode.id;
-      $("#"+id).toggleClass("newCode");
+      $("#"+id).removeClass("newCode");
       $("#"+id+" div.dropdown").remove();
-      $("#addCodeButton").toggle();
+      $("#addCodeButton").show();
   });
 
 
@@ -137,20 +149,20 @@ $(document).ready(function() {
 
   $("#maskTabs li a.filterTab").click(function () {
         var category = $(this).attr("data-category");
-        console.log('tab category: '+category);
         $('#allListMask li').hide();
         $('#allListMask li').filter(function () {
             liCategory = $(this).attr("data-category");
-            console.log("licat: "+liCategory);
             return  liCategory == category;
         }).show();
+        $('#addCodeButton').removeAttr("data-category");
         $('#addCodeButton').hide();
-        $('.editButton').show();
+        $('.codeMaskItem .editButton').show();
         deleteIncompleteCodes();
   });
 
   $("#maskTabs li a#allMaskLink").click(function () {
       $('#allListMask li').show();
+      $('#addCodeButton').removeAttr("data-category");
       $('#addCodeButton').hide();
       $('.editButton').hide();
       $('#allListMask li.mainNewCode').hide();
@@ -158,6 +170,8 @@ $(document).ready(function() {
   });
 
   $("#maskTabs li a.withAddButton").click(function () {
+      var category = $(this).attr("data-category");
+      $('#addCodeButton').attr("data-category", category);
       $('#addCodeButton').show();
       $('#allListMask li.mainNewCode').hide();
       deleteIncompleteCodes();

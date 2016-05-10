@@ -148,7 +148,11 @@ li div:active {
     position: fixed;
 }
 
-.mainNewCode {
+#newMainCode .doneButton {
+    display: block;
+}
+
+#newMainCode {
     display: none;
 }
 
