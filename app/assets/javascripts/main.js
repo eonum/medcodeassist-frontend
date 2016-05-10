@@ -70,7 +70,7 @@ $(document).ready(function() {
       $.ajax({
           url: "/application/analyse",
           type: "post",
-          data: { text_field: plainText, selected_codes: selectedCodes}//: selectedMainCodes, selected_side_codes: selectedSideCodes, selected_procedure_codes: selectedProcedureCodes}
+          data: { text_field: plainText, selected_codes: selectedCodes}//: selected_main_codes: selectedMainCodes, selected_side_codes: selectedSideCodes, selected_procedure_codes: selectedProcedureCodes}
       });
   });
 
