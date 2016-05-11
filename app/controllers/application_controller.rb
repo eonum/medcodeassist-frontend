@@ -43,13 +43,12 @@ class ApplicationController < ActionController::Base
     @main_codes = {}
 
     @main_codes['C800'] = {code: 'C80.0', short_code: 'C800', text_de: "Bösartige Neubildung, primäre Lokalisation unbekannt, so bezeichnet"}
-    @main_codes['A666'] = {code: "A66.6", short_code: 'A666', text_de: "Knochen- und Gelenkveränderungen bei Frambösie"}
+    @main_codes['C810'] = {code: 'C81.0', short_code: 'C810', text_de: "Noduläres lymphozytenprädominantes Hodgkin-Lymphom"}
     @main_codes['G8210'] = {code: 'G82.10', short_code: 'G8210', text_de: "Spastische Paraparese und Paraplegie: Akute komplette Querschnittlähmung nichttraumatischer Genese"}
 
     @side_codes = {}
     @side_codes['C152'] = {code: 'C15.2', short_code: 'C152', text_de: "Bösartige Neubildung: Abdominaler Ösophagus"}
     @side_codes['S242'] = {code: 'S24.2', short_code: 'S242', text_de: "Verletzung von Nervenwurzeln der Brustwirbelsäule"}
-    @side_codes['M8101'] = {code: 'M81.01', short_code: 'M8101', text_de: "Postmenopausale Osteoporose: Schulterregion"}
     @side_codes['E1120'] = {code: 'E11.20', short_code: 'E1120', text_de: "Diabetes mellitus, Typ 2: Mit Nierenkomplikationen: Nicht als entgleist bezeichnet"}
 
 
@@ -64,6 +63,14 @@ class ApplicationController < ActionController::Base
     @selected_codes = params[:selected_codes]
 
     if(!@selected_codes.nil?)
+      @main_codes.delete('G8210')
+      @main_codes.delete('C800')
+      @main_codes['A666'] = {code: "A66.6", short_code: 'A666', text_de: "Knochen- und Gelenkveränderungen bei Frambösie"}
+
+      @side_codes.delete('C152')
+      @side_codes['M8101'] = {code: 'M81.01', short_code: 'M8101', text_de: "Postmenopausale Osteoporose: Schulterregion"}
+      @side_codes['M0690'] = {code: 'M06.90', short_code: 'M0690', text_de: "Chronische Polyarthritis, nicht näher bezeichnet: Mehrere Lokalisationen"}
+
       @procedure_codes['542110'] = {code: '54.21.10', short_code: '542110', text_de: "Laparoskopie, Diagnostische Laparoskopie"}
       @procedure_codes.delete('388410')
       @procedure_codes.delete('388510')
