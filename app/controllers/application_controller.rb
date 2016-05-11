@@ -25,25 +25,28 @@ class ApplicationController < ActionController::Base
 
 
 =begin
-  text = params[:text_field]
-  tokens = HTTParty.post(@@api_url+'tokenizations', { query: {text: text} } )
-  parsed_tokens =  JSON.parse(tokens.body)
+    # API query - uncomment when API is ready
+    text = params[:text_field]
+    tokens = HTTParty.post(@@api_url+'tokenizations', { query: {text: text} } )
+    parsed_tokens =  JSON.parse(tokens.body)
+    @words = parsed_tokens.map {|x| x["word"]}
 
-  puts "words:"
-  @words = parsed_tokens.map {|x| x["word"]}
-
-  code_proposals = HTTParty.post(@@api_url+'code_proposals', {query: {input_codes: { item1: "E11.41", item2: "E51.8"}, input_code_types: {item1: "ICD", item2: "ICD"}, get_icds: true, count: 1  }})
-  parsed_codes = JSON.parse(code_proposals.body)
-
-  @code = parsed_codes["icds"][0]["code"]
-  @codes = []
-  @codes << @code
+    selected_main_diagnoses = params["selected_codes"]["mainDiagnoses"]
+    selected_side_diagnoses = params["selected_codes"]["sideDiagnoses"]
+    selected_procedures = params["selected_codes"]["procedures"]
+    selected_codes_all = selected_main_diagnoses + selected_side_diagnoses + selected_procedures
+    code_types = selected_main_diagnoses.map {|x| "ICD"} + selected_side_diagnoses.map {|x| "ICD"} + selected_procedures.map {|x| "CHOP"}
+    code_proposals = HTTParty.post(@@api_url+'code_proposals', {query: {codes: selected_codes_all, code_types: code_types, text: text  }})
+    parsed_proposals = JSON.parse(code_proposals.body)
+    @main_codes = parsed_proposals["main_diagnoses"]
+    @side_codes = parsed_proposals["side_diagnoses"]
+    @procedure_codes = parsed_proposals["procedures"]
 =end
 
     @main_codes = {}
 
     @main_codes['C800'] = {code: 'C80.0', short_code: 'C800', text_de: "Bösartige Neubildung, primäre Lokalisation unbekannt, so bezeichnet"}
-    @main_codes['C810'] = {code: 'C81.0', short_code: 'C810', text_de: "Noduläres lymphozytenprädominantes Hodgkin-Lymphom"}
+    @main_codes['C81070'] = {code: 'C81.70', short_code: 'C81070', text_de: "Sonstige Typen des (klassischen) Hodgkin-Lymphoms"}
     @main_codes['G8210'] = {code: 'G82.10', short_code: 'G8210', text_de: "Spastische Paraparese und Paraplegie: Akute komplette Querschnittlähmung nichttraumatischer Genese"}
 
     @side_codes = {}
@@ -53,7 +56,6 @@ class ApplicationController < ActionController::Base
 
 
     @procedure_codes = {}
-    @procedure_codes['5411'] = {code: '54.11', short_code: '5411', text_de: "Probelaparotomie"}
     @procedure_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
     @procedure_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
     @procedure_codes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'}
@@ -96,27 +98,32 @@ class ApplicationController < ActionController::Base
 
     @main_related_codes = {}
     @main_related_codes['E500'] = {code: 'E50.0', short_code: 'E500', text_de: "Vitamin-A-Mangel mit Xerosis conjunctivae"}
+    @main_related_codes['C810'] = {code: 'C81.0', short_code: 'C810', text_de: "Noduläres lymphozytenprädominantes Hodgkin-Lymphom"}
 
     @side_related_codes = {}
     @side_related_codes['F500'] = {code: 'F50.0', short_code: 'F500', text_de: "Anorexia nervosa"}
     @side_related_codes['G245'] = {code: 'G24.5', short_code: 'G245', text_de: "Blepharospasmus"}
 
     @procedure_related_codes = {}
+    @procedure_related_codes['5411'] = {code: '54.11', short_code: '5411', text_de: "Probelaparotomie"}
     @procedure_related_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
     @procedure_related_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
     @procedure_related_codes['388500'] = {code: '38.85.00', short_code: '388500', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez.'}
 
     @suggested_related_codes = {mainDiagnoses: @main_related_codes, sideDiagnoses: @side_related_codes, procedures: @procedure_related_codes}
 
-
-    # token = HTTParty.post(@@api_url+'synonyms', { query: {word: @word.gsub('\\', ' '), count: 5} } )
-    # parsed_token = JSON.parse(token.body)
-
     if(@word=='test')
       parsed_token = [{'token' => 'synonym1', similarity: '1'}, {'token' => 'synonym2', similarity: '0'}]
     else
       parsed_token = [{'token' => 'synonym3', similarity: '1'}, {'token' => 'synonym4', similarity: '0'}]
     end
+
+=begin
+    # API query - uncomment when API is ready
+    synonyms = HTTParty.post(@@api_url+'synonyms', { query: {word: params[:word], count: 5} } )
+    parsed_synonyms = JSON.parse(synonyms.body)
+    @synonyms = parsed_synonyms.map {|x| x['name']}
+=end
 
     @synonyms = parsed_token.map {|x| x['token']}
 
