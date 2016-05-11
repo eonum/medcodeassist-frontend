@@ -35,7 +35,7 @@ $(document).ready(function() {
       // then add the code to the codemask lists
       if(tempSavedCodes[category][id]){
           selectedCodes[category][id] = tempSavedCodes[category][id];
-      }else if(tempSavedCodes){
+      }else{
           selectedCodes[category][id] = suggestedCodes[category][id];
       }
       $("#allListMask").append(this);
