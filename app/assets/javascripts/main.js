@@ -35,10 +35,11 @@ $(document).ready(function() {
       // then add the code to the codemask lists
       if(tempSavedCodes[category][id]){
           selectedCodes[category][id] = tempSavedCodes[category][id];
-      }else if(tempSavedCodes){
+      }else{
           selectedCodes[category][id] = suggestedCodes[category][id];
       }
       $("#allListMask").append(this);
+      $("#"+id+" .editButton").show();
       $("#codeLists #"+id).remove();
       if(!$("#maskTabs ."+category).hasClass("active") && !$("#maskTabs #allTab").hasClass("active")){
           idSelector.hide();
@@ -146,8 +147,8 @@ $(document).ready(function() {
       $("#"+id).append(divText);
       var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
       $("#"+id).append(divDropdown);
-      $("#"+id).append(doneAddButton);
       $("#"+id).append(editButton);
+      $("#"+id).append(doneAddButton);
       $("#"+id+" .doneButton").show();
       $(this).hide();
   });
@@ -195,36 +196,36 @@ $(document).ready(function() {
 
 
   function deleteIncompleteCodes(){
-      $('#allListMask li.newCode').remove();
+      $("#allListMask li.newCode").remove();
   }
 
   $("#maskTabs li a.filterTab").click(function () {
         var category = $(this).attr("data-category");
-        $('#allListMask li').hide();
-        $('#allListMask li').filter(function () {
+        $("#allListMask li").hide();
+        $("#allListMask li").filter(function () {
             liCategory = $(this).attr("data-category");
             return  liCategory == category;
         }).show();
-        $('#addCodeButton').removeAttr("data-category");
-        $('#addCodeButton').hide();
-        $('.codeMaskItem .editButton').show();
+        $("#addCodeButton").removeAttr("data-category");
+        $("#addCodeButton").hide();
+        $(".codeMaskItem .editButton").show();
         deleteIncompleteCodes();
   });
 
   $("#maskTabs li a#allMaskLink").click(function () {
-      $('#allListMask li').show();
-      $('#addCodeButton').removeAttr("data-category");
-      $('#addCodeButton').hide();
-      $('.editButton').hide();
-      $('#allListMask li#newMainCode').hide();
+      $("#allListMask li").show();
+      $("#addCodeButton").removeAttr("data-category");
+      $("#addCodeButton").hide();
+      $(".editButton").hide();
+      $("#allListMask li#newMainCode").hide();
       deleteIncompleteCodes();
   });
 
   $("#maskTabs li a.withAddButton").click(function () {
       var category = $(this).attr("data-category");
-      $('#addCodeButton').attr("data-category", category);
-      $('#addCodeButton').show();
-      $('#allListMask li#newMainCode').hide();
+      $("#addCodeButton").attr("data-category", category);
+      $("#addCodeButton").show();
+      $("#allListMask li#newMainCode").hide();
       deleteIncompleteCodes();
   });
 
