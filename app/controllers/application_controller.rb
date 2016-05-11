@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   def analyse
 
-    @words = ['Morbus Hodgkin', 'mellitus', 'insipidus', 'laparotomie']
+    @words = ['hodgkin', 'mellitus', 'insipidus', 'laparotomie']
 
 
 =begin
@@ -97,6 +97,7 @@ class ApplicationController < ActionController::Base
   def show_word_details
 
     @main_related_codes = {}
+    @main_related_codes['C800'] = {code: 'C80.0', short_code: 'C800', text_de: "Bösartige Neubildung, primäre Lokalisation unbekannt, so bezeichnet"}
     @main_related_codes['E500'] = {code: 'E50.0', short_code: 'E500', text_de: "Vitamin-A-Mangel mit Xerosis conjunctivae"}
     @main_related_codes['C810'] = {code: 'C81.0', short_code: 'C810', text_de: "Noduläres lymphozytenprädominantes Hodgkin-Lymphom"}
 
@@ -107,8 +108,7 @@ class ApplicationController < ActionController::Base
     @procedure_related_codes = {}
     @procedure_related_codes['5411'] = {code: '54.11', short_code: '5411', text_de: "Probelaparotomie"}
     @procedure_related_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
-    @procedure_related_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
-    @procedure_related_codes['388500'] = {code: '38.85.00', short_code: '388500', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez.'}
+    @procedure_related_codes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'}
 
     @suggested_related_codes = {mainDiagnoses: @main_related_codes, sideDiagnoses: @side_related_codes, procedures: @procedure_related_codes}
 
@@ -173,7 +173,7 @@ class ApplicationController < ActionController::Base
       @code_matches = ChopCode.any_of({ :code => /.*#{code}.*/i, :text_de => /.*#{text}.*/i}).entries
     end
 
-    if(!selected_codes.nil?)
+    if(!selected_codes.nil? && !selected_codes[category].nil?)
       sel_codes = selected_codes[category]
       @code_matches.reject! { |entry| sel_codes.has_key?(entry["short_code"]) }
     end
