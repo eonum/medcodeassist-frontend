@@ -160,7 +160,7 @@ $(document).ready(function() {
   function interactiveProposals(id) {
       var searchText = $("#"+id+" div.text_field").text();
       var category = $("#"+id).attr("data-category");
-      if(searchText.length >= 1)
+      if(searchText.length >= 2)
       {
           $.ajax({
               url: "/application/search",

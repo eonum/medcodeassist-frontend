@@ -141,6 +141,7 @@ class ApplicationController < ActionController::Base
     if(!codeMatch.nil?)
       code = codeMatch[:code]
       search_text.delete!(code)
+      code.gsub!(/\./, '\.')
     end
 
     patternText = /(?<text>\w+(\s\w*)*)/
