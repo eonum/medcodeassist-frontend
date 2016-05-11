@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
 
     @words = ['test']
 
+
 =begin
   text = params[:text_field]
   tokens = HTTParty.post(@@api_url+'tokenizations', { query: {text: text} } )
@@ -40,20 +41,35 @@ class ApplicationController < ActionController::Base
 =end
 
     @main_codes = {}
-    @main_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
-    @main_codes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'}
+
+    @main_codes['C800'] = {code: 'C80.0', short_code: 'C800', text_de: "Bösartige Neubildung, primäre Lokalisation unbekannt, so bezeichnet"}
+    @main_codes['A666'] = {code: "A66.6", short_code: 'A666', text_de: "Knochen- und Gelenkveränderungen bei Frambösie"}
+    @main_codes['G8210'] = {code: 'G82.10', short_code: 'G8210', text_de: "Spastische Paraparese und Paraplegie: Akute komplette Querschnittlähmung nichttraumatischer Genese"}
 
     @side_codes = {}
-    @side_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
-    @side_codes['388500'] = {code: '38.85.00', short_code: '388500', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez.'}
+    @side_codes['C152'] = {code: 'C15.2', short_code: 'C152', text_de: "Bösartige Neubildung: Abdominaler Ösophagus"}
+    @side_codes['S242'] = {code: 'S24.2', short_code: 'S242', text_de: "Verletzung von Nervenwurzeln der Brustwirbelsäule"}
+    @side_codes['M8101'] = {code: 'M81.01', short_code: 'M8101', text_de: "Postmenopausale Osteoporose: Schulterregion"}
+    @side_codes['E1120'] = {code: 'E11.20', short_code: 'E1120', text_de: "Diabetes mellitus, Typ 2: Mit Nierenkomplikationen: Nicht als entgleist bezeichnet"}
+
 
     @procedure_codes = {}
+    @procedure_codes['5411'] = {code: '54.11', short_code: '5411', text_de: "Probelaparotomie"}
+    @procedure_codes['388410'] = {code: '38.84.10', short_code: '388410', text_de: 'Sonstiger chirurgischer Verschluss der thorakalen Aorta'}
     @procedure_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
     @procedure_codes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'}
 
     @suggested_codes = {mainDiagnoses: @main_codes, sideDiagnoses: @side_codes, procedures: @procedure_codes}
 
     @selected_codes = params[:selected_codes]
+
+    if(!@selected_codes.nil?)
+      @procedure_codes['542110'] = {code: '54.21.10', short_code: '542110', text_de: "Laparoskopie, Diagnostische Laparoskopie"}
+      @procedure_codes.delete('388410')
+      @procedure_codes.delete('388510')
+      @procedure_codes.delete('5411')
+    end
+
 
     puts "selected codes:"
     puts @selected_codes
@@ -72,13 +88,16 @@ class ApplicationController < ActionController::Base
   def show_word_details
 
     @main_related_codes = {}
-    @main_related_codes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'}
+    @main_related_codes['E500'] = {code: 'E50.0', short_code: 'E500', text_de: "Vitamin-A-Mangel mit Xerosis conjunctivae"}
 
     @side_related_codes = {}
-    @side_related_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
+    @side_related_codes['F500'] = {code: 'F50.0', short_code: 'F500', text_de: "Anorexia nervosa"}
+    @side_related_codes['G245'] = {code: 'G24.5', short_code: 'G245', text_de: "Blepharospasmus"}
 
     @procedure_related_codes = {}
     @procedure_related_codes['388510'] = {code: '38.85.10', short_code: '388510', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Arterien, n.n.bez.'}
+    @procedure_related_codes['388499'] = {code: '38.84.99', short_code: '388499', text_de: 'Sonstiger chirurgischer Verschluss der Aorta, sonstige'}
+    @procedure_related_codes['388500'] = {code: '38.85.00', short_code: '388500', text_de: 'Sonstiger chirurgischer Verschluss von anderen thorakalen Gefässen, n.n.bez.'}
 
     @suggested_related_codes = {mainDiagnoses: @main_related_codes, sideDiagnoses: @side_related_codes, procedures: @procedure_related_codes}
 

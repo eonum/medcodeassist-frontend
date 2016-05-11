@@ -40,8 +40,11 @@ $(document).ready(function() {
       }
       $("#allListMask").append(this);
       $("#codeLists #"+id).remove();
-      if(!$("#maskTabs ."+category).hasClass("active")){
+      if(!$("#maskTabs ."+category).hasClass("active") && !$("#maskTabs #allTab").hasClass("active")){
           idSelector.hide();
+      }
+      else{
+          idSelector.show();
       }
   });
 
@@ -68,7 +71,15 @@ $(document).ready(function() {
       $("#newMainCode").append(editButton);
       $("#newMainCode").append(doneButton);
       $("#newMainCode .doneButton").show();
-      $("#newMainCode").show();
+      var id = this.parentNode.id;
+      var category = $("#"+id).attr("data-category");
+      if($("#maskTabs ."+category).hasClass("active")){
+          $("#newMainCode").show();
+      }
+      else{
+          $("#newMainCode").hide();
+      }
+
   });
 
   ulSelector.on("click", "button.editButton", function() {
