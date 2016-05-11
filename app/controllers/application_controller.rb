@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
     @side_codes = {}
     @procedure_codes = {}
     @suggested_codes = {mainDiagnoses: @main_codes, sideDiagnoses: @side_codes, procedures: @procedure_codes}
+
+    @variables = {}
+    @variables['suggested_codes'] = @suggested_codes
+    @variables_as_json = @variables.to_json
   end
 
   def analyse
@@ -106,6 +110,7 @@ class ApplicationController < ActionController::Base
   def search
     search_text = params['search_text'].gsub(/\s\s+/, ' ')
     category = params['category']
+    selected_codes = params["selected_codes"]
 
     if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
       patternCode = /(?<code>[a-zA-Z]\d\d?\.?\d{0,2})/
@@ -125,7 +130,6 @@ class ApplicationController < ActionController::Base
       text = textMatch[:text]
     end
 
-
     puts "code: #{code}"
     puts "text: #{text}"
 
@@ -133,6 +137,11 @@ class ApplicationController < ActionController::Base
       @code_matches = IcdCode.any_of({ :code => /.*#{code}.*/i, :text_de => /.*#{text}.*/i}).entries
     elsif(category == 'procedures')
       @code_matches = ChopCode.any_of({ :code => /.*#{code}.*/i, :text_de => /.*#{text}.*/i}).entries
+    end
+
+    if(!selected_codes.nil?)
+      sel_codes = selected_codes[category]
+      @code_matches.reject! { |entry| sel_codes.has_key?(entry["short_code"]) }
     end
 
     if(!@code_matches.nil?)
@@ -143,6 +152,8 @@ class ApplicationController < ActionController::Base
 
     @variables = {}
     @variables['codes'] = @codes
+    @variables['code'] = code
+    @variables['text'] = text
     @variables['li_id'] = params['li_id']
     @variables_as_json = @variables.to_json
 

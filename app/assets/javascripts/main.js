@@ -1,11 +1,17 @@
 $(document).ready(function() {
   var selectedMainCodes = {};
-    //selectedMainCodes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'};
+  //selectedMainCodes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'};
   var selectedSideCodes = {};
   var selectedProcedureCodes = {};
     //selectedProcedureCodes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'};
   var selectedCodes = {mainDiagnoses: selectedMainCodes, sideDiagnoses: selectedSideCodes, procedures: selectedProcedureCodes};
-  var tempSelectedCodes = {mainDiagnoses: {}, sideDiagnoses: {}, procedures: {}};
+  var tempSavedCodes = {mainDiagnoses: {}, sideDiagnoses: {}, procedures: {}};
+
+
+  var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
+  var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
+  var doneAddButton = "<button class='zbutton doneButton' type='button'>Add</button>";
+  var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'><div class='text_field editing' contenteditable='true'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div></li>";
 
   var ulSelector = $("ul");
   ulSelector.on("click", ".codeItem", function() {
@@ -15,17 +21,32 @@ $(document).ready(function() {
       if (category == "mainDiagnoses" && !jQuery.isEmptyObject(selectedMainCodes)) {
           alert("Nur eine Hauptdiagnose ist erlaubt");
           return;
+          //var oldMainCode = $("#allListMask li.mainDiagnoses");
+          //var oldId = oldMainCode.id;
+          //$("#mainDiagnosesList").prepend(oldMainCode);
+          //delete selectedCodes["mainDiagnoses"][id];
+          //$("#newMainCode").remove();
       }
       // first add buttons and change class
-      var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
-      var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
       idSelector.append(editButton);
       idSelector.append(doneButton);
       idSelector.removeClass("codeItem");
       idSelector.addClass("codeMaskItem");
       // then add the code to the codemask lists
-      selectedCodes[category][id] = suggestedCodes[category][id];
+      if(tempSavedCodes[category][id]){
+          selectedCodes[category][id] = tempSavedCodes[category][id];
+      }else if(tempSavedCodes){
+          selectedCodes[category][id] = suggestedCodes[category][id];
+      }
       $("#allListMask").append(this);
+      $("#codeLists #"+id).remove();
+      if(!$("#maskTabs ."+category).hasClass("active")){
+          idSelector.hide();
+      }
+  });
+
+  $("#mainDiagnosesList").on("click", "li.codeItem", function() {
+      $("#newMainCode").remove();
   });
 
   ulSelector.on("click", ".codeMaskItem div", function() {
@@ -36,12 +57,18 @@ $(document).ready(function() {
       var category = $(thisLi).attr("data-category");
       delete selectedCodes[category][id];
       $("#" + category +"List").prepend(thisLi);
-      // remove it from all tabs in codeMask
-      $(".allListMask li").remove("#"+id);
       // finally change class and remove buttons
       idSelector.removeClass("codeMaskItem");
       idSelector.addClass("codeItem");
       $("#"+id+" button").remove();
+  });
+
+  ulSelector.on("click", "li.codeMaskItem.mainDiagnoses div", function() {
+      $("#allListMask").append(newMainCode);
+      $("#newMainCode").append(editButton);
+      $("#newMainCode").append(doneButton);
+      $("#newMainCode .doneButton").show();
+      $("#newMainCode").show();
   });
 
   ulSelector.on("click", "button.editButton", function() {
@@ -61,11 +88,23 @@ $(document).ready(function() {
     $("#"+id+" .doneButton").hide();
     $("#"+id+" .editButton").show();
     $("#"+id+" div").removeClass("editing");
-     setTimeout(function() {
-       $("#"+id).addClass("codeMaskItem");
-      }, 100);
-  });
 
+    var codeId = $("#"+id).attr("id");
+    var code = $("#"+id).attr("data-code");
+    var text = $("#"+id).attr("data-text");
+    var category = $("#"+id).attr("data-category");
+    $("#"+id).attr("id", codeId);
+    $("#"+codeId).attr("data-code", code);
+    $("#"+codeId).attr("data-text", text);
+    selectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
+    tempSavedCodes[category][codeId] = selectedCodes[category][codeId];
+    setTimeout(function() {
+      $("#"+id).addClass("codeMaskItem");
+    }, 100);
+    // remove it from the code list
+      $("#" + category +"List li#"+codeId).remove();
+    //remove datas
+  });
 
   $("#analyse").click(function() {
       var plainText = $("#textArea").text();
@@ -96,9 +135,7 @@ $(document).ready(function() {
       $("#"+id).append(divText);
       var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
       $("#"+id).append(divDropdown);
-      var doneButton = "<button class='zbutton doneButton' type='button'>Add</button>";
-      $("#"+id).append(doneButton);
-      var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
+      $("#"+id).append(doneAddButton);
       $("#"+id).append(editButton);
       $("#"+id+" .doneButton").show();
       $(this).hide();
@@ -117,7 +154,7 @@ $(document).ready(function() {
           $.ajax({
               url: "/application/search",
               type: "post",
-              data: { search_text: searchText, li_id: id, category: category }
+              data: { search_text: searchText, li_id: id, category: category, selected_codes: selectedCodes}
           });
       }
   };
@@ -129,9 +166,12 @@ $(document).ready(function() {
       var code = $(this).attr("data-code");
       var text = $(this).attr("data-text");
       var category = $("#"+liId).attr("data-category");
+      $("#"+liId).addClass(category);
       $("#"+liId).attr("id", codeId);
       $("#"+codeId+" .doneButton").show();
-      tempSelectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
+      $("#"+codeId).attr("data-code", code);
+      $("#"+codeId).attr("data-text", text);
+      $("#"+codeId+" div.text_field").removeClass("redBackground");
   });
 
   ulSelector.on("click", ".newCode button.doneButton", function() {
@@ -165,7 +205,7 @@ $(document).ready(function() {
       $('#addCodeButton').removeAttr("data-category");
       $('#addCodeButton').hide();
       $('.editButton').hide();
-      $('#allListMask li.mainNewCode').hide();
+      $('#allListMask li#newMainCode').hide();
       deleteIncompleteCodes();
   });
 
@@ -173,7 +213,7 @@ $(document).ready(function() {
       var category = $(this).attr("data-category");
       $('#addCodeButton').attr("data-category", category);
       $('#addCodeButton').show();
-      $('#allListMask li.mainNewCode').hide();
+      $('#allListMask li#newMainCode').hide();
       deleteIncompleteCodes();
   });
 

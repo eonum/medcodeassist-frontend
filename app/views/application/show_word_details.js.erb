@@ -21,8 +21,8 @@ function updateSuggestedRelatedCodes() {
       // only show codes that aren't already selected
       var code = suggestedRelatedCodes[category][codeId].code;
       var text = suggestedRelatedCodes[category][codeId].text_de;
-      if(jQuery.isEmptyObject(selectedCodes[category]) || !(codeId in selectedCodes[category])) {
-        $("#"+category+"RelatedList").append("<li class='list-group-item codeItem' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+      if(!selectedCodes || !selectedCodes[category] || jQuery.isEmptyObject(selectedCodes[category]) || !(codeId in selectedCodes[category])) {
+        $("#"+category+"RelatedList").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
       }
     }
   }

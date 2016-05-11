@@ -7,9 +7,10 @@ nav {
     padding: 20px 0;
 
 }
-.navbar-brand{
-    font-size: 36px;
-    font-weight: bolder;
+
+footer {
+    font-size: 12px;
+    padding-bottom: 20px;
 }
 
 li {
@@ -72,26 +73,6 @@ li {
     color: #ffffff;
     margin: 0 0 30px;
 }
-
-footer {
-    font-size: 12px;
-    padding: 20px 0;
-}
-
-footer .col-sm-8 {
-    display: flex;
-    justify-content: flex-end;
-}
-
-footer ul {
-    list-style: none;
-}
-
-footer li img {
-    width: 32px;
-    height: 32px;
-}
-
 
 .zbutton{
  color: white;
@@ -196,8 +177,21 @@ li div:active {
     height: inherit;
 }
 
+#synonymsList {
+    border: none;
+    box-shadow: none;
+}
+
 #synonymsList li {
     display: inline;
     padding: 5px;
     color: darkblue;
+}
+
+.redBackground{
+    background-color: #E54;
+}
+
+#popupContent {
+    max-width: 600px;
 }
