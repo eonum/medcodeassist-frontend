@@ -39,6 +39,7 @@ $(document).ready(function() {
           selectedCodes[category][id] = suggestedCodes[category][id];
       }
       $("#allListMask").append(this);
+      $("#"+id+" .editButton").show();
       $("#codeLists #"+id).remove();
       if(!$("#maskTabs ."+category).hasClass("active") && !$("#maskTabs #allTab").hasClass("active")){
           idSelector.hide();
