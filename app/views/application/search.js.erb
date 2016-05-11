@@ -1,16 +1,30 @@
 var parameters = <%= raw @variables_as_json %>;
 var codes = parameters.codes;
 var li_id = parameters.li_id;
+var code = parameters.code;
+var text = parameters.text;
 
 var codeList = "";
 codes.forEach(function(element) {
-  var listElement = "<li><a>"+element["code"]+": "+element["text_de"]+"</a></li>";
+  var codeId = element["short_code"];
+  var code = element["code"]
+  var text = element["text_de"]
+  var listElement = "<li class='dropdown-element' id='"+codeId+"' data-code='"+code+"' data-text='"+text+"'><a>"+code+": "+text+"</a></li>";
   codeList = codeList + listElement;
 });
+
+$("#"+li_id+" div.editing").addClass("redBackground");
+
 if(codeList.length == 0)
   codeList = "<li>Keine Codes gefunden</li>";
+else if(codes.length==1 && codes[0]["code"].toLowerCase()==code.toLocaleLowerCase() && codes[0]["text_de"].toLowerCase()==text.toLowerCase()) {
+  $("#"+li_id+" div.editing").removeClass("redBackground");
+  $("#"+li_id).attr("id", codeId);
+  $("#"+codeId).attr("data-code", code);
+  $("#"+codeId).attr("data-text", text);
+}
+
+
 $("#"+li_id+" div.dropdown ul.dropdown-menu").empty().append(codeList);
-$('ul.dropdown-menu li').click(function() {
-  $("#"+li_id+" div.text_field").text($(this).text());
-});
-$("#"+li_id+" div.dropdown").toggleClass("open", true);
+
+$("#"+li_id+" div.dropdown").addClass("open");
