@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   def analyse
 
-    @words = ['test']
+    @words = ['Morbus Hodgkin', 'mellitus', 'insipidus', 'laparotomie']
 
 
 =begin
