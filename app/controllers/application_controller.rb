@@ -9,14 +9,6 @@ class ApplicationController < ActionController::Base
 
   def index
 
-    @main_codes = {}
-    @side_codes = {}
-    @procedure_codes = {}
-    @suggested_codes = {mainDiagnoses: @main_codes, sideDiagnoses: @side_codes, procedures: @procedure_codes}
-
-    @variables = {}
-    @variables['suggested_codes'] = @suggested_codes
-    @variables_as_json = @variables.to_json
   end
 
   def analyse

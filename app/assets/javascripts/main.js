@@ -1,27 +1,24 @@
 $(document).ready(function() {
   var selectedMainCodes = {};
-  //selectedMainCodes['388420'] = {code: '38.84.20', short_code: '388420', text_de: 'Sonstiger chirurgischer Verschluss der Aorta abdominalis'};
   var selectedSideCodes = {};
   var selectedProcedureCodes = {};
-    //selectedProcedureCodes['388511'] = {code: '38.85.11', short_code: '388511', text_de: 'Sonstiger chirurgischer Verschluss der A. subclavia'};
   var selectedCodes = {mainDiagnoses: selectedMainCodes, sideDiagnoses: selectedSideCodes, procedures: selectedProcedureCodes};
-  var tempSavedCodes = {mainDiagnoses: {}, sideDiagnoses: {}, procedures: {}};
-
 
   var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
   var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
   var doneAddButton = "<button class='zbutton doneButton' type='button'>Add</button>";
-  var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'><div class='text_field editing' contenteditable='true'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div></li>";
+  var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'><div class='text_field editing redBackground' contenteditable='true' data-prompt='Typen Sie hier'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div></li>";
 
   var ulSelector = $("ul");
   ulSelector.on("click", ".codeItem", function() {
       var id = this.id;
       var idSelector = $("#"+id);
       var category = $(this).attr("data-category");
-      console.log("main keys length: "+Object.keys(selectedCodes["mainDiagnoses"]).length)
       if (category == "mainDiagnoses" && Object.keys(selectedCodes["mainDiagnoses"]).length>0) {
           alert("Nur eine Hauptdiagnose ist erlaubt");
           return;
+      }else if(category == "mainDiagnoses" && Object.keys(selectedCodes["mainDiagnoses"]).length==0) {
+          $("#newMainCode").remove();
       }
       // first add buttons and change class
       idSelector.append(editButton);
@@ -32,16 +29,13 @@ $(document).ready(function() {
       var parent =  this.parentNode.parentNode.parentNode.id;
       var code = $(this).attr("data-code");
       var text = $(this).attr("data-text");
-      if(tempSavedCodes[category][id]){
-          selectedCodes[category][id] = tempSavedCodes[category][id];
-      }else if( parent == "codeLists" && suggestedCodes && suggestedCodes[category]){
+      if( parent == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]){
           selectedCodes[category][id] = suggestedCodes[category][id];
       }else if( parent == "infoRelatedCodes" && suggestedRelatedCodes && suggestedRelatedCodes[category]){
           selectedCodes[category][id] = suggestedRelatedCodes[category][id];
-      }else{
+      }else if( code && text ){
           selectedCodes[category][id] = {code: code, short_code: id, text_de: text};
       }
-      console.log("added code: "+selectedCodes[category][id]);
       // then add the code to the codemask list
       $("#allListMask").append(this);
       $("#codeLists #"+id).remove();
@@ -57,10 +51,6 @@ $(document).ready(function() {
       }
   });
 
-  $("#mainDiagnosesList, #mainDiagnosesRelatedList").on("click", "li.codeItem", function() {
-      $("#newMainCode").remove();
-  });
-
   ulSelector.on("click", ".codeMaskItem div", function() {
       var thisLi = this.parentNode;
       var id = this.parentNode.id;
@@ -73,6 +63,9 @@ $(document).ready(function() {
       idSelector.removeClass("codeMaskItem");
       idSelector.addClass("codeItem");
       $("#"+id+" button").remove();
+      if(id == "newMainCode"){
+          idSelector.attr("id", "oldMainCode");
+      }
   });
 
   ulSelector.on("click", "li.codeMaskItem.mainDiagnoses div", function() {
@@ -95,7 +88,6 @@ $(document).ready(function() {
     var id = this.parentNode.id;
     var category = $("#"+id).attr("data-category");
     delete selectedCodes[category][id];
-    console.log("deleted cat: "+category+" id: "+id);
     $("#"+id).removeClass("codeMaskItem");
     $("#"+id+" .text_field").attr("contenteditable", "true");
     var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
@@ -119,11 +111,11 @@ $(document).ready(function() {
     var code = idSelector.attr("data-code");
     var text = idSelector.attr("data-text");
     var category = idSelector.attr("data-category");
-    idSelector.attr("id", codeId);
-    $("#"+codeId).attr("data-code", code);
-    $("#"+codeId).attr("data-text", text);
-    selectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
-    tempSavedCodes[category][codeId] = selectedCodes[category][codeId];
+    if(code && text){
+        selectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
+    }else{
+        selectedCodes[category][codeId] = {code: codeId, short_code: codeId};
+    }
     setTimeout(function() {
       $("#"+id).addClass("codeMaskItem");
     }, 100);
@@ -164,6 +156,7 @@ $(document).ready(function() {
       $("#"+id).append(doneAddButton);
       $("#"+id+" .doneButton").show();
       $("#"+id+" div.editing").addClass("redBackground");
+      $("#"+id+" div.editing").attr("data-prompt", "Typen Sie hier");
       $("#cancelButton").show();
       $(this).hide();
   });

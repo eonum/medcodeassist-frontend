@@ -13,6 +13,17 @@ footer {
     padding-bottom: 20px;
 }
 
+div[contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-prompt);
+    color: gray;
+    opacity: 0.7;
+}
+
+#allListMask div[contentEditable=true]:empty:not(:focus):before{
+    color: black;
+    opacity: 0.5;
+}
+
 li {
     display: block;
 }
@@ -193,15 +204,11 @@ li div:active {
 }
 
 .redBackground{
-    background-color: #E54;
+    background-color: #E76;
 }
 
 .whiteBackground{
     background-color: #FFF;
-}
-
-.greenBackground{
-    background-color: #5E4;
 }
 
 #popupContent {
