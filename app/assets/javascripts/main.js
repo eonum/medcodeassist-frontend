@@ -119,7 +119,7 @@ $(document).ready(function() {
     var code = idSelector.attr("data-code");
     var text = idSelector.attr("data-text");
     var category = idSelector.attr("data-category");
-    $("#"+id).attr("id", codeId);
+    idSelector.attr("id", codeId);
     $("#"+codeId).attr("data-code", code);
     $("#"+codeId).attr("data-text", text);
     selectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
@@ -164,7 +164,14 @@ $(document).ready(function() {
       $("#"+id).append(doneAddButton);
       $("#"+id+" .doneButton").show();
       $("#"+id+" div.editing").addClass("redBackground");
+      $("#cancelButton").show();
       $(this).hide();
+  });
+
+  $("#cancelButton").click(function() {
+      $("#allListMask .newCode").remove();
+      $(this).hide();
+      $("#addCodeButton").show();
   });
 
   ulSelector.on("keyup", "li div.editing", function() {
@@ -213,11 +220,13 @@ $(document).ready(function() {
       $("#"+id).removeClass("newCode");
       $("#"+id+" div.dropdown").remove();
       $("#addCodeButton").show();
+      $("#cancelButton").hide();
   });
 
 
   function deleteIncompleteCodes(){
       $("#allListMask li.newCode").remove();
+      $("#cancelButton").hide();
   }
 
   $("#maskTabs li a.filterTab").click(function () {
