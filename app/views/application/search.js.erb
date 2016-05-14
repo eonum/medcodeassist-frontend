@@ -13,13 +13,6 @@ codes.forEach(function(element) {
   codeList = codeList + listElement;
 });
 
-$("#"+li_id+" div.editing").removeClass("whiteBackground");
-
-
-$("#"+li_id+" div.editing").addClass("redBackground");
-$("#"+li_id).removeAttr("data-code");
-$("#"+li_id).removeAttr("data-text");
-$("#"+li_id).attr("id", "newTempCode");
 
 
 if(codeList.length == 0)
@@ -30,6 +23,14 @@ else if(codes.length==1 && codes[0]["code"].toLowerCase()==code.toLocaleLowerCas
   $("#"+li_id).attr("data-code", code);
   $("#"+li_id).attr("data-text", text);
   $("#"+li_id).attr("id", codes[0]["short_code"]);
+}
+else {
+  $("#"+li_id+" div.editing").removeClass("whiteBackground");
+  $("#"+li_id+" div.editing").addClass("redBackground");
+  $("#"+li_id).removeAttr("data-code");
+  $("#"+li_id).removeAttr("data-text");
+  $("#"+li_id).attr("id", "newTempCode");
+  $("#newTempCode .doneButton").show();
 }
 
 
