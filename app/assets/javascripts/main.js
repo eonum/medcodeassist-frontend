@@ -100,6 +100,7 @@ $(document).ready(function() {
     $("#"+id+" .text_field").attr("contenteditable", "true");
     var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
     $("#"+id).append(divDropdown);
+    $("#"+id+" .doneButton").text("Done");
     $("#"+id+" .doneButton").show();
     $("#"+id+" .editButton").hide();
     $("#"+id+" div").addClass("editing");
@@ -107,6 +108,7 @@ $(document).ready(function() {
 
   ulSelector.on("click", "button.doneButton", function() {
     var id = this.parentNode.id;
+    $("#"+id+" div.editing").removeClass("whiteBackground");
     $("#"+id+" .text_field").attr("contenteditable", "false");
     $("#"+id+" .doneButton").hide();
     $("#"+id+" .editButton").show();
@@ -126,10 +128,7 @@ $(document).ready(function() {
       $("#"+id).addClass("codeMaskItem");
     }, 100);
     // remove it from the code list
-      $("#" + category +"List li#"+codeId).remove();
-    //remove datas
-    $("#"+codeId).removeAttr("data-code");
-    $("#"+codeId).removeAttr("data-text");
+    $("#" + category +"List li#"+codeId).remove();
   });
 
   $("#analyse").click(function() {
@@ -164,11 +163,19 @@ $(document).ready(function() {
       $("#"+id).append(editButton);
       $("#"+id).append(doneAddButton);
       $("#"+id+" .doneButton").show();
+      $("#"+id+" div.editing").addClass("redBackground");
       $(this).hide();
   });
 
   ulSelector.on("keyup", "li div.editing", function() {
       var id = this.parentNode.id;
+      //remove datas
+      $("#"+id+" div.editing").removeClass("whiteBackground");
+      $("#"+id+" div.editing").addClass("redBackground");
+      $("#"+id).removeAttr("data-code");
+      $("#"+id).removeAttr("data-text");
+      $("#"+id).attr("id", "newTempCode");
+      $("#newTempCode .doneButton").show();
       interactiveProposals(id);
   });
 
