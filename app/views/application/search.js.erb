@@ -13,15 +13,23 @@ codes.forEach(function(element) {
   codeList = codeList + listElement;
 });
 
+$("#"+li_id+" div.editing").removeClass("whiteBackground");
+
+
 $("#"+li_id+" div.editing").addClass("redBackground");
+$("#"+li_id).removeAttr("data-code");
+$("#"+li_id).removeAttr("data-text");
+$("#"+li_id).attr("id", "newTempCode");
+
 
 if(codeList.length == 0)
   codeList = "<li>Keine Codes gefunden</li>";
 else if(codes.length==1 && codes[0]["code"].toLowerCase()==code.toLocaleLowerCase() && codes[0]["text_de"].toLowerCase()==text.toLowerCase()) {
   $("#"+li_id+" div.editing").removeClass("redBackground");
-  $("#"+li_id).attr("id", codeId);
-  $("#"+codeId).attr("data-code", code);
-  $("#"+codeId).attr("data-text", text);
+  $("#"+li_id+" div.editing").addClass("whiteBackground");
+  $("#"+li_id).attr("data-code", code);
+  $("#"+li_id).attr("data-text", text);
+  $("#"+li_id).attr("id", codes[0]["short_code"]);
 }
 
 

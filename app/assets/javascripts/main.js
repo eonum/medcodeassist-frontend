@@ -29,13 +29,19 @@ $(document).ready(function() {
       idSelector.removeClass("codeItem");
       idSelector.addClass("codeMaskItem");
       // check if it was added manually and add the info to selected Codes, else it will be in the suggested Codes
+      var parent =  this.parentNode.parentNode.parentNode.id;
+      var code = $(this).attr("data-code");
+      var text = $(this).attr("data-text");
       if(tempSavedCodes[category][id]){
           selectedCodes[category][id] = tempSavedCodes[category][id];
-      }else if(suggestedCodes && suggestedCodes[category]){
+      }else if( parent == "codeLists" && suggestedCodes && suggestedCodes[category]){
           selectedCodes[category][id] = suggestedCodes[category][id];
+      }else if( parent == "infoRelatedCodes" && suggestedRelatedCodes && suggestedRelatedCodes[category]){
+          selectedCodes[category][id] = suggestedRelatedCodes[category][id];
       }else{
-          selectedCodes[category][id] = {short_code: id};
+          selectedCodes[category][id] = {code: code, short_code: id, text_de: text};
       }
+      console.log("added code: "+selectedCodes[category][id]);
       // then add the code to the codemask list
       $("#allListMask").append(this);
       $("#codeLists #"+id).remove();

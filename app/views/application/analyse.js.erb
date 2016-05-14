@@ -27,9 +27,9 @@ function updateSuggestedCodes() {
     $("#"+category+"List").empty();
     for(var codeId in suggestedCodes[category]){
       // only show codes that aren't already selected
-      var code = suggestedCodes[category][codeId].code;
-      var text = suggestedCodes[category][codeId].text_de;
-      if(!selectedCodes || !selectedCodes[category] || jQuery.isEmptyObject(selectedCodes[category]) || !(codeId in selectedCodes[category])) {
+      if(!selectedCodes || !selectedCodes[category] || !(codeId in selectedCodes[category])) {
+        var code = suggestedCodes[category][codeId].code;
+        var text = suggestedCodes[category][codeId].text_de;
         $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
       }
     }

@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   def analyse
 
-    @words = ['hodgkin', 'mellitus', 'insipidus', 'laparotomie']
+    @words = ['hodgkin', 'mellitus', 'insipidus', 'laparotomie', 'test']
 
 
 =begin
@@ -81,7 +81,15 @@ class ApplicationController < ActionController::Base
 
 
     puts "selected codes:"
-    puts @selected_codes
+    if(@selected_codes)
+      for cat in @selected_codes
+        if(cat)
+          for id in cat
+            puts id
+          end
+        end
+      end
+    end
 
     @variables = {}
     @variables['words'] = @words
@@ -126,6 +134,18 @@ class ApplicationController < ActionController::Base
 =end
 
     @synonyms = parsed_token.map {|x| x['token']}
+    @selected_codes = params[:selected_codes]
+
+    puts "sel2:"
+    if(@selected_codes)
+      for cat in @selected_codes
+        if(cat)
+          for id in cat
+            puts id
+          end
+        end
+      end
+    end
 
     @variables = {}
     @variables['word'] = params[:word]
@@ -152,13 +172,13 @@ class ApplicationController < ActionController::Base
          end
 
     codeMatch = search_text.match(patternCode)
-    if(!codeMatch.nil?)
+     if(!codeMatch.nil?)
       code = codeMatch[:code]
       search_text.delete!(code)
-      code.gsub!(/\./, '\.')
+      #code.gsub!(/\./, '\.')
     end
 
-    patternText = /(?<text>\w+(\s\w*)*)/
+    patternText = /(?<text>\w+(\s\w+)*)/
     textMatch = search_text.match(patternText)
     if(!textMatch.nil?)
       text = textMatch[:text]

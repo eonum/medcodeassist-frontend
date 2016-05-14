@@ -192,6 +192,10 @@ li div:active {
     background-color: #E54;
 }
 
+.whiteBackground{
+    background-color: #FFF;
+}
+
 #popupContent {
     max-width: 600px;
 }
