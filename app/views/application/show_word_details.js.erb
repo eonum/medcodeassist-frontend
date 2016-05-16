@@ -2,11 +2,11 @@ var parameters = <%= raw @variables_as_json %>;
 var word = parameters.word;
 var synonyms = parameters.synonyms;
 var suggestedRelatedCodes = parameters.suggested_related_codes;
-var selectedCodes = parameters.selected_codes;
 
-
+/* clicked word is displayed */
 $("#infoWord").text(word);
 
+/* synonyms of the word are displayed highlighted and clickable */
 if(synonyms) {
   $("#synonymsList").empty();
   synonyms.forEach(function (synonym) {
@@ -14,16 +14,15 @@ if(synonyms) {
   });
 }
 
+/* update related code lists are filled in the appropriate format */
 function updateSuggestedRelatedCodes() {
   for(var category in suggestedRelatedCodes){
+    // empty list first
     $("#"+category+"RelatedList").empty();
     for(var codeId in suggestedRelatedCodes[category]){
-      // only show codes that aren't already selected
-      if(!selectedCodes || !selectedCodes[category] || !(codeId in selectedCodes[category])) {
         var code = suggestedRelatedCodes[category][codeId].code;
         var text = suggestedRelatedCodes[category][codeId].text_de;
         $("#"+category+"RelatedList").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
-      }
     }
   }
 }

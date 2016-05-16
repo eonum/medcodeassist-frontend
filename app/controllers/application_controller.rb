@@ -8,13 +8,11 @@ class ApplicationController < ActionController::Base
   @@api_url = 'http://pse4.inf.unibe.ch/api/v1/'
 
   def index
-
   end
 
   def analyse
-
-    @words = ['hodgkin', 'mellitus', 'insipidus', 'laparotomie', 'test']
-
+    # get post variables
+    selected_codes = params[:selected_codes]
 
 =begin
     # API query - uncomment when API is ready
@@ -35,6 +33,9 @@ class ApplicationController < ActionController::Base
     @procedure_codes = parsed_proposals["procedures"]
 =end
 
+    # mockup words and suggested codes
+    @words = ['hodgkin', 'mellitus', 'insipidus', 'laparotomie', 'test']
+
     @main_codes = {}
 
     @main_codes['C800'] = {code: 'C80.0', short_code: 'C800', text_de: "Bösartige Neubildung, primäre Lokalisation unbekannt, so bezeichnet"}
@@ -54,9 +55,7 @@ class ApplicationController < ActionController::Base
 
     @suggested_codes = {mainDiagnoses: @main_codes, sideDiagnoses: @side_codes, procedures: @procedure_codes}
 
-    @selected_codes = params[:selected_codes]
-
-    if(!@selected_codes.nil?)
+    if(!selected_codes.nil?)
       @main_codes.delete('G8210')
       @main_codes.delete('C800')
       @main_codes['A666'] = {code: "A66.6", short_code: 'A666', text_de: "Knochen- und Gelenkveränderungen bei Frambösie"}
@@ -71,22 +70,24 @@ class ApplicationController < ActionController::Base
       @procedure_codes.delete('5411')
     end
 
+    # end of mockup words and suggested codes
 
-    puts "selected codes:"
-    if(@selected_codes)
-      for cat in @selected_codes
-        if(cat)
-          for id in cat
-            puts id
-          end
+
+    # reject selected codes from suggested codes
+    if(!selected_codes.nil?)
+      selected_codes.each_key do|category|
+        if(!selected_codes[category].nil?)
+          sel_codes = selected_codes[category]
+          puts @suggested_codes[category.to_sym]
+          @suggested_codes[category.to_sym].reject!{ |entry| sel_codes.has_key?(entry) }
         end
       end
     end
 
+    # pass the variables to javascript view
     @variables = {}
     @variables['words'] = @words
     @variables['suggested_codes'] = @suggested_codes
-    @variables['selected_codes'] = @selected_codes
     @variables_as_json = @variables.to_json
 
     respond_to do |format|
@@ -95,7 +96,11 @@ class ApplicationController < ActionController::Base
   end
 
   def show_word_details
+    # get post variables
+    selected_codes = params[:selected_codes]
+    word = params[:word]
 
+    #mockup related codes and synonyms
     @main_related_codes = {}
     @main_related_codes['C800'] = {code: 'C80.0', short_code: 'C800', text_de: "Bösartige Neubildung, primäre Lokalisation unbekannt, so bezeichnet"}
     @main_related_codes['E500'] = {code: 'E50.0', short_code: 'E500', text_de: "Vitamin-A-Mangel mit Xerosis conjunctivae"}
@@ -112,11 +117,15 @@ class ApplicationController < ActionController::Base
 
     @suggested_related_codes = {mainDiagnoses: @main_related_codes, sideDiagnoses: @side_related_codes, procedures: @procedure_related_codes}
 
-    if(@word=='test')
-      parsed_token = [{'token' => 'synonym1', similarity: '1'}, {'token' => 'synonym2', similarity: '0'}]
+    if( word !=  "test")
+      parsed_token = [{'name' => 'synonym1', similarity: '1'}, {'name' => 'synonym2', similarity: '0'}]
     else
-      parsed_token = [{'token' => 'synonym3', similarity: '1'}, {'token' => 'synonym4', similarity: '0'}]
+      parsed_token = [{'name' => 'synonym3', similarity: '1'}, {'name' => 'synonym4', similarity: '0'}]
     end
+
+    @synonyms = parsed_token.map {|x| x['name']}
+
+    # end of mockup related codes and synonyms
 
 =begin
     # API query - uncomment when API is ready
@@ -125,25 +134,21 @@ class ApplicationController < ActionController::Base
     @synonyms = parsed_synonyms.map {|x| x['name']}
 =end
 
-    @synonyms = parsed_token.map {|x| x['token']}
-    @selected_codes = params[:selected_codes]
-
-    puts "sel2:"
-    if(@selected_codes)
-      for cat in @selected_codes
-        if(cat)
-          for id in cat
-            puts id
-          end
+    # reject selected codes from suggested codes
+    if(!selected_codes.nil?)
+      selected_codes.each_key do|category|
+        if(!selected_codes[category].nil?)
+          sel_codes = selected_codes[category]
+          @suggested_related_codes[category.to_sym].reject!{ |entry| sel_codes.has_key?(entry) }
         end
       end
     end
 
+    # pass the variables to javascript view
     @variables = {}
-    @variables['word'] = params[:word]
+    @variables['word'] = word
     @variables['synonyms'] = @synonyms
     @variables['suggested_related_codes'] = @suggested_related_codes
-    @variables['selected_codes'] = params[:selected_codes]
     @variables_as_json = @variables.to_json
 
     respond_to do |format|
@@ -153,49 +158,56 @@ class ApplicationController < ActionController::Base
   end
 
   def search
+    # get post variables
     search_text = params['search_text'].gsub(/\s\s+/, ' ')
     category = params['category']
     selected_codes = params["selected_codes"]
 
+    # determine code pattern based on category
     if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
-      patternCode = /(?<code>[a-zA-Z]\d\d?\.?\d{0,2})/
+      codePattern = /(?<code>[a-zA-Z]\d\d?\.?\d{0,2})/ # ICD code pattern
     elsif(category == 'procedures')
-      patternCode = /(?<code>\d{1,2}\.?\d?[\w\d]\.?\d{0,2})/
-         end
-
-    codeMatch = search_text.match(patternCode)
+      codePattern = /(?<code>\d{1,2}\.?\d?[\w\d]\.?\d{0,2})/ # CHOP code pattern
+    end
+    # find matched codes
+    codeMatch = search_text.match(codePattern)
      if(!codeMatch.nil?)
       code = codeMatch[:code]
+      # delete code from search_text for later use
       search_text.delete!(code)
-      #code.gsub!(/\./, '\.')
+      # escaped regex code for later search in database
+      escaped_code = code.gsub(/\./, '\.')
     end
 
-    patternText = /(?<text>\w+(\s\w+)*)/
-    textMatch = search_text.match(patternText)
+    # text pattern
+    textPattern = /(?<text>\w+(\s\w+)*)/
+    # find matched text
+    textMatch = search_text.match(textPattern)
     if(!textMatch.nil?)
       text = textMatch[:text]
     end
 
-    puts "code: #{code}"
-    puts "text: #{text}"
-
+    # search in the appropriate database based on category
     if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
-      @code_matches = IcdCode.any_of({ :code => /.*#{code}.*/i, :text_de => /.*#{text}.*/i}).entries
+      @code_matches = IcdCode.any_of({ :code => /.*#{escaped_code}.*/i, :text_de => /.*#{text}.*/i}).entries
     elsif(category == 'procedures')
-      @code_matches = ChopCode.any_of({ :code => /.*#{code}.*/i, :text_de => /.*#{text}.*/i}).entries
+      @code_matches = ChopCode.any_of({ :code => /.*#{escaped_code}.*/i, :text_de => /.*#{text}.*/i}).entries
     end
 
+    # if selected codes of given category exists then reject them from matched codes
     if(!selected_codes.nil? && !selected_codes[category].nil?)
       sel_codes = selected_codes[category]
       @code_matches.reject! { |entry| sel_codes.has_key?(entry["short_code"]) }
     end
 
+    # if no matches send an empty object
     if(!@code_matches.nil?)
       @codes = @code_matches.take 10
     else
       @codes = {}
     end
 
+    # pass the variables to javascript view
     @variables = {}
     @variables['codes'] = @codes
     @variables['code'] = code

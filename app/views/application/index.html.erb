@@ -17,7 +17,7 @@
 
       <button id="analyse" type="button" class="btn btn-primary">Analyse</button>
 
-      <!-- Modal -->
+      <!-- Modal/Popup -->
       <div id="popup" class="modal fade" role="dialog">
         <div id="popupContent" class="modal-dialog modal-lg">
 
@@ -79,15 +79,15 @@
         <!-- Nav tabs for the list of the mask -->
         <ul class="nav nav-tabs" id="maskTabs" role="tablist">
           <li id="allTab" role="presentation" class="active"><a id="allMaskLink" href="#allMask" aria-controls="allMask" role="tab" data-toggle="tab">Alle</a></li>
-          <li class="mainDiagnoses" role="presentation"><a class="filterTab" href="#mainDiagnosesMask" aria-controls="mainDiagnosesMask" role="tab" data-toggle="tab" data-category="mainDiagnoses">Hauptdiagnosen</a></li>
-          <li class="sideDiagnoses" role="presentation"><a class="filterTab withAddButton" href="#sideDiagnosesMask" aria-controls="sideDiagnosesMask" role="tab" data-toggle="tab" data-category="sideDiagnoses">Nebendiagnosen</a></li>
-          <li class="procedures" role="presentation"><a class="filterTab withAddButton" href="#proceduresMask" aria-controls="proceduresMask" role="tab" data-toggle="tab" data-category="procedures">Prozeduren</a></li>
+          <li class="mainDiagnoses" role="presentation"><a class="filterTab" href="#allMask" aria-controls="mainDiagnosesMask" role="tab" data-toggle="tab" data-category="mainDiagnoses">Hauptdiagnosen</a></li>
+          <li class="sideDiagnoses" role="presentation"><a class="filterTab withAddButton" href="#allMask" aria-controls="sideDiagnosesMask" role="tab" data-toggle="tab" data-category="sideDiagnoses">Nebendiagnosen</a></li>
+          <li class="procedures" role="presentation"><a class="filterTab withAddButton" href="#allMask" aria-controls="proceduresMask" role="tab" data-toggle="tab" data-category="procedures">Prozeduren</a></li>
         </ul>
 
         <!-- Tab panes with the lists of the mask -->
-        <div class="tab-content codeMaskLists">
+        <div class="tab-content" id="codeMaskLists">
           <div role="tabpanel" class="tab-pane active" id="allMask">
-            <ul class="list-group code-maskList" id="allListMask">
+            <ul class="list-group codeMaskList" id="allListMask">
               <li class='list-group-item mainDiagnoses' id="newMainCode" data-category="mainDiagnoses"><div class="text_field editing redBackground" contenteditable="true" data-prompt="Typen Sie hier"></div><div class="dropdown"><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class="dropdown-menu"></ul></div><button class="zbutton doneButton" type="button">Add</button><button class="zbutton editButton" type="button">Edit</button></li>
             </ul>
           </div>
@@ -124,10 +124,6 @@
 
   </div>
 
-  <!--Placeholder-->
-  <div class="row">
-
-  </div>
 </section>
 
 

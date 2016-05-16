@@ -1,14 +1,21 @@
 var parameters = <%= raw @variables_as_json %>;
 var words = parameters.words;
 var suggestedCodes = parameters.suggested_codes;
-var selectedCodes = parameters.selected_codes;
 
+// change analyze button after first use
 $("#analyse").text('Update');
 
+// function to escape all escaped characters of a regex expression
+function reg_escape(str) {
+  return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+}
+
+// highlight words (case insensitive) and make them links for the popup and show_word_detaills-post
 var textArea = $("#textArea");
 var text = textArea.html();
 words.forEach(function(item) {
   var textArray = text.match(new RegExp( "(" + reg_escape( item ) + ")" , 'gi'));
+  // only escaped due to problem of the API that has matched words. remove "if" when API works properly
   if(textArray && item != "n") {
     textArray.forEach(function(word) {
       var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' title='click for details' data-toggle='modal' data-target='#popup' >" + word + "</a>";
@@ -18,20 +25,16 @@ words.forEach(function(item) {
 });
 textArea.html(text);
 
-function reg_escape(str) {
-  return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
-}
 
+/* update code lists are filled in the appropriate format */
 function updateSuggestedCodes() {
   for(var category in suggestedCodes){
+    // empty list first
     $("#"+category+"List").empty();
     for(var codeId in suggestedCodes[category]){
-      // only show codes that aren't already selected
-      if(!selectedCodes || !selectedCodes[category] || !(codeId in selectedCodes[category])) {
         var code = suggestedCodes[category][codeId].code;
         var text = suggestedCodes[category][codeId].text_de;
         $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
-      }
     }
   }
 }

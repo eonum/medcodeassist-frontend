@@ -4,6 +4,7 @@ var li_id = parameters.li_id;
 var code = parameters.code;
 var text = parameters.text;
 
+/* add matching codes to the temporary dropdown list in the appropriate format */
 var codeList = "";
 codes.forEach(function(element) {
   var codeId = element["short_code"];
@@ -13,10 +14,10 @@ codes.forEach(function(element) {
   codeList = codeList + listElement;
 });
 
-
-
+// no matching codes
 if(codeList.length == 0)
   codeList = "<li>Keine Codes gefunden</li>";
+// one exact matching code gets stored in html and background is white
 else if(codes.length==1 && codes[0]["code"].toLowerCase()==code.toLocaleLowerCase() && codes[0]["text_de"].toLowerCase()==text.toLowerCase()) {
   $("#"+li_id+" div.editing").removeClass("redBackground");
   $("#"+li_id+" div.editing").addClass("whiteBackground");
@@ -24,6 +25,7 @@ else if(codes.length==1 && codes[0]["code"].toLowerCase()==code.toLocaleLowerCas
   $("#"+li_id).attr("data-text", text);
   $("#"+li_id).attr("id", codes[0]["short_code"]);
 }
+// more than one matching codes deletes stored data in html and background is red
 else {
   $("#"+li_id+" div.editing").removeClass("whiteBackground");
   $("#"+li_id+" div.editing").addClass("redBackground");
@@ -32,7 +34,8 @@ else {
   $("#"+li_id).attr("id", "newTempCode");
 }
 
-
+// empty and fill the dropdown list with the temporary above
 $("#"+li_id+" div.dropdown ul.dropdown-menu").empty().append(codeList);
 
+// open dropdown
 $("#"+li_id+" div.dropdown").addClass("open");
