@@ -14,7 +14,7 @@ function reg_escape(str) {
 var textArea = $("#textArea");
 var text = textArea.html();
 words.forEach(function(item) {
-  var textArray = text.match(new RegExp( "(" + reg_escape( item ) + ")" , 'gi'));
+  var textArray = text.match(new RegExp("("+reg_escape(item)+")",'gi'));
   // only escaped due to problem of the API that has matched words. remove "if" when API works properly
   if(textArray && item != "n") {
     textArray.forEach(function(word) {

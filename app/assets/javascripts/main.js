@@ -121,7 +121,6 @@ $(document).ready(function() {
     // on click of the done button change make code uneditable and save data to selected_codes List
     $("#codeMaskLists ul").on("click", "button.doneButton", function() {
         var id = this.parentNode.id;
-        $("#"+id+" div.editing").removeClass("whiteBackground");
         $("#"+id+" .text_field").attr("contenteditable", "false");
         $("#"+id+" .doneButton").hide();
         $("#"+id+" .editButton").show();
@@ -207,14 +206,7 @@ $(document).ready(function() {
     // on key release send post for search
     $("#codeMaskLists ul").on("keyup", "li div.editing", function() {
         var id = this.parentNode.id;
-        // change Background from white to red
-        $("#"+id+" div.editing").removeClass("whiteBackground");
-        $("#"+id+" div.editing").addClass("redBackground");
-        // remove datas
-        $("#"+id).removeAttr("data-code");
-        $("#"+id).removeAttr("data-text");
-        $("#"+id).attr("id", "newTempCode");
-        $("#newTempCode .doneButton").show();
+        $("#"+id+" .doneButton").show();
         interactiveProposals(id);
     });
 

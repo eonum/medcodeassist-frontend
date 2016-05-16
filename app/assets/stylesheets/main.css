@@ -51,16 +51,6 @@ li {
     font-weight: bold;
 }
 
-#codeMask{
-    border: solid 1px #CCCCCC;
-    border-radius: 5px;
-    height: 100px;
-}
-
-#codeMask:hover{
-    border:solid 1px Aqua ;
-    font-weight: bold;
-}
 #codeMaskWrapper {
     margin-top: 30px;
 }
@@ -169,10 +159,6 @@ li {
 
 .redBackground{
     background-color: #E76;
-}
-
-.whiteBackground{
-    background-color: #FFF;
 }
 
 #popupContent {

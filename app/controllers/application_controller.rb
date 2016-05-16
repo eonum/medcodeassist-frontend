@@ -77,9 +77,9 @@ class ApplicationController < ActionController::Base
     if(!selected_codes.nil?)
       selected_codes.each_key do|category|
         if(!selected_codes[category].nil?)
-          sel_codes = selected_codes[category]
+          selected_category_codes = selected_codes[category]
           puts @suggested_codes[category.to_sym]
-          @suggested_codes[category.to_sym].reject!{ |entry| sel_codes.has_key?(entry) }
+          @suggested_codes[category.to_sym].reject!{ |entry| selected_category_codes.has_key?(entry) }
         end
       end
     end
@@ -138,8 +138,8 @@ class ApplicationController < ActionController::Base
     if(!selected_codes.nil?)
       selected_codes.each_key do|category|
         if(!selected_codes[category].nil?)
-          sel_codes = selected_codes[category]
-          @suggested_related_codes[category.to_sym].reject!{ |entry| sel_codes.has_key?(entry) }
+          selected_category_codes = selected_codes[category]
+          @suggested_related_codes[category.to_sym].reject!{ |entry| selected_category_codes.has_key?(entry) }
         end
       end
     end
@@ -180,13 +180,14 @@ class ApplicationController < ActionController::Base
     end
 
     # text pattern
-    textPattern = /(?<text>\w+(\s\w+)*)/
+    textPattern = /(?<text>\w+(\s*\w+)*\s*)/
     # find matched text
     textMatch = search_text.match(textPattern)
     if(!textMatch.nil?)
       text = textMatch[:text]
+      text = text.chomp(" ")
     end
-
+    
     # search in the appropriate database based on category
     if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
       @code_matches = IcdCode.any_of({ :code => /.*#{escaped_code}.*/i, :text_de => /.*#{text}.*/i}).entries
@@ -200,11 +201,15 @@ class ApplicationController < ActionController::Base
       @code_matches.reject! { |entry| sel_codes.has_key?(entry["short_code"]) }
     end
 
+    @codes = {}
     # if no matches send an empty object
     if(!@code_matches.nil?)
       @codes = @code_matches.take 10
-    else
-      @codes = {}
+    end
+
+    puts "sel codes"
+    @codes.each do |code|
+      puts code
     end
 
     # pass the variables to javascript view

@@ -8,26 +8,29 @@ var text = parameters.text;
 var codeList = "";
 codes.forEach(function(element) {
   var codeId = element["short_code"];
-  var code = element["code"]
-  var text = element["text_de"]
+  var code = element["code"];
+  var text = element["text_de"];
   var listElement = "<li class='dropdown-element' id='"+codeId+"' data-code='"+code+"' data-text='"+text+"'><a>"+code+": "+text+"</a></li>";
   codeList = codeList + listElement;
 });
 
 // no matching codes
-if(codeList.length == 0)
+if(codeList.length == 0){
   codeList = "<li>Keine Codes gefunden</li>";
+  $("#"+li_id+" div.editing").addClass("redBackground");
+  $("#"+li_id).removeAttr("data-code");
+  $("#"+li_id).removeAttr("data-text");
+  $("#"+li_id).attr("id", "newTempCode");
+}
 // one exact matching code gets stored in html and background is white
-else if(codes.length==1 && codes[0]["code"].toLowerCase()==code.toLocaleLowerCase() && codes[0]["text_de"].toLowerCase()==text.toLowerCase()) {
+else if(codes.length==1 && code.match(new RegExp("\s*"+codes[0]["code"]+"\s*",'i')) && text.match(new RegExp("\s*"+codes[0]["text_de"]+"\s*",'i'))) {
   $("#"+li_id+" div.editing").removeClass("redBackground");
-  $("#"+li_id+" div.editing").addClass("whiteBackground");
   $("#"+li_id).attr("data-code", code);
   $("#"+li_id).attr("data-text", text);
   $("#"+li_id).attr("id", codes[0]["short_code"]);
 }
 // more than one matching codes deletes stored data in html and background is red
-else {
-  $("#"+li_id+" div.editing").removeClass("whiteBackground");
+else{
   $("#"+li_id+" div.editing").addClass("redBackground");
   $("#"+li_id).removeAttr("data-code");
   $("#"+li_id).removeAttr("data-text");
