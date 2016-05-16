@@ -1,55 +1,55 @@
 require 'spec_helper'
 require 'rails_helper'
 
+@@api_url = 'http://pse4.inf.unibe.ch/api/v1/'
 
-describe Api::V1::TokenizationsController do
+describe 'api controllers' do
 
-  before do
-    @token = Token.new(:name =>"Mirko",:lang =>'de',:wordvector=>[0,1])
-    @token2 = Token.new(:name =>"Simon",:lang =>'de',:wordvector=>[0,1])
-    @token3 = Token.new(:name =>"Jiannis",:lang =>'de',:wordvector=>[0,1])
-    @token4 = Token.new(:name =>"Antonis",:lang =>'de',:wordvector=>[0,1])
-    @token5 = Token.new(:name =>"LucienM",:lang =>'de',:wordvector=>[0,1])
-    @token.save
-    @token2.save
-    @token3.save
-    @token4.save
-    @token5.save
+  it 'has right token structure' do
+    tokens = HTTParty.post(@@api_url+'tokenizations', { query: {text: 'anorexia'} } )
+    parsed_tokens =  JSON.parse(tokens.body)
+    expect(parsed_tokens).to be_an_instance_of(Array)
+    if(parsed_tokens.count > 0)
+      expect(parsed_tokens[0]).to be_an_instance_of(Hash)
+      expect(parsed_tokens[0].size).to be 2
+    end
   end
 
-    it 'test controller method create' do
-      expect(@controller.respond_to?(:create)).to be(true)
-      get :create, {:format => :json, text: "Mirko, Simon, Jiannis, Antonis, LucienM"}
+  it 'returns not more than 3 synonyms and has right structure' do
+    synonyms = HTTParty.post(@@api_url+'synonyms', { query: {word: 'anorexia', count: 3} } )
+    parsed_synonyms = JSON.parse(synonyms.body)
 
-      parsed_body = JSON.parse(response.body)
-
-      # puts parsed_body[0]["word"] # uncomment if you wanna look how the parsed_body 2D-array looks like
-
-      expect(parsed_body[0]["word"].eql?("Mirko")).to be(true)
-      expect(parsed_body[0]["token"].eql?("Mirko")).to be(true)
-      expect(parsed_body[0]["pos"]).to be(0)
-
-
-      expect(parsed_body[1]["word"].eql?("Simon")).to be(true)
-      expect(parsed_body[1]["token"].eql?("Simon")).to be(true)
-      expect(parsed_body[1]["pos"]).to be(7)
-
-      expect(parsed_body[2]["word"].eql?("Jiannis")).to be(true)
-      expect(parsed_body[2]["token"].eql?("Jiannis")).to be(true)
-      expect(parsed_body[2]["pos"]).to be(14)
-
-      expect(parsed_body[3]["word"].eql?("Antonis")).to be(true)
-      expect(parsed_body[3]["token"].eql?("Antonis")).to be(true)
-      expect(parsed_body[3]["pos"]).to be(23)
-
-      expect(parsed_body[4]["word"].eql?("LucienM")).to be(true)
-      expect(parsed_body[4]["token"].eql?("LucienM")).to be(true)
-      expect(parsed_body[4]["pos"]).to be(32)
+    expect(parsed_synonyms.count).to be <= 3
+    expect(parsed_synonyms).to be_an_instance_of(Array)
+    if(parsed_synonyms.count > 0)
+        expect(parsed_synonyms[0]).to be_an_instance_of(Hash)
+        expect(parsed_synonyms[0].size).to be 2
     end
+  end
 
-    it 'test similarity of tokens' do
-      expect(Token.count).to be(5)
-      expect(@token2.name.eql?("Simon")).to be(true)
-      expect(@token.find_similar_tokens.include?({:token=>"Simon", :similarity=>1.0})).to be(true)
+  it 'gets the right code_proposals structures' do
+    code_proposals = HTTParty.post(@@api_url+'code_proposals', {query: {codes: %w(F50.0 G24.5), code_types: %w(ICD ICD), text: ''  }})
+    parsed_proposals = JSON.parse(code_proposals.body)
+    @main_codes = parsed_proposals['main_diagnoses']
+    @side_codes = parsed_proposals['side_diagnoses']
+    @procedure_codes = parsed_proposals['procedures']
+
+    expect(@main_codes).to be_an_instance_of(Hash)
+    expect(@side_codes).to be_an_instance_of(Hash)
+    expect(@procedure_codes).to be_an_instance_of(Hash)
+
+    if(@main_codes.size > 0)
+      expect(@main_codes.values[0]).to be_an_instance_of(Hash)
+      expect(@main_codes.values[0].size).to be 2
     end
+    if(@side_codes.size > 0)
+      expect(@side_codes.values[0]).to be_an_instance_of(Hash)
+      expect(@side_codes.values[0].size).to be 2
+    end
+    if(@procedure_codes.size > 0)
+      expect(@procedure_codes.values[0]).to be_an_instance_of(Hash)
+      expect(@procedure_codes.values[0].size).to be 2
+    end
+  end
+
 end

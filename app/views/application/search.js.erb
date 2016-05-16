@@ -1,0 +1,44 @@
+var parameters = <%= raw @variables_as_json %>;
+var codes = parameters.codes;
+var li_id = parameters.li_id;
+var code = parameters.code;
+var text = parameters.text;
+
+/* add matching codes to the temporary dropdown list in the appropriate format */
+var codeList = "";
+codes.forEach(function(element) {
+  var codeId = element["short_code"];
+  var code = element["code"];
+  var text = element["text_de"];
+  var listElement = "<li class='dropdown-element' id='"+codeId+"' data-code='"+code+"' data-text='"+text+"'><a>"+code+": "+text+"</a></li>";
+  codeList = codeList + listElement;
+});
+
+// no matching codes
+if(codeList.length == 0){
+  codeList = "<li>Keine Codes gefunden</li>";
+  $("#"+li_id+" div.editing").addClass("redBackground");
+  $("#"+li_id).removeAttr("data-code");
+  $("#"+li_id).removeAttr("data-text");
+  $("#"+li_id).attr("id", "newTempCode");
+}
+// one exact matching code gets stored in html and background is white
+else if(codes.length==1 && code.match(new RegExp("\s*"+codes[0]["code"]+"\s*",'i')) && text.match(new RegExp("\s*"+codes[0]["text_de"]+"\s*",'i'))) {
+  $("#"+li_id+" div.editing").removeClass("redBackground");
+  $("#"+li_id).attr("data-code", code);
+  $("#"+li_id).attr("data-text", text);
+  $("#"+li_id).attr("id", codes[0]["short_code"]);
+}
+// more than one matching codes deletes stored data in html and background is red
+else{
+  $("#"+li_id+" div.editing").addClass("redBackground");
+  $("#"+li_id).removeAttr("data-code");
+  $("#"+li_id).removeAttr("data-text");
+  $("#"+li_id).attr("id", "newTempCode");
+}
+
+// empty and fill the dropdown list with the temporary above
+$("#"+li_id+" div.dropdown ul.dropdown-menu").empty().append(codeList);
+
+// open dropdown
+$("#"+li_id+" div.dropdown").addClass("open");

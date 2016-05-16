@@ -7,16 +7,26 @@ nav {
     padding: 20px 0;
 
 }
-.navbar-brand{
-    font-size: 36px;
-    font-weight: bolder;
+
+footer {
+    font-size: 12px;
+    padding-bottom: 20px;
 }
 
+div[contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-prompt);
+    color: gray;
+    opacity: 0.7;
 }
 
-#feedback { font-size: 1.4em; }
-.selectable .ui-selecting, .unselectable .ui-selecting { background: #FECA40; }
-/*.selectable .ui-selected { background: #F39814; color: white; }*/
+#allListMask div[contentEditable=true]:empty:not(:focus):before{
+    color: black;
+    opacity: 0.5;
+}
+
+li {
+    display: block;
+}
 
 #analyse{
     position: relative;
@@ -25,114 +35,31 @@ nav {
     margin-right:30px;
 }
 
-.infoButton{
-    position: relative;
-    top: 30%;
-    margin-top: -5px;
-    float: right;
-    border-style: none;
-    border-radius: 100px;
-    height: 30px;
-    background-color: transparent;
-}
-
-
-.editable{
+#textArea{
     height: 300px;
     overflow:scroll
 }
 
 .highlight{
-    font-weight: bold;
-    background: yellow;
+    background-color: orange;
+    opacity: 0.5;
 }
 
-
-#infoField-wrapper{
-    height: auto;
-    margin-top: 30px;
-    margin-bottom: 50px;
-    padding: 0;
-}
-
-#infoField {
-    border: 1px solid #CCC;
-    border-radius: 5px;
-    padding: 0;
-}
-
-#infoWordWrapper {
-    border-bottom: 1px solid #CCC;
-    padding: 0;
-}
-
-#infoDetailsWrapper {
-
-}
-
-#infoSynonymsWrapper {
-    border-right: 1px solid #CCC;
-    padding-left: 0;
-    height: inherit;
-}
-
-#infoRelatedCodesListWrapper {
-    /*border-left: 1px solid #CCC;*/
-    padding-right: 0;
-    height: inherit;
-}
-
-
-#code-mask{
-    border: solid 1px #CCCCCC;
-
-    border-radius: 5px;
-    height: 100px;
-}
-
-#code-mask:hover{
-    border:solid 1px Aqua ;
+.showWordDetails {
+    cursor: pointer;
+    color: black;
     font-weight: bold;
 }
+
 #codeMaskWrapper {
     margin-top: 30px;
 }
 
 .btn.btn-primary {
     border-radius: 2px;
-    border: 0px;  text-shadow: none;
+    border: 0;  text-shadow: none;
 
 }
-
-.btn.btn-primary:hover {
-
-}
-
-.btn-secondary {
-    background-color: #E8DFE0;
-    color: #ffffff;
-    margin: 0 0 30px;
-}
-
-footer {
-    font-size: 12px;
-    padding: 20px 0;
-}
-
-footer .col-sm-8 {
-    display: flex;
-    justify-content: flex-end;
-}
-
-footer ul {
-    list-style: none;
-}
-
-footer li img {
-    width: 32px;
-    height: 32px;
-}
-
 
 .zbutton{
  color: white;
@@ -140,31 +67,100 @@ footer li img {
  border-radius: 60px;
  border-color:#508ABF;
  padding:5px 4px 5px 4px ;
- /*float: right;*/
- /*margin-left: 10px;*/
  font-size: 0.8em;
- /*margin-left: 96%;*/
  position: absolute;
  bottom:5px;
  right:10px;
 }
 
-
-.doneButton {
+.doneButton, .editButton, #addCodeButton, #cancelButton {
     display: none;
-}
-
-li:active {
-    background-color: orange;
 }
 
 .list-group-item {
     background-color: #EEE;
     margin: 2px;
+    padding: 0;
     box-shadow: 10px 10px 5px #CCC;
+    min-height: 42px;
+    cursor: pointer;
 }
 
 .editing {
-    border-color: red;
-    font-weight: bold;
+    background-color: #FFF;
+    border: 1px solid #DDD;
+}
+
+.text_field {
+    padding: 10px 15px;
+    height: 100%;
+    min-height: 40px;
+    width: 90%;
+}
+
+#newMainCode .doneButton {
+    display: block;
+}
+
+#newMainCode {
+    display: none;
+}
+
+.modal-header {
+    background-color: darkgray;
+    height: 40px;
+    padding: 0;
+}
+
+#info {
+    height: inherit;
+}
+
+.modal-body {
+    padding:0;
+    margin: 0;
+}
+
+#infoWordWrapper{
+    height: 40px;
+    background-color: #EEE;
+    padding: 0;
+}
+
+#infoWordDiv {
+    height: inherit;
+    padding-left: 0;
+}
+
+#infoWord {
+    color: darkblue;
+}
+
+#infoSynonymsWrapper {
+    background-color: #FFF;
+    height: inherit;
+}
+
+#infoRelatedCodesListWrapper {
+    background-color: #EEE;
+    height: inherit;
+}
+
+#synonymsList {
+    border: none;
+    box-shadow: none;
+}
+
+#synonymsList li {
+    display: inline;
+    padding: 5px;
+    color: darkblue;
+}
+
+.redBackground{
+    background-color: #E76;
+}
+
+#popupContent {
+    max-width: 600px;
 }

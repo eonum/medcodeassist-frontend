@@ -1,0 +1,30 @@
+var parameters = <%= raw @variables_as_json %>;
+var word = parameters.word;
+var synonyms = parameters.synonyms;
+var suggestedRelatedCodes = parameters.suggested_related_codes;
+
+/* clicked word is displayed */
+$("#infoWord").text(word);
+
+/* synonyms of the word are displayed highlighted and clickable */
+if(synonyms) {
+  $("#synonymsList").empty();
+  synonyms.forEach(function (synonym) {
+    $("#synonymsList").append("<li title='click for details'><a class='highlight showWordDetails'>" + synonym + "</a></li>");
+  });
+}
+
+/* update related code lists are filled in the appropriate format */
+function updateSuggestedRelatedCodes() {
+  for(var category in suggestedRelatedCodes){
+    // empty list first
+    $("#"+category+"RelatedList").empty();
+    for(var codeId in suggestedRelatedCodes[category]){
+        var code = suggestedRelatedCodes[category][codeId].code;
+        var text = suggestedRelatedCodes[category][codeId].text_de;
+        $("#"+category+"RelatedList").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+    }
+  }
+}
+
+updateSuggestedRelatedCodes();

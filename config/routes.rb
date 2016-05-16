@@ -1,13 +1,7 @@
 Rails.application.routes.draw do
-  get 'front_end/index'
-  post 'front_end/analyse'
-  post 'front_end/showWordDetails'
-  root 'front_end#index'
-  namespace :api do
-    namespace :v1, :defaults => {:format => :json} do
-      resources :tokenizations, :only => [:create]
-      resources :synonyms, :only => [:create]
-      resources :code_proposals, :only => [:create]
-    end
-  end
+  get 'application/index'
+  post 'application/analyse'
+  post 'application/show_word_details'
+  post 'application/search'
+  root 'application#index'
 end
