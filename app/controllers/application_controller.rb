@@ -185,9 +185,9 @@ class ApplicationController < ActionController::Base
     textMatch = search_text.match(textPattern)
     if(!textMatch.nil?)
       text = textMatch[:text]
-      text = text.chomp(" ")
+      text.chomp!(" ")
     end
-    
+
     # search in the appropriate database based on category
     if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
       @code_matches = IcdCode.any_of({ :code => /.*#{escaped_code}.*/i, :text_de => /.*#{text}.*/i}).entries
@@ -202,16 +202,11 @@ class ApplicationController < ActionController::Base
     end
 
     @codes = {}
-    # if no matches send an empty object
+    # if there are matches send the first 10
     if(!@code_matches.nil?)
       @codes = @code_matches.take 10
     end
-
-    puts "sel codes"
-    @codes.each do |code|
-      puts code
-    end
-
+    
     # pass the variables to javascript view
     @variables = {}
     @variables['codes'] = @codes
