@@ -180,12 +180,11 @@ class ApplicationController < ActionController::Base
     end
 
     # text pattern
-    textPattern = /(?<text>\w+(\s*\w+)*\s*)/
+    textPattern = /(?<text>\w+(\s+\w+)*)/
     # find matched text
     textMatch = search_text.match(textPattern)
     if(!textMatch.nil?)
       text = textMatch[:text]
-      text.chomp!(" ")
     end
 
     # search in the appropriate database based on category
