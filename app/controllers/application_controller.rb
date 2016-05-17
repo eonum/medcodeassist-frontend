@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
     @suggested_codes = {mainDiagnoses: @code_proposals[:main_diagnoses], sideDiagnoses: @code_proposals[:side_diagnoses], procedures: @code_proposals[:procedures]}
     # end of mockup words and suggested codes
 
-
     # reject selected codes from suggested codes
     if(!selected_codes.nil?)
       selected_codes.each_key do|category|
@@ -48,7 +47,6 @@ class ApplicationController < ActionController::Base
   def show_word_details
     # get post variables
     selected_codes = params[:selected_codes]
-
 
     # mockup related codes and synonyms
     # use same methods without '_mocked_' if API is ready
@@ -77,7 +75,6 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.js
     end
-
   end
 
   def search
