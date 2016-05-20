@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
     @variables_as_json = @variables.to_json
 
     respond_to do |format|
-      format.js
+      format.json { render :json => @variables_as_json }
     end
   end
 
@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
     @variables_as_json = @variables.to_json
 
     respond_to do |format|
-      format.js
+      format.json { render :json => @variables_as_json }
     end
   end
 
@@ -128,14 +128,14 @@ class ApplicationController < ActionController::Base
     
     # pass the variables to javascript view
     @variables = {}
-    @variables['codes'] = @codes
+    @variables['codes'] = @codes.map {|x| {'text_de': x['text_de'], 'code': x['code'], 'short_code': x['short_code']} }
     @variables['code'] = code
     @variables['text'] = text
     @variables['li_id'] = params['li_id']
     @variables_as_json = @variables.to_json
 
     respond_to do |format|
-      format.js
+      format.json { render :json => @variables_as_json }
     end
   end
 

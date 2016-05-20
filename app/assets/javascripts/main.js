@@ -161,7 +161,50 @@ $(document).ready(function() {
         $.ajax({
             url: "/application/analyse",
             type: "post",
-            data: { text_field: plainText, selected_codes: selectedCodes}
+            data: { text_field: plainText, selected_codes: selectedCodes},
+            success: function(parameters){
+                var words = parameters.words;
+                var suggestedCodes = parameters.suggested_codes;
+
+                // change analyze button after first use
+                $("#analyse").text('Aktualisieren');
+
+                // function to escape all escaped characters of a regex expression
+                function reg_escape(str) {
+                    return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+                }
+
+                // highlight words (case insensitive) and make them links for the popup and show_word_detaills-post
+                var textArea = $("#textArea");
+                var text = textArea.html();
+                words.forEach(function(item) {
+                    var textArray = text.match(new RegExp("("+reg_escape(item)+")",'gi'));
+                    // only escaped due to problem of the API that has matched words. remove "if" when API works properly
+                    if(textArray && item != "n") {
+                        textArray.forEach(function(word) {
+                            var highlightedWord = "<a class='highlight showWordDetails' contenteditable='true' title='click for details' data-toggle='modal' data-target='#popup' >" + word + "</a>";
+                            text=text.replace(new RegExp(word, 'g'), highlightedWord);
+                        });
+                    }
+                });
+                textArea.html(text);
+
+
+                /* update code lists are filled in the appropriate format */
+                function updateSuggestedCodes() {
+                    for(var category in suggestedCodes){
+                        // empty list first
+                        $("#"+category+"List").empty();
+                        for(var codeId in suggestedCodes[category]){
+                            var code = suggestedCodes[category][codeId].code;
+                            var text = suggestedCodes[category][codeId].text_de;
+                            $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+                        }
+                    }
+                }
+
+                updateSuggestedCodes();
+            }
         });
     });
 
@@ -171,7 +214,38 @@ $(document).ready(function() {
         $.ajax({
             url: "/application/show_word_details",
             type: "post",
-            data: { word: word, selected_codes: selectedCodes }
+            data: { word: word, selected_codes: selectedCodes },
+            success: function(parameters){
+                var word = parameters.word;
+                var synonyms = parameters.synonyms;
+                var suggestedRelatedCodes = parameters.suggested_related_codes;
+
+                /* clicked word is displayed */
+                $("#infoWord").text(word);
+
+                /* synonyms of the word are displayed highlighted and clickable */
+                if(synonyms) {
+                    $("#synonymsList").empty();
+                    synonyms.forEach(function (synonym) {
+                        $("#synonymsList").append("<li title='click for details'><a class='highlight showWordDetails'>" + synonym + "</a></li>");
+                    });
+                }
+
+                /* update related code lists are filled in the appropriate format */
+                function updateSuggestedRelatedCodes() {
+                    for(var category in suggestedRelatedCodes){
+                        // empty list first
+                        $("#"+category+"RelatedList").empty();
+                        for(var codeId in suggestedRelatedCodes[category]){
+                            var code = suggestedRelatedCodes[category][codeId].code;
+                            var text = suggestedRelatedCodes[category][codeId].text_de;
+                            $("#"+category+"RelatedList").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+                        }
+                    }
+                }
+
+                updateSuggestedRelatedCodes();
+            }
         });
     });
 
@@ -220,7 +294,50 @@ $(document).ready(function() {
             $.ajax({
                 url: "/application/search",
                 type: "post",
-                data: { search_text: searchText, li_id: id, category: category, selected_codes: selectedCodes}
+                data: { search_text: searchText, category: category, selected_codes: selectedCodes},
+                success: function(parameters){
+                    var codes = parameters.codes;
+                    var code = parameters.code;
+                    var text = parameters.text;
+                    /* add matching codes to the temporary dropdown list in the appropriate format */
+                    var codeList = "";
+                    codes.forEach(function(element) {
+                        var codeId = element["short_code"];
+                        var code = element["code"];
+                        var text = element["text_de"];
+                        var listElement = "<li class='dropdown-element' id='"+codeId+"' data-code='"+code+"' data-text='"+text+"'><a>"+code+": "+text+"</a></li>";
+                        codeList = codeList + listElement;
+                    });
+
+                    // no matching codes
+                    if(codeList.length == 0){
+                        codeList = "<li>Keine Kodes gefunden</li>";
+                        $("#"+id+" div.editing").addClass("redBackground");
+                        $("#"+id).removeAttr("data-code");
+                        $("#"+id).removeAttr("data-text");
+                        $("#"+id).attr("id", "newTempCode");
+                    }
+                    // one exact matching code gets stored in html and background is white
+                    else if(codes.length==1 && code.match(new RegExp("\s*"+codes[0]["code"]+"\s*",'i')) && text.match(new RegExp("\s*"+codes[0]["text_de"]+"\s*",'i'))) {
+                        $("#"+id+" div.editing").removeClass("redBackground");
+                        $("#"+id).attr("data-code", code);
+                        $("#"+id).attr("data-text", text);
+                        $("#"+id).attr("id", codes[0]["short_code"]);
+                    }
+                    // more than one matching codes deletes stored data in html and background is red
+                    else{
+                        $("#"+id+" div.editing").addClass("redBackground");
+                        $("#"+id).removeAttr("data-code");
+                        $("#"+id).removeAttr("data-text");
+                        $("#"+id).attr("id", "newTempCode");
+                    }
+
+                    // empty and fill the dropdown list with the temporary above
+                    $("#"+id+" div.dropdown ul.dropdown-menu").empty().append(codeList);
+
+                    // open dropdown
+                    $("#"+id+" div.dropdown").addClass("open");
+                }
             });
         }
     };
