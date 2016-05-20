@@ -41,3 +41,8 @@ If the server times out, try ``` gpg --keyserver hkp://pgp.mit.edu --recv-keys 4
 #### Run the rails server ####
 * To run the server at port 3000, type: ``` rails server -p 3000 ```
 * Open your favorite browser and go to: ``` localhost:3000 ```
+
+## Connecting to the API
+* Make sure you have a running and accessible API (that can be cloned from <a href="https://github.com/eonum/medcodeassist">here</a>)
+* Suppose your API runs at http://apiurl.ch
+* Configure the `@@api_url` in application_controller.rb to look like `@@api_url = 'http://apiurl.ch/api/v1/'`
