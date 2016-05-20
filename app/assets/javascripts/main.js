@@ -205,7 +205,7 @@ $(document).ready(function() {
                         for(var codeId in suggestedCodes[category]){
                             var code = suggestedCodes[category][codeId].code;
                             var text = suggestedCodes[category][codeId].text_de;
-                            $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+                            $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"' data-code='"+code+"' data-text='"+text+"'><div class='text_field'>"+code+": "+text+"</div></li>");
                         }
                     }
                 }
