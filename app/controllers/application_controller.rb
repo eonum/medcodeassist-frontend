@@ -27,13 +27,12 @@ class ApplicationController < ActionController::Base
       selected_codes.each_key do|category|
         if(!selected_codes[category].nil?)
           selected_category_codes = selected_codes[category]
-          puts @suggested_codes[category.to_sym]
           @suggested_codes[category.to_sym].reject!{ |entry| selected_category_codes.has_key?(entry) }
         end
       end
     end
 
-    # pass the variables to javascript view
+    # pass the variables back to ajax success handler
     @variables = {}
     @variables['words'] = @words
     @variables['suggested_codes'] = @suggested_codes
@@ -65,7 +64,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    # pass the variables to javascript view
+    # pass the variables back to ajax success handler
     @variables = {}
     @variables['word'] = params[:word]
     @variables['synonyms'] = @synonyms
@@ -126,7 +125,7 @@ class ApplicationController < ActionController::Base
       @codes = @code_matches.take 10
     end
     
-    # pass the variables to javascript view
+    # pass the variables back to ajax success handler
     @variables = {}
     @variables['codes'] = @codes.map {|x| {'text_de': x['text_de'], 'code': x['code'], 'short_code': x['short_code']} }
     @variables['code'] = code
