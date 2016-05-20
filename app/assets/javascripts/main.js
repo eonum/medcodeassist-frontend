@@ -14,7 +14,8 @@ $(document).ready(function() {
     // assign codes from codeLists to codeMaskLists
     $("#infoRelatedCodes ul, #codeLists ul").on("click", ".codeItem", function() {
         var id = this.id;
-        var category = $(this).attr("data-category");
+        var liSelector = $(this);
+        var category = liSelector.attr("data-category");
         // if category is mainDiagnoses and there is already one selected code alert user
         if (category == "mainDiagnoses" && Object.keys(selectedCodes["mainDiagnoses"]).length>0) {
             alert("Nur eine Hauptdiagnose ist erlaubt");
@@ -25,27 +26,30 @@ $(document).ready(function() {
             $("#newMainCode").remove();
         }
         // first add buttons and change class
-        $(this).append(editButton);
-        $(this).append(doneButton);
-        $(this).removeClass("codeItem");
-        $(this).addClass("codeMaskItem");
+        liSelector.append(editButton);
+        liSelector.append(doneButton);
+        liSelector.removeClass("codeItem");
+        liSelector.addClass("codeMaskItem");
         // get data that may be stored in html
-        var code = $(this).attr("data-code");
-        var text = $(this).attr("data-text");
+        var code = liSelector.attr("data-code");
+        var text = liSelector.attr("data-text");
         // find parent List name
-        var parent =  this.parentNode.parentNode.parentNode.id;
+        var parentId =  this.parentNode.parentNode.parentNode.id;
         // add code to selected codes
         // in case it was selected from the original code Lists
-        if( parent == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]) {
+        if( parentId == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]) {
             selectedCodes[category][id] = suggestedCodes[category][id];
         }
         // in case it was selected from the related code Lists in the popup
-        else if( parent == "infoRelatedCodes" && typeof suggestedRelatedCodes != "undefined" && suggestedRelatedCodes && suggestedRelatedCodes[category]) {
+        else if( parentId == "infoRelatedCodes" && typeof suggestedRelatedCodes != "undefined" && suggestedRelatedCodes && suggestedRelatedCodes[category]) {
             selectedCodes[category][id] = suggestedRelatedCodes[category][id];
         }
         // in case it was added manually or edited
         else if( code && text ) {
             selectedCodes[category][id] = {code: code, short_code: id, text_de: text};
+        }
+        else {
+            selectedCodes[category][id] = {code: id, short_code:id}
         }
         // then add the code to the codemask list
         $("#allListMask").append(this);
@@ -53,35 +57,38 @@ $(document).ready(function() {
         $("#codeLists #" + category +"List"+id).remove();
         // only show the new selected code with its editButton if the appropriate tab is active
         if($("#maskTabs ."+category).hasClass("active") ) {
-            $(this).find(".editButton").show();
-            $(this).show();
+            liSelector.find(".editButton").show();
+            liSelector.show();
         }
         // else if allTab is active only show the code without the editButton
         else if($("#maskTabs #allTab").hasClass("active")) {
-            $(this).show();
+            liSelector.show();
         }
         // else hide
         else{
-            $(this).hide();
+            liSelector.hide();
         }
     });
 
+    var index = 0;
     // deselect codes from the codeMask and take them back to codeLists
     $("#codeMaskLists ul").on("click", ".codeMaskItem div", function() {
-        var parent = this.parentNode;
+        var parentLi = this.parentNode;
         var id = this.parentNode.id;
-        var category = $(parent).attr("data-category");
+        var liSelector = $(parentLi);
+        var category = liSelector.attr("data-category");
         // delete the code from the appropriate selectedCodes list
         delete selectedCodes[category][id];
         // add the code to the appropriate list
-        $("#codeLists #" + category +"List").prepend(parent);
+        $("#codeLists #" + category +"List").prepend(parentLi);
         // finally change class and remove buttons
-        $(parent).removeClass("codeMaskItem");
-        $(parent).addClass("codeItem");
-        $(parent).find("button").remove();
+        liSelector.removeClass("codeMaskItem");
+        liSelector.addClass("codeItem");
+        liSelector.find("button").remove();
         // in case of the new custon main code change its name so that it doesn;t get mixed with the new one
         if(id == "newMainCode") {
-            $("#codeLists #"+id).attr("id", "oldMainCode");
+            liSelector.attr("id", "oldMainCode"+index);
+            index++;
         }
     });
 
@@ -91,7 +98,6 @@ $(document).ready(function() {
         $("#codeMaskLists #newMainCode").append(editButton);
         $("#codeMaskLists #newMainCode").append(doneButton);
         $("#codeMaskLists #newMainCode .doneButton").show();
-        var id = this.parentNode.id;
         // only show the newMainCode if the mainDiagnoses tab is active
         if($("#maskTabs .mainDiagnoses").hasClass("active")) {
             $("#codeMaskLists #newMainCode").show();
@@ -103,34 +109,35 @@ $(document).ready(function() {
 
     // on click of the editButton change code li to editable and add dropdown menu used for search post
     $("#codeMaskLists ul").on("click", "button.editButton", function() {
-        var parent = this.parentNode;
-        var id = parent.id;
-        var category = $(this.parentNode).attr("data-category");
+        var parentLi = this.parentNode;
+        var id = parentLi.id;
+        var liSelector = $(parentLi);
+        var category = liSelector.attr("data-category");
         delete selectedCodes[category][id];
-        $(parent).removeClass("codeMaskItem");
-        $(parent).find(".text_field").attr("contenteditable", "true");
+        liSelector.removeClass("codeMaskItem");
+        liSelector.find(".text_field").attr("contenteditable", "true");
         var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
-        $(parent).append(divDropdown);
-        $(parent).find(".doneButton").text("Done");
-        $(parent).find(".doneButton").show();
-        $(parent).find(".editButton").hide();
-        $(parent).find("div").addClass("editing");
+        liSelector.append(divDropdown);
+        liSelector.find(".doneButton").text("Done");
+        liSelector.find(".doneButton").show();
+        liSelector.find(".editButton").hide();
+        liSelector.find("div").addClass("editing");
     });
 
     // on click of the done button change make code uneditable and save data to selected_codes List
     $("#codeMaskLists ul").on("click", "button.doneButton", function() {
-        var parent = this.parentNode;
-        var id = parent.id;
-        var category = $(parent).attr("data-category");
-        $(parent).find(".text_field").attr("contenteditable", "false");
-        $(parent).find(".doneButton").hide();
-        $(parent).find(".editButton").show();
-        $(parent).find("div").removeClass("editing");
+        var parentLi = this.parentNode;
+        var liSelector = $(parentLi);
+        var category = liSelector.attr("data-category");
+        liSelector.find(".text_field").attr("contenteditable", "false");
+        liSelector.find(".doneButton").hide();
+        liSelector.find(".editButton").show();
+        liSelector.find("div").removeClass("editing");
 
         // save data from li in case of an edited or added code
-        var codeId = $(parent).attr("id");
-        var code = $(parent).attr("data-code");
-        var text = $(parent).attr("data-text");
+        var codeId = liSelector.attr("id");
+        var code = liSelector.attr("data-code");
+        var text = liSelector.attr("data-text");
         // save code to selectedCodes list
         if(code && text) {
             selectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
@@ -138,7 +145,7 @@ $(document).ready(function() {
             selectedCodes[category][codeId] = {code: codeId, short_code: codeId};
         }
         setTimeout(function() {
-          $(parent).addClass("codeMaskItem");
+            liSelector.addClass("codeMaskItem");
         }, 100);
         // remove it from the code list
         $("#codeLists #" + category +"List li#"+codeId).remove();
@@ -146,11 +153,11 @@ $(document).ready(function() {
 
     // on click of the done Button of a newly added code remove "newCode" class and hide the cancel Button and show again the add Button
     $("#codeMaskLists ul").on("click", ".newCode button.doneButton", function() {
-        var parent = this.parentNode;
-        var id = parent.id;
-        var category = $(parent).attr("data-category");
-        $(parent).removeClass("newCode");
-        $(parent).find("div.dropdown").remove();
+        var parentLi = this.parentNode;
+        var liSelector = $(parentLi);
+        var category = liSelector.attr("data-category");
+        liSelector.removeClass("newCode");
+        liSelector.find("div.dropdown").remove();
         $("#addCodeButton").show();
         $("#cancelButton").hide();
     });
@@ -252,7 +259,7 @@ $(document).ready(function() {
     // on click of the addCodeButton create a new editable code with red Background
     var key = 0;
     $("#addCodeButton").click(function() {
-        key = key+1;
+        key++;
         var id = "newCode"+key;
         var category = $(this).attr("data-category");
         var newLiElement = "<li class='list-group-item newCode' id='"+id+"' data-category='"+category+"'></li>";
@@ -280,10 +287,10 @@ $(document).ready(function() {
 
     // on key release send post for search
     $("#codeMaskLists ul").on("keyup", "li div.editing", function() {
-        var parent = this.parentNode;
-        var id = parent.id;
-        var category = $(parent).attr("data-category");
-        $(parent).find(".doneButton").show();
+        var parentLi = this.parentNode;
+        var id = parentLi.id;
+        var category = $(parentLi).attr("data-category");
+        $(parentLi).find(".doneButton").show();
         interactiveProposals(id, category);
     });
 
@@ -345,21 +352,22 @@ $(document).ready(function() {
     // on click of a suggested code in the dropdown menu assign its text and data to the parent li, i.e. to the original searching code
     $("ul#allListMask").on("click","li.dropdown-element", function() {
         var parentLi = this.parentNode.parentNode.parentNode;
-        var parentLiId = parentLi.id;
-        var category = $(parentLiId).attr("data-category");
-        $(parentLi).find("div.text_field").text($(this).text());
+        var thisSelector = $(this);
+        var liSelector = $(parentLi);
+        var category = liSelector.attr("data-category");
+        liSelector.find("div.text_field").text(thisSelector.text());
         // copy data from selected dropdown element to current editing code
-        var codeId = $(this).attr("id");
-        var code = $(this).attr("data-code");
-        var text = $(this).attr("data-text");
-        $(parentLi).addClass(category);
-        $(parentLi).find(".doneButton").show();
-        $(parentLi).attr("data-code", code);
-        $(parentLi).attr("data-text", text);
+        var codeId = thisSelector.attr("id");
+        var code = thisSelector.attr("data-code");
+        var text = thisSelector.attr("data-text");
+        liSelector.addClass(category);
+        liSelector.find(".doneButton").show();
+        liSelector.attr("data-code", code);
+        liSelector.attr("data-text", text);
         // change red background to original (white)
-        $(parentLi).find("div.text_field").removeClass("redBackground");
+        liSelector.find("div.text_field").removeClass("redBackground");
         // update id
-        $(parentLi).attr("id", codeId);
+        liSelector.attr("id", codeId);
     });
 
     // function to delete Incomplete Codes, i,e, newly added codes via the add Button but without saving them with the add/done Button
