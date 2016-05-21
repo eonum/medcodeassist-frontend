@@ -25,50 +25,54 @@ $(document).ready(function() {
         else if(category == "mainDiagnoses" && Object.keys(selectedCodes["mainDiagnoses"]).length==0) {
             $("#newMainCode").remove();
         }
-        // first add buttons and change class
-        liSelector.append(eraseButton);
-        liSelector.append(doneButton);
-        liSelector.removeClass("codeItem");
-        liSelector.addClass("codeMaskItem");
-        // get data that may be stored in html
-        var code = liSelector.attr("data-code");
-        var text = liSelector.attr("data-text");
-        // find parent List name
-        var parentId =  this.parentNode.parentNode.parentNode.id;
-        // add code to selected codes
-        // in case it was selected from the original code Lists
-        if( parentId == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]) {
-            selectedCodes[category][id] = suggestedCodes[category][id];
-        }
-        // in case it was selected from the related code Lists in the popup
-        else if( parentId == "infoRelatedCodes" && typeof suggestedRelatedCodes != "undefined" && suggestedRelatedCodes && suggestedRelatedCodes[category]) {
-            selectedCodes[category][id] = suggestedRelatedCodes[category][id];
-        }
-        // in case it was added manually or edited
-        else if( code && text ) {
-            selectedCodes[category][id] = {code: code, short_code: id, text_de: text};
-        }
-        else {
-            selectedCodes[category][id] = {code: id, short_code:id}
-        }
         // then add the code to the codemask list
-        $("#allListMask").append(this);
-        // and remove it from the original codeList
-        $("#codeLists #" + category +"List"+id).remove();
-        // only show the new selected code with its eraseButton if the appropriate tab is active
-        if($("#maskTabs ."+category).hasClass("active") ) {
-            liSelector.find(".eraseButton").show();
-            liSelector.show();
-        }
-        // else if allTab is active only show the code without the eraseButton
-        else if($("#maskTabs #allTab").hasClass("active")) {
-            liSelector.show();
-        }
-        // else hide
-        else{
-            liSelector.hide();
-        }
-        $("#maskTabs li."+category+" a").trigger("click");
+        $(this).animate({'left' : '-=500px'}, 500, function() {
+            $("#allListMask").append(this);
+            liSelector.css("left",0);
+
+            // first add buttons and change class
+            liSelector.append(eraseButton);
+            liSelector.append(doneButton);
+            liSelector.removeClass("codeItem");
+            liSelector.addClass("codeMaskItem");
+            // get data that may be stored in html
+            var code = liSelector.attr("data-code");
+            var text = liSelector.attr("data-text");
+            // find parent List name
+            var parentId =  this.parentNode.parentNode.parentNode.id;
+            // add code to selected codes
+            // in case it was selected from the original code Lists
+            if( parentId == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]) {
+                selectedCodes[category][id] = suggestedCodes[category][id];
+            }
+            // in case it was selected from the related code Lists in the popup
+            else if( parentId == "infoRelatedCodes" && typeof suggestedRelatedCodes != "undefined" && suggestedRelatedCodes && suggestedRelatedCodes[category]) {
+                selectedCodes[category][id] = suggestedRelatedCodes[category][id];
+            }
+            // in case it was added manually or edited
+            else if( code && text ) {
+                selectedCodes[category][id] = {code: code, short_code: id, text_de: text};
+            }
+            else {
+                selectedCodes[category][id] = {code: id, short_code:id}
+            }
+            // and remove it from the original codeList
+            $("#codeLists #" + category +"List"+id).remove();
+            // only show the new selected code with its eraseButton if the appropriate tab is active
+            if($("#maskTabs ."+category).hasClass("active") ) {
+                liSelector.find(".eraseButton").show();
+                liSelector.show();
+            }
+            // else if allTab is active only show the code without the eraseButton
+            else if($("#maskTabs #allTab").hasClass("active")) {
+                liSelector.show();
+            }
+            // else hide
+            else{
+                liSelector.hide();
+            }
+            $("#maskTabs li."+category+" a").trigger("click");
+        });
     });
 
     // on click of the eraseButton change code li to editable and add dropdown menu used for search post
