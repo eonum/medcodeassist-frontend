@@ -6,7 +6,7 @@ $(document).ready(function() {
     var selectedCodes = {mainDiagnoses: selectedMainCodes, sideDiagnoses: selectedSideCodes, procedures: selectedProcedureCodes};
 
     // fix buttons and newMainCode
-    var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
+    var eraseButton = "<button class='zbutton eraseButton' type='button'>Delete</button>";
     var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
     var doneAddButton = "<button class='zbutton doneButton' type='button'>Add</button>";
     var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'><div class='text_field editing redBackground' contenteditable='true' data-prompt='Typen Sie hier'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div></li>";
@@ -26,7 +26,7 @@ $(document).ready(function() {
             $("#newMainCode").remove();
         }
         // first add buttons and change class
-        liSelector.append(editButton);
+        liSelector.append(eraseButton);
         liSelector.append(doneButton);
         liSelector.removeClass("codeItem");
         liSelector.addClass("codeMaskItem");
@@ -55,12 +55,12 @@ $(document).ready(function() {
         $("#allListMask").append(this);
         // and remove it from the original codeList
         $("#codeLists #" + category +"List"+id).remove();
-        // only show the new selected code with its editButton if the appropriate tab is active
+        // only show the new selected code with its eraseButton if the appropriate tab is active
         if($("#maskTabs ."+category).hasClass("active") ) {
-            liSelector.find(".editButton").show();
+            liSelector.find(".eraseButton").show();
             liSelector.show();
         }
-        // else if allTab is active only show the code without the editButton
+        // else if allTab is active only show the code without the eraseButton
         else if($("#maskTabs #allTab").hasClass("active")) {
             liSelector.show();
         }
@@ -71,8 +71,8 @@ $(document).ready(function() {
     });
 
     var index = 0;
-    // deselect codes from the codeMask and take them back to codeLists
-    $("#codeMaskLists ul").on("click", ".codeMaskItem div", function() {
+    // deselect codes from the codeMask and take them back to codeLists using the eraseButton
+    $("#codeMaskLists ul").on("click", ".codeMaskItem button.eraseButton", function() {
         var parentLi = this.parentNode;
         var id = this.parentNode.id;
         var liSelector = $(parentLi);
@@ -93,9 +93,9 @@ $(document).ready(function() {
     });
 
     // on click of a mainDiagnoses code add a new editable main code to support restriction of 1 main code
-    $("#codeMaskLists ul").on("click", "li.codeMaskItem.mainDiagnoses div", function() {
+    $("#codeMaskLists ul").on("click", "li.codeMaskItem.mainDiagnoses button.eraseButton", function() {
         $("#allListMask").append(newMainCode);
-        $("#codeMaskLists #newMainCode").append(editButton);
+        $("#codeMaskLists #newMainCode").append(eraseButton);
         $("#codeMaskLists #newMainCode").append(doneButton);
         $("#codeMaskLists #newMainCode .doneButton").show();
         // only show the newMainCode if the mainDiagnoses tab is active
@@ -107,8 +107,8 @@ $(document).ready(function() {
         }
     });
 
-    // on click of the editButton change code li to editable and add dropdown menu used for search post
-    $("#codeMaskLists ul").on("click", "button.editButton", function() {
+    // on click of the eraseButton change code li to editable and add dropdown menu used for search post
+    $("#codeMaskLists ul").on("click", ".codeMaskItem div", function() {
         var parentLi = this.parentNode;
         var id = parentLi.id;
         var liSelector = $(parentLi);
@@ -120,7 +120,7 @@ $(document).ready(function() {
         liSelector.append(divDropdown);
         liSelector.find(".doneButton").text("Done");
         liSelector.find(".doneButton").show();
-        liSelector.find(".editButton").hide();
+        liSelector.find(".eraseButton").hide();
         liSelector.find("div").addClass("editing");
     });
 
@@ -131,7 +131,7 @@ $(document).ready(function() {
         var category = liSelector.attr("data-category");
         liSelector.find(".text_field").attr("contenteditable", "false");
         liSelector.find(".doneButton").hide();
-        liSelector.find(".editButton").show();
+        liSelector.find(".eraseButton").show();
         liSelector.find("div").removeClass("editing");
 
         // save data from li in case of an edited or added code
@@ -269,7 +269,7 @@ $(document).ready(function() {
         $("#codeMaskLists [data-category*='"+category+"']#"+id).append(divText);
         var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
         $(newLiSelector).append(divDropdown);
-        $(newLiSelector).append(editButton);
+        $(newLiSelector).append(eraseButton);
         $(newLiSelector).append(doneAddButton);
         $(newLiSelector+" .doneButton").show();
         $(newLiSelector+" div.editing").addClass("redBackground");
@@ -387,7 +387,7 @@ $(document).ready(function() {
         // deactivate addCode Button
         $("#addCodeButton").removeAttr("data-category");
         $("#addCodeButton").hide();
-        $("#codeMaskLists .codeMaskItem .editButton").show();
+        $("#codeMaskLists .codeMaskItem .eraseButton").show();
         deleteIncompleteCodes();
     });
 
@@ -396,7 +396,7 @@ $(document).ready(function() {
         $("#allListMask li").show();
         $("#addCodeButton").removeAttr("data-category");
         $("#addCodeButton").hide();
-        $("#codeMaskLists .editButton").hide();
+        $("#codeMaskLists .eraseButton").hide();
         $("#allListMask li#newMainCode").hide();
         deleteIncompleteCodes();
     });
