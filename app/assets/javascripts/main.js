@@ -27,14 +27,16 @@ $(document).ready(function() {
         }
         // then add the code to the codemask list
         $(this).animate({'left' : '-=500px'}, 500, function() {
-            $("#allListMask").append(this);
-            liSelector.css("left",0);
-
-            // first add buttons and change class
-            liSelector.append(eraseButton);
-            liSelector.append(doneButton);
-            liSelector.removeClass("codeItem");
-            liSelector.addClass("codeMaskItem");
+            liSelector.fadeOut("slow", function() {
+                $("#allListMask").append(this);
+                liSelector.css("left",0);
+                // first add buttons and change class
+                liSelector.append(eraseButton);
+                liSelector.append(doneButton);
+                liSelector.removeClass("codeItem");
+                liSelector.addClass("codeMaskItem");
+                liSelector.find(".eraseButton").show();
+            });
             // get data that may be stored in html
             var code = liSelector.attr("data-code");
             var text = liSelector.attr("data-text");
@@ -58,20 +60,10 @@ $(document).ready(function() {
             }
             // and remove it from the original codeList
             $("#codeLists #" + category +"List"+id).remove();
-            // only show the new selected code with its eraseButton if the appropriate tab is active
-            if($("#maskTabs ."+category).hasClass("active") ) {
-                liSelector.find(".eraseButton").show();
-                liSelector.show();
-            }
-            // else if allTab is active only show the code without the eraseButton
-            else if($("#maskTabs #allTab").hasClass("active")) {
-                liSelector.show();
-            }
-            // else hide
-            else{
-                liSelector.hide();
-            }
             $("#maskTabs li."+category+" a").trigger("click");
+            $(this).fadeIn("normal", function() {
+                $("#maskTabs li."+category+" a").trigger("click");
+            });
         });
     });
 
@@ -267,8 +259,9 @@ $(document).ready(function() {
         key++;
         var id = "newCode"+key;
         var category = $(this).attr("data-category");
-        var newLiElement = "<li class='list-group-item newCode' id='"+id+"' data-category='"+category+"'></li>";
+        var newLiElement = "<li class='list-group-item newCode' style='display:none' id='"+id+"' data-category='"+category+"'></li>";
         $("#allListMask").append(newLiElement); // codeMaskItem
+        $("#"+id).fadeIn("normal");
         var divText = "<div class='text_field editing' contenteditable='true'></div>";
         var newLiSelector = "#codeMaskLists [data-category*='"+category+"']#"+id;
         $("#codeMaskLists [data-category*='"+category+"']#"+id).append(divText);
