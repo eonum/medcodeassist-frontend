@@ -68,6 +68,24 @@ $(document).ready(function() {
         else{
             liSelector.hide();
         }
+        $("#maskTabs li."+category+" a").trigger("click");
+    });
+
+    // on click of the eraseButton change code li to editable and add dropdown menu used for search post
+    $("#codeMaskLists ul").on("click", ".codeMaskItem.editable div", function() {
+        var parentLi = this.parentNode;
+        var id = parentLi.id;
+        var liSelector = $(parentLi);
+        var category = liSelector.attr("data-category");
+        delete selectedCodes[category][id];
+        liSelector.removeClass("codeMaskItem");
+        liSelector.find(".text_field").attr("contenteditable", "true");
+        var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
+        liSelector.append(divDropdown);
+        liSelector.find(".doneButton").text("Done");
+        liSelector.find(".doneButton").show();
+        liSelector.find(".eraseButton").hide();
+        liSelector.find("div").addClass("editing");
     });
 
     var index = 0;
@@ -105,23 +123,6 @@ $(document).ready(function() {
         else {
             $("#codeMaskLists #newMainCode").hide();
         }
-    });
-
-    // on click of the eraseButton change code li to editable and add dropdown menu used for search post
-    $("#codeMaskLists ul").on("click", ".codeMaskItem div", function() {
-        var parentLi = this.parentNode;
-        var id = parentLi.id;
-        var liSelector = $(parentLi);
-        var category = liSelector.attr("data-category");
-        delete selectedCodes[category][id];
-        liSelector.removeClass("codeMaskItem");
-        liSelector.find(".text_field").attr("contenteditable", "true");
-        var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
-        liSelector.append(divDropdown);
-        liSelector.find(".doneButton").text("Done");
-        liSelector.find(".doneButton").show();
-        liSelector.find(".eraseButton").hide();
-        liSelector.find("div").addClass("editing");
     });
 
     // on click of the done button change make code uneditable and save data to selected_codes List
@@ -388,12 +389,15 @@ $(document).ready(function() {
         $("#addCodeButton").removeAttr("data-category");
         $("#addCodeButton").hide();
         $("#codeMaskLists .codeMaskItem .eraseButton").show();
+        $("#allListMask li:not(:hidden)").addClass("editable");
+        $("#allListMask li:not(:hidden) div.text_field").attr("title", "click to edit");
         deleteIncompleteCodes();
     });
 
     // if all tab is selected show all codes (except editing ones) and hide all buttons
     $("#maskTabs li a#allMaskLink").click(function () {
-        $("#allListMask li").show();
+        $("#allListMask li").removeClass("editable").show();
+        $("#allListMask li div.text_field").removeAttr("title");
         $("#addCodeButton").removeAttr("data-category");
         $("#addCodeButton").hide();
         $("#codeMaskLists .eraseButton").hide();

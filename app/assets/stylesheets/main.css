@@ -19,6 +19,10 @@ div[contentEditable=true]:empty:not(:focus):before{
     opacity: 0.7;
 }
 
+#allListMask li.editable div.text_field:hover{
+    title: "click to edit";
+}
+
 #allListMask div[contentEditable=true]:empty:not(:focus):before{
     color: black;
     opacity: 0.5;
