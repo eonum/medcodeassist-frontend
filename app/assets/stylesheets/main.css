@@ -19,7 +19,7 @@ div[contentEditable=true]:empty:not(:focus):before{
     opacity: 0.7;
 }
 
-#allListMask li.editable div.text_field:hover{
+#allListMask li.editable div.text_field:hover {
     title: "click to edit";
 }
 
@@ -34,8 +34,11 @@ li {
 
 #analyse{
     position: relative;
-    left: 70%;
-    top:10px;
+    left: 75%;
+    top: 30px;
+    border: 10px white;
+
+
 }
 
 #textArea{
@@ -72,7 +75,7 @@ li {
  padding:5px 4px 5px 4px ;
  font-size: 0.8em;
  position: absolute;
- top:5px;
+    top: 5px;
  right:10px;
 }
 

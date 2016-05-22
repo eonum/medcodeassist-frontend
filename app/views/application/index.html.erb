@@ -15,7 +15,9 @@
       <!--Textarea Div-->
       <div id="textArea" class="editable form-control bg-primary" contentEditable="true" data-prompt="Bitte hier den medizinischen Text zur Analyse eingeben"></div>
 
-      <div id="analyseWraper"><button id="analyse" type="button" class="btn btn-primary">Analysieren</button></div>
+      <div id="analyseWraper">
+        <button id="analyse" type="button" class="btn btn-primary">Analysieren</button>
+      </div>
 
       <!-- Modal/Popup -->
       <div id="popup" class="modal fade" role="dialog">
@@ -88,7 +90,14 @@
         <div class="tab-content" id="codeMaskLists">
           <div role="tabpanel" class="tab-pane active" id="allMask">
             <ul class="list-group codeMaskList" id="allListMask">
-              <li class='list-group-item mainDiagnoses' id="newMainCode" data-category="mainDiagnoses"><div class="text_field editing redBackground" contenteditable="true" data-prompt="Typen Sie hier"></div><div class="dropdown"><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class="dropdown-menu"></ul></div><button class="zbutton doneButton" type="button">Add</button><button class="zbutton eraseButton" type="button">Delete</button></li>
+              <li class='list-group-item mainDiagnoses' id="newMainCode" data-category="mainDiagnoses">
+                <div class="text_field editing redBackground" contenteditable="true" data-prompt="Typen Sie hier"></div>
+                <div class="dropdown"><a data-toggle='dropdown' class='dropdown-toggle'></a>
+                  <ul class="dropdown-menu"></ul>
+                </div>
+                <button class="zbutton doneButton" type="button">Add</button>
+                <button class="zbutton eraseButton" type="button">Delete</button>
+              </li>
             </ul>
           </div>
         </div>

@@ -26,10 +26,10 @@ $(document).ready(function() {
             $("#newMainCode").remove();
         }
         // then add the code to the codemask list
-        $(this).animate({'left' : '-=500px'}, 500, function() {
-            liSelector.fadeOut("slow", function() {
+        $(this).animate({'left': '-=500px'}, 500, function () {
+            liSelector.fadeOut("slow", function () {
                 $("#allListMask").append(this);
-                liSelector.css("left",0);
+                liSelector.css("left", 0);
                 // first add buttons and change class
                 liSelector.append(eraseButton);
                 liSelector.append(doneButton);
@@ -41,34 +41,34 @@ $(document).ready(function() {
             var code = liSelector.attr("data-code");
             var text = liSelector.attr("data-text");
             // find parent List name
-            var parentId =  this.parentNode.parentNode.parentNode.id;
+            var parentId = this.parentNode.parentNode.parentNode.id;
             // add code to selected codes
             // in case it was selected from the original code Lists
-            if( parentId == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]) {
+            if (parentId == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]) {
                 selectedCodes[category][id] = suggestedCodes[category][id];
             }
             // in case it was selected from the related code Lists in the popup
-            else if( parentId == "infoRelatedCodes" && typeof suggestedRelatedCodes != "undefined" && suggestedRelatedCodes && suggestedRelatedCodes[category]) {
+            else if (parentId == "infoRelatedCodes" && typeof suggestedRelatedCodes != "undefined" && suggestedRelatedCodes && suggestedRelatedCodes[category]) {
                 selectedCodes[category][id] = suggestedRelatedCodes[category][id];
             }
             // in case it was added manually or edited
-            else if( code && text ) {
+            else if (code && text) {
                 selectedCodes[category][id] = {code: code, short_code: id, text_de: text};
             }
             else {
-                selectedCodes[category][id] = {code: id, short_code:id}
+                selectedCodes[category][id] = {code: id, short_code: id}
             }
             // and remove it from the original codeList
-            $("#codeLists #" + category +"List"+id).remove();
-            $("#maskTabs li."+category+" a").trigger("click");
-            $(this).fadeIn("normal", function() {
-                $("#maskTabs li."+category+" a").trigger("click");
+            $("#codeLists #" + category + "List" + id).remove();
+            $("#maskTabs li." + category + " a").trigger("click");
+            $(this).fadeIn("normal", function () {
+                $("#maskTabs li." + category + " a").trigger("click");
             });
         });
     });
 
     // on click of the eraseButton change code li to editable and add dropdown menu used for search post
-    $("#codeMaskLists ul").on("click", ".codeMaskItem.editable div", function() {
+    $("#codeMaskLists ul").on("click", ".codeMaskItem.editable div", function () {
         var parentLi = this.parentNode;
         var id = parentLi.id;
         var liSelector = $(parentLi);
@@ -76,7 +76,7 @@ $(document).ready(function() {
         delete selectedCodes[category][id];
         liSelector.removeClass("codeMaskItem");
         liSelector.find(".text_field").attr("contenteditable", "true");
-        var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
+        var divDropdown = "<div class='dropdown' id='dropdown-" + id + "'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
         liSelector.append(divDropdown);
         liSelector.find(".doneButton").text("Done");
         liSelector.find(".doneButton").show();
@@ -86,7 +86,7 @@ $(document).ready(function() {
 
     var index = 0;
     // deselect codes from the codeMask and take them back to codeLists using the eraseButton
-    $("#codeMaskLists ul").on("click", ".codeMaskItem button.eraseButton", function() {
+    $("#codeMaskLists ul").on("click", ".codeMaskItem button.eraseButton", function () {
         var parentLi = this.parentNode;
         var id = this.parentNode.id;
         var liSelector = $(parentLi);
@@ -107,7 +107,7 @@ $(document).ready(function() {
     });
 
     // on click of a mainDiagnoses code add a new editable main code to support restriction of 1 main code
-    $("#codeMaskLists ul").on("click", "li.codeMaskItem.mainDiagnoses button.eraseButton", function() {
+    $("#codeMaskLists ul").on("click", "li.codeMaskItem.mainDiagnoses button.eraseButton", function () {
         $("#allListMask").append(newMainCode);
         $("#codeMaskLists #newMainCode").append(eraseButton);
         $("#codeMaskLists #newMainCode").append(doneButton);
@@ -172,6 +172,11 @@ $(document).ready(function() {
 
                 // change analyze button after first use
                 $("#analyse").text('Aktualisieren');
+                $("#analyse").css("border", "10px solid #cfdcec");
+                $("#analyse").css("top", "25px");
+                $("#analyse").prop('title', 'berechnet die wahrscheinlichsten Vorschläge aus der Kodemaske und des Texts');
+
+
 
                 // function to escape all escaped characters of a regex expression
                 function reg_escape(str) {
@@ -259,9 +264,9 @@ $(document).ready(function() {
         key++;
         var id = "newCode"+key;
         var category = $(this).attr("data-category");
-        var newLiElement = "<li class='list-group-item newCode' style='display:none' id='"+id+"' data-category='"+category+"'></li>";
+        var newLiElement = "<li class='list-group-item newCode' style='display:none' id='" + id + "' data-category='" + category + "'></li>";
         $("#allListMask").append(newLiElement); // codeMaskItem
-        $("#"+id).fadeIn("normal");
+        $("#" + id).fadeIn("normal");
         var divText = "<div class='text_field editing' contenteditable='true'></div>";
         var newLiSelector = "#codeMaskLists [data-category*='"+category+"']#"+id;
         $("#codeMaskLists [data-category*='"+category+"']#"+id).append(divText);
