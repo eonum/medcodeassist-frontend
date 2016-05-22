@@ -78,7 +78,7 @@ $(document).ready(function() {
         liSelector.find(".text_field").attr("contenteditable", "true");
         var divDropdown = "<div class='dropdown' id='dropdown-" + id + "'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
         liSelector.append(divDropdown);
-        liSelector.find(".doneButton").text("Done");
+        liSelector.find(".doneButton").text("Fertig");
         liSelector.find(".doneButton").show();
         liSelector.find(".eraseButton").hide();
         liSelector.find("div").addClass("editing");
@@ -174,7 +174,7 @@ $(document).ready(function() {
                 $("#analyse").text('Aktualisieren');
                 $("#analyse").css("border", "10px solid #cfdcec");
                 $("#analyse").css("top", "25px");
-                $("#analyse").prop('title', 'berechnet die wahrscheinlichsten Vorschläge aus der Kodemaske und des Texts');
+                $("#analyse").prop('title', 'aktualisiert den Kontext und die Textanalyse anhand Ihrer Kodemaske und der Textanalyse');
 
 
 
