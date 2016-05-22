@@ -6,9 +6,9 @@ $(document).ready(function() {
     var selectedCodes = {mainDiagnoses: selectedMainCodes, sideDiagnoses: selectedSideCodes, procedures: selectedProcedureCodes};
 
     // fix buttons and newMainCode
-    var editButton = "<button class='zbutton editButton' type='button'>Edit</button>";
-    var doneButton = "<button class='zbutton doneButton' type='button'>Done</button>";
-    var doneAddButton = "<button class='zbutton doneButton' type='button'>Add</button>";
+    var editButton = "<button class='zbutton editButton' type='button'>Bearbeiten</button>";
+    var doneButton = "<button class='zbutton doneButton' type='button'>Fertig</button>";
+    var doneAddButton = "<button class='zbutton doneButton' type='button'>Hinzufügen</button>";
     var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'><div class='text_field editing redBackground' contenteditable='true' data-prompt='Typen Sie hier'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div></li>";
 
     // assign codes from codeLists to codeMaskLists
@@ -118,7 +118,7 @@ $(document).ready(function() {
         liSelector.find(".text_field").attr("contenteditable", "true");
         var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
         liSelector.append(divDropdown);
-        liSelector.find(".doneButton").text("Done");
+        liSelector.find(".doneButton").text("Fertig");
         liSelector.find(".doneButton").show();
         liSelector.find(".editButton").hide();
         liSelector.find("div").addClass("editing");
