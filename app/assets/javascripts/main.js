@@ -25,16 +25,14 @@ $(document).ready(function() {
         else if(category == "mainDiagnoses" && Object.keys(selectedCodes["mainDiagnoses"]).length==0) {
             $("#newMainCode").remove();
         }
-        // then add the code to the codemask list
-        $(this).animate({'left': '-=500px'}, 500, function () {
+        // then add the code to the codemask list with animation
+        var width = liSelector.css('width');
+        liSelector.animate({'left': '-='+width}, 500, function () {
             liSelector.fadeOut("slow", function () {
                 $("#allListMask").append(this);
                 liSelector.css("left", 0);
                 // first add buttons and change class
-                liSelector.append(eraseButton);
-                liSelector.append(doneButton);
-                liSelector.removeClass("codeItem");
-                liSelector.addClass("codeMaskItem");
+                liSelector.append(eraseButton).append(doneButton).removeClass("codeItem").addClass("codeMaskItem");
                 liSelector.find(".eraseButton").show();
             });
             // get data that may be stored in html
@@ -61,7 +59,7 @@ $(document).ready(function() {
             // and remove it from the original codeList
             $("#codeLists #" + category + "List" + id).remove();
             $("#maskTabs li." + category + " a").trigger("click");
-            $(this).fadeIn("normal", function () {
+            liSelector.fadeIn("normal", function () {
                 $("#maskTabs li." + category + " a").trigger("click");
             });
         });
@@ -96,8 +94,7 @@ $(document).ready(function() {
         // add the code to the appropriate list
         $("#codeLists #" + category +"List").prepend(parentLi);
         // finally change class and remove buttons
-        liSelector.removeClass("codeMaskItem");
-        liSelector.addClass("codeItem");
+        liSelector.removeClass("codeMaskItem").addClass("codeItem");
         liSelector.find("button").remove();
         // in case of the new custon main code change its name so that it doesn;t get mixed with the new one
         if(id == "newMainCode") {
@@ -109,8 +106,7 @@ $(document).ready(function() {
     // on click of a mainDiagnoses code add a new editable main code to support restriction of 1 main code
     $("#codeMaskLists ul").on("click", "li.codeMaskItem.mainDiagnoses button.eraseButton", function () {
         $("#allListMask").append(newMainCode);
-        $("#codeMaskLists #newMainCode").append(eraseButton);
-        $("#codeMaskLists #newMainCode").append(doneButton);
+        $("#codeMaskLists #newMainCode").append(eraseButton).append(doneButton);
         $("#codeMaskLists #newMainCode .doneButton").show();
         // only show the newMainCode if the mainDiagnoses tab is active
         if($("#maskTabs .mainDiagnoses").hasClass("active")) {
@@ -170,13 +166,16 @@ $(document).ready(function() {
                 var words = parameters.words;
                 var suggestedCodes = parameters.suggested_codes;
 
-                // change analyze button after first use
-                $("#analyse").text('Aktualisieren');
-                $("#analyse").css("border", "10px solid #cfdcec");
-                $("#analyse").css("top", "25px");
-                $("#analyse").prop('title', 'aktualisiert den Kontext und die Textanalyse anhand Ihrer Kodemaske und der Textanalyse');
+                var analyzeSelector = $("#analyse");
 
+                // change analyze button shortly after every use
+                analyzeSelector.text('Aktualisieren').css("border", "5px solid #cfdcec").css("margin", "15.5px");
+                setTimeout(function() {
+                    analyzeSelector.css("border", '0').css("margin", "20px");
+                }, 700);
 
+                // update title after first use
+                analyzeSelector.attr('title', 'aktualisiert den Kontext und die Textanalyse anhand Ihrer Kodemaske und der Textanalyse');
 
                 // function to escape all escaped characters of a regex expression
                 function reg_escape(str) {
@@ -207,7 +206,7 @@ $(document).ready(function() {
                         for(var codeId in suggestedCodes[category]){
                             var code = suggestedCodes[category][codeId].code;
                             var text = suggestedCodes[category][codeId].text_de;
-                            $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"' data-code='"+code+"' data-text='"+text+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+                            $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"' data-code='"+code+"' data-text='"+text+"' title='zum Einfugen klicken'><div class='text_field'>"+code+": "+text+"</div></li>");
                         }
                     }
                 }
@@ -268,15 +267,12 @@ $(document).ready(function() {
         $("#allListMask").append(newLiElement); // codeMaskItem
         $("#" + id).fadeIn("normal");
         var divText = "<div class='text_field editing' contenteditable='true'></div>";
-        var newLiSelector = "#codeMaskLists [data-category*='"+category+"']#"+id;
+        var newLiSelector = $("#codeMaskLists [data-category*='"+category+"']#"+id);
         $("#codeMaskLists [data-category*='"+category+"']#"+id).append(divText);
         var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
-        $(newLiSelector).append(divDropdown);
-        $(newLiSelector).append(eraseButton);
-        $(newLiSelector).append(doneAddButton);
-        $(newLiSelector+" .doneButton").show();
-        $(newLiSelector+" div.editing").addClass("redBackground");
-        $(newLiSelector+" div.editing").attr("data-prompt", "Typen Sie hier");
+        newLiSelector.append(divDropdown).append(eraseButton).append(doneAddButton);
+        newLiSelector.find(".doneButton").show();
+        newLiSelector.find("div.editing").addClass("redBackground").attr("data-prompt", "Typen Sie hier");
         $("#cancelButton").show();
         $(this).hide();
     });
@@ -324,24 +320,18 @@ $(document).ready(function() {
                     if(codeList.length == 0){
                         codeList = "<li>Keine Kodes gefunden</li>";
                         liSelector.find("div.editing").addClass("redBackground");
-                        liSelector.removeAttr("data-code");
-                        liSelector.removeAttr("data-text");
-                        liSelector.attr("id", "newTempCode"+newIndex);
+                        liSelector.removeAttr("data-code").removeAttr("data-text").attr("id", "newTempCode"+newIndex);
                         newIndex ++;
                     }
                     // one exact matching code gets stored in html and background is white
                     else if(codes.length==1 && code.match(new RegExp("\s*"+codes[0]["code"]+"\s*",'i')) && text.match(new RegExp("\s*"+codes[0]["text_de"]+"\s*",'i'))) {
                         liSelector.find(" div.editing").removeClass("redBackground");
-                        liSelector.attr("data-code", code);
-                        liSelector.attr("data-text", text);
-                        liSelector.attr("id", codes[0]["short_code"]);
+                        liSelector.attr("data-code", code).attr("data-text", text).attr("id", codes[0]["short_code"]);
                     }
                     // more than one matching codes deletes stored data in html and background is red
                     else{
                         liSelector.find(" div.editing").addClass("redBackground");
-                        liSelector.removeAttr("data-code");
-                        liSelector.removeAttr("data-text");
-                        liSelector.attr("id", "newTempCode"+newIndex);
+                        liSelector.removeAttr("data-code").removeAttr("data-text").attr("id", "newTempCode"+newIndex);
                         newIndex++;
                     }
 
@@ -373,10 +363,8 @@ $(document).ready(function() {
         var codeId = thisSelector.attr("id");
         var code = thisSelector.attr("data-code");
         var text = thisSelector.attr("data-text");
-        liSelector.addClass(category);
+        liSelector.addClass(category).attr("data-code", code).attr("data-text", text);
         liSelector.find(".doneButton").show();
-        liSelector.attr("data-code", code);
-        liSelector.attr("data-text", text);
         // change red background to original (white)
         liSelector.find("div.text_field").removeClass("redBackground");
         // update id
@@ -392,14 +380,12 @@ $(document).ready(function() {
     // on changing tab filter the codes of only the selected category
     $("#maskTabs li a.filterTab").click(function () {
         var category = $(this).attr("data-category");
-        $("#allListMask li").hide();
-        $("#allListMask li").filter(function () {
+        $("#allListMask li").hide().filter(function () {
             liCategory = $(this).attr("data-category");
             return  liCategory == category;
         }).show();
         // deactivate addCode Button
-        $("#addCodeButton").removeAttr("data-category");
-        $("#addCodeButton").hide();
+        $("#addCodeButton").removeAttr("data-category").hide();
         $("#codeMaskLists .codeMaskItem .eraseButton").show();
         $("#allListMask li:not(:hidden)").addClass("editable");
         $("#allListMask li:not(:hidden) div.text_field").attr("title", "zum Bearbeiten klicken");
@@ -410,8 +396,7 @@ $(document).ready(function() {
     $("#maskTabs li a#allMaskLink").click(function () {
         $("#allListMask li").removeClass("editable").show();
         $("#allListMask li div.text_field").removeAttr("title");
-        $("#addCodeButton").removeAttr("data-category");
-        $("#addCodeButton").hide();
+        $("#addCodeButton").removeAttr("data-category").hide();
         $("#codeMaskLists .eraseButton").hide();
         $("#allListMask li#newMainCode").hide();
         deleteIncompleteCodes();
@@ -420,8 +405,7 @@ $(document).ready(function() {
     // if sideDiagnoses or procedures tab is selected show the addButton and give it the corresponding category
     $("#maskTabs li a.withAddButton").click(function () {
         var category = $(this).attr("data-category");
-        $("#addCodeButton").attr("data-category", category);
-        $("#addCodeButton").show();
+        $("#addCodeButton").attr("data-category", category).show();
         $("#allListMask li#newMainCode").hide();
     });
 

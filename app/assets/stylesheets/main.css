@@ -35,10 +35,7 @@ li {
 #analyse{
     position: relative;
     left: 75%;
-    top: 30px;
-    border: 10px white;
-
-
+    margin: 20px;
 }
 
 #textArea{
@@ -62,9 +59,9 @@ li {
 }
 
 .btn.btn-primary {
-    border-radius: 2px;
-    border: 0;  text-shadow: none;
-
+    border-radius: 5px;
+    border: 0;
+    text-shadow: none;
 }
 
 .zbutton{
@@ -75,7 +72,7 @@ li {
  padding:5px 4px 5px 4px ;
  font-size: 0.8em;
  position: absolute;
-    top: 5px;
+ top: 5px;
  right:10px;
 }
 
