@@ -26,8 +26,7 @@ $(document).ready(function() {
             $("#newMainCode").remove();
         }
         // then add the code to the codemask list with animation
-        var width = liSelector.css('width');
-        liSelector.animate({'left': '-='+width}, 500, function () {
+        liSelector.animate({'left': '-=100%'}, 500, function () {
             liSelector.fadeOut("slow", function () {
                 $("#allListMask").append(this);
                 liSelector.css("left", 0);
