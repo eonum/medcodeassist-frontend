@@ -264,7 +264,7 @@ $(document).ready(function() {
         key++;
         var id = "newCode"+key;
         var category = $(this).attr("data-category");
-        var newLiElement = "<li class='list-group-item newCode' style='display:none' id='" + id + "' data-category='" + category + "'></li>";
+        var newLiElement = "<li class='list-group-item newCode editable' style='display:none' id='" + id + "' data-category='" + category + "'></li>";
         $("#allListMask").append(newLiElement); // codeMaskItem
         $("#" + id).fadeIn("normal");
         var divText = "<div class='text_field editing' contenteditable='true'></div>";
@@ -291,15 +291,16 @@ $(document).ready(function() {
     // on key release send post for search
     $("#codeMaskLists ul").on("keyup", "li div.editing", function() {
         var parentLi = this.parentNode;
-        var id = parentLi.id;
         var category = $(parentLi).attr("data-category");
         $(parentLi).find(".doneButton").show();
-        interactiveProposals(id, category);
+        interactiveProposals(parentLi, category);
     });
 
     // function to send search post if length of search text is at least 2
-    function interactiveProposals(id, category) {
-        var searchText = $("#codeMaskLists [data-category*='"+category+"']#"+id+" div.text_field").text();
+    var newIndex = 0;
+    function interactiveProposals(parentLi, category) {
+        var liSelector = $(parentLi);
+        var searchText = liSelector.find("div.text_field").text();
         if(searchText.length >= 2) {
             $.ajax({
                 url: "/application/search",
@@ -322,33 +323,42 @@ $(document).ready(function() {
                     // no matching codes
                     if(codeList.length == 0){
                         codeList = "<li>Keine Kodes gefunden</li>";
-                        $("#"+id+" div.editing").addClass("redBackground");
-                        $("#"+id).removeAttr("data-code");
-                        $("#"+id).removeAttr("data-text");
-                        $("#"+id).attr("id", "newTempCode");
+                        liSelector.find("div.editing").addClass("redBackground");
+                        liSelector.removeAttr("data-code");
+                        liSelector.removeAttr("data-text");
+                        liSelector.attr("id", "newTempCode"+newIndex);
+                        newIndex ++;
                     }
                     // one exact matching code gets stored in html and background is white
                     else if(codes.length==1 && code.match(new RegExp("\s*"+codes[0]["code"]+"\s*",'i')) && text.match(new RegExp("\s*"+codes[0]["text_de"]+"\s*",'i'))) {
-                        $("#"+id+" div.editing").removeClass("redBackground");
-                        $("#"+id).attr("data-code", code);
-                        $("#"+id).attr("data-text", text);
-                        $("#"+id).attr("id", codes[0]["short_code"]);
+                        liSelector.find(" div.editing").removeClass("redBackground");
+                        liSelector.attr("data-code", code);
+                        liSelector.attr("data-text", text);
+                        liSelector.attr("id", codes[0]["short_code"]);
                     }
                     // more than one matching codes deletes stored data in html and background is red
                     else{
-                        $("#"+id+" div.editing").addClass("redBackground");
-                        $("#"+id).removeAttr("data-code");
-                        $("#"+id).removeAttr("data-text");
-                        $("#"+id).attr("id", "newTempCode");
+                        liSelector.find(" div.editing").addClass("redBackground");
+                        liSelector.removeAttr("data-code");
+                        liSelector.removeAttr("data-text");
+                        liSelector.attr("id", "newTempCode"+newIndex);
+                        newIndex++;
                     }
 
                     // empty and fill the dropdown list with the temporary above
-                    $("#"+id+" div.dropdown ul.dropdown-menu").empty().append(codeList);
+                    liSelector.find("div.dropdown ul.dropdown-menu").empty().append(codeList);
 
                     // open dropdown
-                    $("#"+id+" div.dropdown").addClass("open");
+                    liSelector.find("div.dropdown").addClass("open");
+
                 }
             });
+        }
+        else {
+            // close dropdown
+            liSelector.find(" div.dropdown").removeClass("open");
+            // empty dropdown
+            liSelector.find(" div.dropdown ul.dropdown-menu").empty();
         }
     };
 

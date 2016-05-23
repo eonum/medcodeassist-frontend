@@ -90,6 +90,7 @@ class ApplicationController < ActionController::Base
     end
     # find matched codes
     codeMatch = search_text.match(codePattern)
+    code = ""
      if(!codeMatch.nil?)
       code = codeMatch[:code]
       # delete code from search_text for later use
@@ -102,10 +103,12 @@ class ApplicationController < ActionController::Base
     textPattern = /(?<text>\w+(\s+\w+)*)/
     # find matched text
     textMatch = search_text.match(textPattern)
+    text = ""
     if(!textMatch.nil?)
       text = textMatch[:text]
     end
 
+    @code_matches = {}
     # search in the appropriate database based on category
     if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
       @code_matches = IcdCode.any_of({ :code => /.*#{escaped_code}.*/i, :text_de => /.*#{text}.*/i}).entries
