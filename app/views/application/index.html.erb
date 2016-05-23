@@ -11,11 +11,13 @@
     <!--Div of Textarea and Codemask-->
     <div class="col-md-offset-1 form-group col-md-5 ">
 
-      <label for="Text">Text:</label>
+      <h3><label for="Text" title="Eingabefeld für den zu analysierenden Text">Textanalyse:</label></h3>
       <!--Textarea Div-->
-      <div id="textArea" class="editable form-control bg-primary" contentEditable="true" data-prompt="Text hier eingeben"></div>
+      <div id="textArea" class="editable form-control bg-primary" contentEditable="true" data-prompt="Bitte hier den medizinischen Text zur Analyse eingeben"></div>
 
-      <button id="analyse" type="button" class="btn btn-primary">Analyse</button>
+      <div id="analyseWraper">
+        <button id="analyse" type="button" class="btn btn-primary">Analysieren</button>
+      </div>
 
       <!-- Modal/Popup -->
       <div id="popup" class="modal fade" role="dialog">
@@ -75,7 +77,7 @@
 
       <!--CodeMask Div-->
       <div id="codeMaskWrapper">
-        <label>Code mask:</label>
+        <h3><label title="Hier können Sie Ihre ausgewählten Kodes ablegen">Ihre Kodemaske:</label></h3>
         <!-- Nav tabs for the list of the mask -->
         <ul class="nav nav-tabs" id="maskTabs" role="tablist">
           <li id="allTab" role="presentation" class="active"><a id="allMaskLink" href="#allMask" aria-controls="allMask" role="tab" data-toggle="tab">Alle</a></li>
@@ -88,35 +90,43 @@
         <div class="tab-content" id="codeMaskLists">
           <div role="tabpanel" class="tab-pane active" id="allMask">
             <ul class="list-group codeMaskList" id="allListMask">
-              <li class='list-group-item mainDiagnoses' id="newMainCode" data-category="mainDiagnoses"><div class="text_field editing redBackground" contenteditable="true" data-prompt="Typen Sie hier"></div><div class="dropdown"><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class="dropdown-menu"></ul></div><button class="zbutton doneButton" type="button">Add</button><button class="zbutton editButton" type="button">Edit</button></li>
+              <li class='list-group-item mainDiagnoses' id="newMainCode" data-category="mainDiagnoses">
+                <div class="text_field editing redBackground" contenteditable="true" data-prompt="Typen Sie hier"></div>
+                <div class="dropdown"><a data-toggle='dropdown' class='dropdown-toggle'></a>
+                  <ul class="dropdown-menu"></ul>
+                </div>
+                <button class="zbutton doneButton" type="button">Hinzufügen</button>
+                <button class="zbutton eraseButton" type="button">Löschen</button>
+              </li>
             </ul>
           </div>
         </div>
 
-      <button id="addCodeButton" type="button" class="btn btn-primary">Add code</button>
-      <button id="cancelButton" type="button" class="btn btn-primary">Cancel</button>
+      <button id="addCodeButton" type="button" class="btn btn-primary">Kode hinzufügen</button>
+      <button id="cancelButton" type="button" class="btn btn-primary">Letzte Zeile löschen</button>
       </div>
     </div>
 
     <!--Code Lists-->
     <div class="form-group col-md-5  " id="codeLists">
+      <h3><label> Kodevorschläge aus dem Kontext</label></h3>
 
       <div id="mainDiagnoses">
-        <label>Hauptdiagnosen:</label>
+        <label>Häufige Hauptdiagnosen:</label>
         <ul class="list-group codeList" id="mainDiagnosesList">
         </ul>
       </div>
 
 
       <div id="sideDiagnoses">
-        <label>Nebendiagnosen:</label>
+        <label>Häufige Nebendiagnosen:</label>
         <ul class="list-group codeList" id="sideDiagnosesList">
         </ul>
       </div>
 
 
       <div id="Proccedures">
-        <label>Prozeduren:</label>
+        <label>Häufige Prozeduren:</label>
         <ul class="list-group codeList" id="proceduresList">
         </ul>
       </div>

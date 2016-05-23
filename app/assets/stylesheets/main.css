@@ -19,6 +19,10 @@ div[contentEditable=true]:empty:not(:focus):before{
     opacity: 0.7;
 }
 
+#allListMask li.editable div.text_field:hover {
+    title: "click to edit";
+}
+
 #allListMask div[contentEditable=true]:empty:not(:focus):before{
     color: black;
     opacity: 0.5;
@@ -30,9 +34,11 @@ li {
 
 #analyse{
     position: relative;
-    left: 80%;
-    top:10px;
-    margin-right:30px;
+    left: 75%;
+    top: 30px;
+    border: 10px white;
+
+
 }
 
 #textArea{
@@ -69,11 +75,11 @@ li {
  padding:5px 4px 5px 4px ;
  font-size: 0.8em;
  position: absolute;
- bottom:5px;
+    top: 5px;
  right:10px;
 }
 
-.doneButton, .editButton, #addCodeButton, #cancelButton {
+.doneButton, .eraseButton, #addCodeButton, #cancelButton {
     display: none;
 }
 
@@ -95,7 +101,7 @@ li {
     padding: 10px 15px;
     height: 100%;
     min-height: 40px;
-    width: 90%;
+    width: 85%;
 }
 
 #newMainCode .doneButton {
