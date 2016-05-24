@@ -4,7 +4,6 @@
 ## Installing guide
 This section explains how to prepare your OS to run the project medcodeassist-frontend of EONUM.
 <br>
-Development environment has to be linux.
 
 ### Linux (Ubuntu)
 <b> Tested on Ubuntu 14.04 LTS </b>
@@ -33,18 +32,16 @@ If the server times out, try ``` gpg --keyserver hkp://pgp.mit.edu --recv-keys 4
 
 #### MongoDB
 - Set up mongodb as described at <a href="https://docs.mongodb.org/manual/administration/install-on-linux/#recommended">this link</a>.
-<<<<<<< HEAD
-=======
-- At first use, load data in your local database to make the search work. To do this, put your data in 'test/testdata'. Then open a terminal and cd to the project. Type `rake db:seed_test_data`
->>>>>>> development
+- At first use, load data in your local database to make the search work. To do this, put your data in 'spec/testdata'. Then open a terminal and cd to the project. Type `rake db:seed_test_data`
 - Run the database as follows: ``` mongod --dbpath [...]/medcodeassist-frontend/db --rest ```
 - This will start the mongodb server at localhost:27017
 - <q>--dbpath [...]/medcodeassist-frontend/db</q> defines your data directory
 - <q>--rest</q> will provide an http interface at localhost:28017 and is optional
 
 #### Run the rails server ####
-* To run the server at port 3000, type: ``` rails server -p 3000 ```
+* To run the server in development mode at port 3000, type: ``` rails server -p 3000 ```
 * Open your favorite browser and go to: ``` localhost:3000 ```
+* To run the server in production mode, run `rake assets:precompile` then `rails server –e production`
 
 ## Connecting to the API
 * Make sure you have a running and accessible API (that can be cloned from <a href="https://github.com/eonum/medcodeassist">here</a>)

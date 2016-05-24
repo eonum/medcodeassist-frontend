@@ -38,7 +38,7 @@ bower.json
 
 # Ignore data
 db/seeds
-test/testdata
+spec/testdata/*
 data
 
 #Ignore DB
