@@ -32,7 +32,7 @@ If the server times out, try ``` gpg --keyserver hkp://pgp.mit.edu --recv-keys 4
 
 #### MongoDB
 - Set up mongodb as described at <a href="https://docs.mongodb.org/manual/administration/install-on-linux/#recommended">this link</a>.
-- At first use, load data in your local database to make the search work. To do this, put your data in 'spec/testdata'. Then open a terminal and cd to the project. Type `rake db:seed_test_data`
+- At first use, load data in your local database to make the search work. To do this, put your data in 'db/data/json-fixtures'. Then open a terminal and cd to the project. Type `rake db:seed_test_data`
 - Run the database as follows: ``` mongod --dbpath [...]/medcodeassist-frontend/db --rest ```
 - This will start the mongodb server at localhost:27017
 - <q>--dbpath [...]/medcodeassist-frontend/db</q> defines your data directory
