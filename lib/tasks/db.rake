@@ -1,7 +1,7 @@
 require 'csv'
 
 namespace :db do
-  desc 'Delete all contents of the test DB and seed it with the contents in spec/testdata/json-fixtures'
+  desc 'Delete all contents of the test DB and seed it with the contents in db/data/json-fixtures'
   task :seed_test_data => :environment do
     Rails.env = 'test'
     db_config = Mongoid::Config::Environment.load_yaml('config/mongoid.yml')['sessions']['default']
@@ -16,7 +16,7 @@ namespace :db do
 
     collections.each do |collection|
       sh "mongo #{db_config['database']} --eval 'db.#{collection}.drop()'"
-      sh "mongoimport --db #{db_config['database']} --collection #{collection} < spec/testdata/json-fixtures/#{collection}.json"
+      sh "mongoimport --db #{db_config['database']} --collection #{collection} < db/data/json-fixtures/#{collection}.json"
     end
   end
 
