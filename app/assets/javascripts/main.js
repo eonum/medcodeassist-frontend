@@ -10,7 +10,7 @@ $(document).ready(function() {
     var doneButton = "<button class='zbutton doneButton' type='button'>Fertig</button>";
     var doneAddButton = "<button class='zbutton doneButton' type='button'>Hinzufügen</button>";
     var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'>" +
-        "<div class='text_field editing redBackground' contenteditable='true' data-prompt='Typen Sie hier'></div>" +
+        "<div class='text_field editing redBackground' contenteditable='true' data-prompt='Bitte klicken Sie hier um den Code einzutippen'></div>" +
         "<div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'>" +
         "</a><ul class='dropdown-menu'></ul></div></li>";
 
@@ -286,13 +286,14 @@ $(document).ready(function() {
             "style='display:none' id='" + id + "' data-category='" + category + "'></li>";
         $("#allListMask").append(newEmptyLiElement); // codeMaskItem
         $("#" + id).fadeIn("normal");
-        var divText = "<div class='text_field editing' contenteditable='true'></div>";
+        var divText = "<div class='text_field editing' contenteditable='true' " +
+            "data-prompt='Bitte klicken Sie hier um den Code einzutippen'></div>";
         var newLiSelector = $("#codeMaskLists [data-category*='"+category+"']#"+id);
         $("#codeMaskLists [data-category*='"+category+"']#"+id).append(divText);
         var divDropdown = createDivDropdown(id);
         newLiSelector.append(divDropdown).append(eraseButton).append(doneAddButton);
         newLiSelector.find(".doneButton").show();
-        newLiSelector.find("div.editing").addClass("redBackground").attr("data-prompt", "Typen Sie hier");
+        newLiSelector.find("div.editing").addClass("redBackground").data("prompt", "Typen Sie hier");
         $("#cancelButton").show();
         $(this).hide();
     });
@@ -382,8 +383,8 @@ $(document).ready(function() {
         liSelector.find("div.text_field").text(thisSelector.text());
         // copy data from selected dropdown element to current editing code
         var codeId = thisSelector.attr("id");
-        var code = thisSelector.attr("data-code");
-        var text = thisSelector.attr("data-text");
+        var code = thisSelector.data("code");
+        var text = thisSelector.data("text");
         liSelector.addClass(category).data("code", code).data("text", text);
         liSelector.find(".doneButton").show();
         // change red background to original (white)

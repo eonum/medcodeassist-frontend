@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
   end
 
   def analyse
-    # get post variables
     selected_codes = params[:selected_codes]
 
     # mockup words and suggested codes
@@ -23,9 +22,9 @@ class ApplicationController < ActionController::Base
     # end of mockup words and suggested codes
 
     # reject selected codes from suggested codes
-    if(!selected_codes.nil?)
+    if selected_codes
       selected_codes.each_key do|category|
-        if(!selected_codes[category].nil?)
+        if selected_codes[category]
           selected_category_codes = selected_codes[category]
           suggested_codes[category.to_sym].reject!{ |entry| selected_category_codes.has_key?(entry) }
         end
@@ -44,7 +43,6 @@ class ApplicationController < ActionController::Base
   end
 
   def show_word_details
-    # get post variables
     selected_codes = params[:selected_codes]
 
     # mockup related codes and synonyms
@@ -55,9 +53,9 @@ class ApplicationController < ActionController::Base
     # end of mockup related codes and synonyms
 
     # reject selected codes from suggested codes
-    if(!selected_codes.nil?)
+    if selected_codes
       selected_codes.each_key do|category|
-        if(!selected_codes[category].nil?)
+        if selected_codes[category]
           selected_category_codes = selected_codes[category]
           suggested_related_codes[category.to_sym].reject!{ |entry| selected_category_codes.has_key?(entry) }
         end
@@ -77,21 +75,20 @@ class ApplicationController < ActionController::Base
   end
 
   def search
-    # get post variables
     search_text = params['search_text'].gsub(/\s\s+/, ' ')
     category = params['category']
     selected_codes = params['selected_codes']
 
     # determine code pattern based on category
-    if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
+    if category == 'mainDiagnoses' || category == 'sideDiagnoses'
       codePattern = /(?<code>[a-zA-Z]\d\d?\.?\d{0,2})/ # ICD code pattern
-    elsif(category == 'procedures')
+    elsif category == 'procedures'
       codePattern = /(?<code>\d{1,2}\.?\d?[\w\d]\.?\d{0,2})/ # CHOP code pattern
     end
     # find matched codes
     codeMatch = search_text.match(codePattern)
     code = ""
-     if(!codeMatch.nil?)
+     if codeMatch
       code = codeMatch[:code]
       # delete code from search_text for later use
       search_text.delete!(code)
@@ -104,27 +101,27 @@ class ApplicationController < ActionController::Base
     # find matched text
     textMatch = search_text.match(textPattern)
     text = ""
-    if(!textMatch.nil?)
+    if textMatch
       text = textMatch[:text]
     end
 
     code_matches = {}
     # search in the appropriate database based on category
-    if(category == 'mainDiagnoses' || category == 'sideDiagnoses')
+    if category == 'mainDiagnoses' || category == 'sideDiagnoses'
       code_matches = IcdCode.any_of({ :code => /.*#{escaped_code}.*/i, :text_de => /.*#{text}.*/i}).entries
-    elsif(category == 'procedures')
+    elsif category == 'procedures'
       code_matches = ChopCode.any_of({ :code => /.*#{escaped_code}.*/i, :text_de => /.*#{text}.*/i}).entries
     end
 
     # if selected codes of given category exists then reject them from matched codes
-    if(!selected_codes.nil? && !selected_codes[category].nil?)
+    if selected_codes && selected_codes[category]
       sel_codes = selected_codes[category]
       code_matches.reject! { |entry| sel_codes.has_key?(entry['short_code']) }
     end
 
     codes = {}
     # if there are matches send the first 10
-    if(!code_matches.nil?)
+    if code_matches
       codes = code_matches.take 10
     end
     
@@ -184,7 +181,7 @@ class ApplicationController < ActionController::Base
 
     selected_codes = params[:selected_codes]
 
-    if(!selected_codes.nil?)
+    if selected_codes
       main_codes.delete('G8210')
       main_codes.delete('C800')
       main_codes['A666'] = {code: 'A66.6', short_code: 'A666', text_de: 'Knochen- und Gelenkveränderungen bei Frambösie'}
@@ -210,7 +207,7 @@ class ApplicationController < ActionController::Base
 
   def get_mocked_synonyms
     word = params[:word]
-    if( word !=  'test')
+    if word !=  'test'
       parsed_token = [{'name' => 'synonym1', similarity: '1'}, {'name' => 'synonym2', similarity: '0'}]
     else
       parsed_token = [{'name' => 'synonym3', similarity: '1'}, {'name' => 'synonym4', similarity: '0'}]
