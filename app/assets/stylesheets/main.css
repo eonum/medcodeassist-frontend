@@ -66,9 +66,9 @@ li {
 
 .zbutton{
  color: white;
- background-color:#508ABF;
- border-radius: 60px;
- border-color:#508ABF;
+ background-color:#337ab7;
+ border-radius: 5px;
+ border-color:#337ab7;
  padding:5px 4px 5px 4px ;
  font-size: 0.8em;
  position: absolute;
@@ -98,7 +98,7 @@ li {
     padding: 10px 15px;
     height: 100%;
     min-height: 40px;
-    width: 85%;
+    width: 80%;
 }
 
 #newMainCode .doneButton {
