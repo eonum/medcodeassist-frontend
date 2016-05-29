@@ -9,22 +9,42 @@ $(document).ready(function() {
     var eraseButton = "<button class='zbutton eraseButton' type='button'>Löschen</button>";
     var doneButton = "<button class='zbutton doneButton' type='button'>Fertig</button>";
     var doneAddButton = "<button class='zbutton doneButton' type='button'>Hinzufügen</button>";
-    var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'><div class='text_field editing redBackground' contenteditable='true' data-prompt='Typen Sie hier'></div><div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div></li>";
+    var newMainCode = "<li class='list-group-item mainDiagnoses' id='newMainCode' data-category='mainDiagnoses'>" +
+        "<div class='text_field editing redBackground' contenteditable='true' data-prompt='Typen Sie hier'></div>" +
+        "<div class='dropdown'><a data-toggle='dropdown' class='dropdown-toggle'>" +
+        "</a><ul class='dropdown-menu'></ul></div></li>";
+
+    function createDivDropdown(id){
+        return "<div class='dropdown' id='dropdown-"+id+"'>" +
+            "<a data-toggle='dropdown' class='dropdown-toggle'/>" +
+            "<ul class='dropdown-menu'></ul></div>";
+    };
+
+    function createNewCodeLiElement(codeId, category, code, text) {
+        return "<li class='list-group-item codeItem "+category+
+            "' id='"+codeId+"' data-category='"+category+"' data-code='"+code+
+            "' data-text='"+text+"' title='zum Einfugen klicken'>" +
+            "<div class='text_field'>"+code+": "+text+"</div></li>";
+    };
 
     // assign codes from codeLists to codeMaskLists
     $("#infoRelatedCodes ul, #codeLists ul").on("click", ".codeItem", function() {
         var id = this.id;
         var liSelector = $(this);
-        var category = liSelector.attr("data-category");
-        // if category is mainDiagnoses and there is already one selected code alert user
-        if (category == "mainDiagnoses" && Object.keys(selectedCodes["mainDiagnoses"]).length>0) {
-            alert("Nur eine Hauptdiagnose ist erlaubt");
-            return;
+        var category = liSelector.data("category");
+        // in case that the category is mainDiagnoses
+        if (category == "mainDiagnoses") {
+        // if there is already one selected code alert user
+            if (Object.keys(selectedCodes["mainDiagnoses"]).length > 0) {
+                alert("Nur eine Hauptdiagnose ist erlaubt");
+                return;
+            }
+            // else if no code is selected remove the editable newMainCode
+            else if (Object.keys(selectedCodes["mainDiagnoses"]).length == 0) {
+                $("#newMainCode").remove();
+            }
         }
-        // else if no code is selected remove the editable newMainCode
-        else if(category == "mainDiagnoses" && Object.keys(selectedCodes["mainDiagnoses"]).length==0) {
-            $("#newMainCode").remove();
-        }
+
         // then add the code to the codemask list with animation
         liSelector.animate({'left': '-=100%'}, 500, function () {
             liSelector.fadeOut("slow", function () {
@@ -35,10 +55,10 @@ $(document).ready(function() {
                 liSelector.find(".eraseButton").show();
             });
             // get data that may be stored in html
-            var code = liSelector.attr("data-code");
-            var text = liSelector.attr("data-text");
+            var code = liSelector.data("code");
+            var text = liSelector.data("text");
             // find parent List name
-            var parentId = this.parentNode.parentNode.parentNode.id;
+            var parentId = liSelector.parent().parent().parent().id;
             // add code to selected codes
             // in case it was selected from the original code Lists
             if (parentId == "codeLists" && typeof suggestedCodes != "undefined" && suggestedCodes && suggestedCodes[category]) {
@@ -55,8 +75,7 @@ $(document).ready(function() {
             else {
                 selectedCodes[category][id] = {code: id, short_code: id}
             }
-            // and remove it from the original codeList
-            $("#codeLists #" + category + "List" + id).remove();
+
             $("#maskTabs li." + category + " a").trigger("click");
             liSelector.fadeIn("normal", function () {
                 $("#maskTabs li." + category + " a").trigger("click");
@@ -66,14 +85,14 @@ $(document).ready(function() {
 
     // on click of the eraseButton change code li to editable and add dropdown menu used for search post
     $("#codeMaskLists ul").on("click", ".codeMaskItem.editable div", function () {
-        var parentLi = this.parentNode;
+        var parentLi = $(this).parent();
         var id = parentLi.id;
         var liSelector = $(parentLi);
-        var category = liSelector.attr("data-category");
+        var category = liSelector.data("category");
         delete selectedCodes[category][id];
         liSelector.removeClass("codeMaskItem");
         liSelector.find(".text_field").attr("contenteditable", "true");
-        var divDropdown = "<div class='dropdown' id='dropdown-" + id + "'><a data-toggle='dropdown' class='dropdown-toggle'></a><ul class='dropdown-menu'></ul></div>";
+        var divDropdown = createDivDropdown(id);
         liSelector.append(divDropdown);
         liSelector.find(".doneButton").text("Fertig");
         liSelector.find(".doneButton").show();
@@ -87,7 +106,7 @@ $(document).ready(function() {
         var parentLi = this.parentNode;
         var id = this.parentNode.id;
         var liSelector = $(parentLi);
-        var category = liSelector.attr("data-category");
+        var category = liSelector.data("category");
         // delete the code from the appropriate selectedCodes list
         delete selectedCodes[category][id];
         // add the code to the appropriate list
@@ -96,7 +115,7 @@ $(document).ready(function() {
         liSelector.removeClass("codeMaskItem").addClass("codeItem");
         liSelector.find("button").remove();
         // in case of the new custon main code change its name so that it doesn;t get mixed with the new one
-        if(id == "newMainCode") {
+        if (id == "newMainCode") {
             liSelector.attr("id", "oldMainCode"+index);
             index++;
         }
@@ -108,7 +127,7 @@ $(document).ready(function() {
         $("#codeMaskLists #newMainCode").append(eraseButton).append(doneButton);
         $("#codeMaskLists #newMainCode .doneButton").show();
         // only show the newMainCode if the mainDiagnoses tab is active
-        if($("#maskTabs .mainDiagnoses").hasClass("active")) {
+        if ($("#maskTabs .mainDiagnoses").hasClass("active")) {
             $("#codeMaskLists #newMainCode").show();
         }
         else {
@@ -116,11 +135,11 @@ $(document).ready(function() {
         }
     });
 
-    // on click of the done button change make code uneditable and save data to selected_codes List
+    // on click of the done button change make code uneditable and save data
     $("#codeMaskLists ul").on("click", "button.doneButton", function() {
-        var parentLi = this.parentNode;
+        var parentLi = $(this).parent();
         var liSelector = $(parentLi);
-        var category = liSelector.attr("data-category");
+        var category = liSelector.data("category");
         liSelector.find(".text_field").attr("contenteditable", "false");
         liSelector.find(".doneButton").hide();
         liSelector.find(".eraseButton").show();
@@ -128,26 +147,25 @@ $(document).ready(function() {
 
         // save data from li in case of an edited or added code
         var codeId = liSelector.attr("id");
-        var code = liSelector.attr("data-code");
-        var text = liSelector.attr("data-text");
+        var code = liSelector.data("code");
+        var text = liSelector.data("text");
         // save code to selectedCodes list
-        if(code && text) {
+        if (code && text) {
             selectedCodes[category][codeId] = {code: code, short_code: codeId, text_de: text};
         }else {
             selectedCodes[category][codeId] = {code: codeId, short_code: codeId};
         }
-        setTimeout(function() {
-            liSelector.addClass("codeMaskItem");
-        }, 100);
+
+        liSelector.addClass("codeMaskItem");
         // remove it from the code list
         $("#codeLists #" + category +"List li#"+codeId).remove();
     });
 
     // on click of the done Button of a newly added code remove "newCode" class and hide the cancel Button and show again the add Button
     $("#codeMaskLists ul").on("click", ".newCode button.doneButton", function() {
-        var parentLi = this.parentNode;
+        var parentLi = $(this).parent();
         var liSelector = $(parentLi);
-        var category = liSelector.attr("data-category");
+        var category = liSelector.data("category");
         liSelector.removeClass("newCode");
         liSelector.find("div.dropdown").remove();
         $("#addCodeButton").show();
@@ -205,7 +223,8 @@ $(document).ready(function() {
                         for(var codeId in suggestedCodes[category]){
                             var code = suggestedCodes[category][codeId].code;
                             var text = suggestedCodes[category][codeId].text_de;
-                            $("#"+category+"List").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"' data-code='"+code+"' data-text='"+text+"' title='zum Einfugen klicken'><div class='text_field'>"+code+": "+text+"</div></li>");
+                            var newLiElement = createNewCodeLiElement(codeId, category, code, text);
+                            $("#"+category+"List").append(newLiElement);
                         }
                     }
                 }
@@ -231,7 +250,7 @@ $(document).ready(function() {
                 $("#infoWord").text(word);
 
                 /* synonyms of the word are displayed highlighted and clickable */
-                if(synonyms) {
+                if (synonyms) {
                     $("#synonymsList").empty();
                     synonyms.forEach(function (synonym) {
                         $("#synonymsList").append("<li title='click for details'><a class='highlight showWordDetails'>" + synonym + "</a></li>");
@@ -246,7 +265,8 @@ $(document).ready(function() {
                         for(var codeId in suggestedRelatedCodes[category]){
                             var code = suggestedRelatedCodes[category][codeId].code;
                             var text = suggestedRelatedCodes[category][codeId].text_de;
-                            $("#"+category+"RelatedList").append("<li class='list-group-item codeItem "+category+"' id='"+codeId+"' data-category='"+category+"'><div class='text_field'>"+code+": "+text+"</div></li>");
+                            var newLiElement = createNewCodeLiElement(codeId, category, code, text);
+                            $("#"+category+"RelatedList").append(newLiElement);
                         }
                     }
                 }
@@ -261,14 +281,15 @@ $(document).ready(function() {
     $("#addCodeButton").click(function() {
         key++;
         var id = "newCode"+key;
-        var category = $(this).attr("data-category");
-        var newLiElement = "<li class='list-group-item newCode editable' style='display:none' id='" + id + "' data-category='" + category + "'></li>";
-        $("#allListMask").append(newLiElement); // codeMaskItem
+        var category = $(this).data("category");
+        var newEmptyLiElement = "<li class='list-group-item newCode editable' " +
+            "style='display:none' id='" + id + "' data-category='" + category + "'></li>";
+        $("#allListMask").append(newEmptyLiElement); // codeMaskItem
         $("#" + id).fadeIn("normal");
         var divText = "<div class='text_field editing' contenteditable='true'></div>";
         var newLiSelector = $("#codeMaskLists [data-category*='"+category+"']#"+id);
         $("#codeMaskLists [data-category*='"+category+"']#"+id).append(divText);
-        var divDropdown = "<div class='dropdown' id='dropdown-"+id+"'><a data-toggle='dropdown' class='dropdown-toggle'/><ul class='dropdown-menu'></ul></div>";
+        var divDropdown = createDivDropdown(id);
         newLiSelector.append(divDropdown).append(eraseButton).append(doneAddButton);
         newLiSelector.find(".doneButton").show();
         newLiSelector.find("div.editing").addClass("redBackground").attr("data-prompt", "Typen Sie hier");
@@ -283,20 +304,12 @@ $(document).ready(function() {
         $("#addCodeButton").show();
     });
 
-    // on key release send post for search
-    $("#codeMaskLists ul").on("keyup", "li div.editing", function() {
-        var parentLi = this.parentNode;
-        var category = $(parentLi).attr("data-category");
-        $(parentLi).find(".doneButton").show();
-        interactiveProposals(parentLi, category);
-    });
-
     // function to send search post if length of search text is at least 2
     var newIndex = 0;
     function interactiveProposals(parentLi, category) {
         var liSelector = $(parentLi);
         var searchText = liSelector.find("div.text_field").text();
-        if(searchText.length >= 2) {
+        if (searchText.length >= 2) {
             $.ajax({
                 url: "/application/search",
                 type: "post",
@@ -311,26 +324,27 @@ $(document).ready(function() {
                         var codeId = element["short_code"];
                         var code = element["code"];
                         var text = element["text_de"];
-                        var listElement = "<li class='dropdown-element' id='"+codeId+"' data-code='"+code+"' data-text='"+text+"'><a>"+code+": "+text+"</a></li>";
+                        var listElement = "<li class='dropdown-element' id='"+codeId+
+                            "' data-code='"+code+"' data-text='"+text+"'><a>"+code+": "+text+"</a></li>";
                         codeList = codeList + listElement;
                     });
 
                     // no matching codes
-                    if(codeList.length == 0){
+                    if (codeList.length == 0) {
                         codeList = "<li>Keine Kodes gefunden</li>";
                         liSelector.find("div.editing").addClass("redBackground");
-                        liSelector.removeAttr("data-code").removeAttr("data-text").attr("id", "newTempCode"+newIndex);
+                        liSelector.removeData("code").removeData("text").attr("id", "newTempCode"+newIndex);
                         newIndex ++;
                     }
                     // one exact matching code gets stored in html and background is white
-                    else if(codes.length==1 && code.match(new RegExp("\s*"+codes[0]["code"]+"\s*",'i')) && text.match(new RegExp("\s*"+codes[0]["text_de"]+"\s*",'i'))) {
+                    else if (codes.length==1 && code.match(new RegExp("\s*"+codes[0]["code"]+"\s*",'i')) && text.match(new RegExp("\s*"+codes[0]["text_de"]+"\s*",'i'))) {
                         liSelector.find(" div.editing").removeClass("redBackground");
-                        liSelector.attr("data-code", code).attr("data-text", text).attr("id", codes[0]["short_code"]);
+                        liSelector.data("code", code).data("text", text).attr("id", codes[0]["short_code"]);
                     }
                     // more than one matching codes deletes stored data in html and background is red
-                    else{
+                    else {
                         liSelector.find(" div.editing").addClass("redBackground");
-                        liSelector.removeAttr("data-code").removeAttr("data-text").attr("id", "newTempCode"+newIndex);
+                        liSelector.removeData("code").removeData("text").attr("id", "newTempCode"+newIndex);
                         newIndex++;
                     }
 
@@ -351,18 +365,26 @@ $(document).ready(function() {
         }
     };
 
+    // on key release send post for search
+    $("#codeMaskLists ul").on("keyup", "li div.editing", function() {
+        var parentLi = $(this).parent();
+        var category = $(parentLi).data("category");
+        $(parentLi).find(".doneButton").show();
+        interactiveProposals(parentLi, category);
+    });
+
     // on click of a suggested code in the dropdown menu assign its text and data to the parent li, i.e. to the original searching code
     $("ul#allListMask").on("click","li.dropdown-element", function() {
-        var parentLi = this.parentNode.parentNode.parentNode;
         var thisSelector = $(this);
+        var parentLi = thisSelector.parent().parent().parent();
         var liSelector = $(parentLi);
-        var category = liSelector.attr("data-category");
+        var category = liSelector.data("category");
         liSelector.find("div.text_field").text(thisSelector.text());
         // copy data from selected dropdown element to current editing code
         var codeId = thisSelector.attr("id");
         var code = thisSelector.attr("data-code");
         var text = thisSelector.attr("data-text");
-        liSelector.addClass(category).attr("data-code", code).attr("data-text", text);
+        liSelector.addClass(category).data("code", code).data("text", text);
         liSelector.find(".doneButton").show();
         // change red background to original (white)
         liSelector.find("div.text_field").removeClass("redBackground");
@@ -378,13 +400,13 @@ $(document).ready(function() {
 
     // on changing tab filter the codes of only the selected category
     $("#maskTabs li a.filterTab").click(function () {
-        var category = $(this).attr("data-category");
+        var category = $(this).data("category");
         $("#allListMask li").hide().filter(function () {
-            liCategory = $(this).attr("data-category");
+            liCategory = $(this).data("category");
             return  liCategory == category;
         }).show();
         // deactivate addCode Button
-        $("#addCodeButton").removeAttr("data-category").hide();
+        $("#addCodeButton").removeData("category").hide();
         $("#codeMaskLists .codeMaskItem .eraseButton").show();
         $("#allListMask li:not(:hidden)").addClass("editable");
         $("#allListMask li:not(:hidden) div.text_field").attr("title", "zum Bearbeiten klicken");
@@ -395,7 +417,7 @@ $(document).ready(function() {
     $("#maskTabs li a#allMaskLink").click(function () {
         $("#allListMask li").removeClass("editable").show();
         $("#allListMask li div.text_field").removeAttr("title");
-        $("#addCodeButton").removeAttr("data-category").hide();
+        $("#addCodeButton").removeData("category").hide();
         $("#codeMaskLists .eraseButton").hide();
         $("#allListMask li#newMainCode").hide();
         deleteIncompleteCodes();
@@ -403,8 +425,8 @@ $(document).ready(function() {
 
     // if sideDiagnoses or procedures tab is selected show the addButton and give it the corresponding category
     $("#maskTabs li a.withAddButton").click(function () {
-        var category = $(this).attr("data-category");
-        $("#addCodeButton").attr("data-category", category).show();
+        var category = $(this).data("category");
+        $("#addCodeButton").data("category", category).show();
         $("#allListMask li#newMainCode").hide();
     });
 
